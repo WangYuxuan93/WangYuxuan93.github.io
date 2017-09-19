@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Graph-based Parsing,Neural Network,LSTM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
+<meta name="keywords" content="Graph-based Parsing,Neural Network,LSTM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Stanford&#39;s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》">
+<meta property="og:url" content="www.alexyxwang.me/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/index.html">
+<meta property="og:site_name" content="Avalon">
+<meta property="og:description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
+<meta property="og:updated_time" content="2017-08-29T06:19:22.184Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Stanford&#39;s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》">
+<meta name="twitter:description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
+<meta name="twitter:image" content="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="www.alexyxwang.me/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/"/>
+
+
+
+
+
+  <title>《Stanford's Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》 | Avalon</title>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=63531031";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Avalon</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">全て遠き理想郷</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="www.alexyxwang.me/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Alex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Avalon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《Stanford's Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-28T15:53:49+08:00">
+                2017-08-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Parsing/" itemprop="url" rel="index">
+                    <span itemprop="name">Parsing</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/" class="leancloud_visitors" data-flag-title="《Stanford's Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Stanford的<a href="http://universaldependencies.org/conll17/" target="_blank" rel="external">CoNLL 2017</a>参赛系统研究，文章见 <a href="http://aclweb.org/anthology/K17-3002.pdf" target="_blank" rel="external">《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》</a>。该系统来自他们ICLR 2017的文章 <a href="https://openreview.net/pdf?id=Hk95PK9le" target="_blank" rel="external">《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》</a>，其中删掉了对预测弧标签部分网络结构的具体介绍，可以在<a href="https://web.stanford.edu/~tdozat/files/iclr2016-deep-biaffine.pdf" target="_blank" rel="external">Review的版本</a>中找到（虽然有很多错误）。</p>
+<a id="more"></a>
+<h2 id="Deep-Biaffine-Parser"><a href="#Deep-Biaffine-Parser" class="headerlink" title="Deep Biaffine Parser"></a>Deep Biaffine Parser</h2><p>他们的网络结构灵感来源于第一篇 <strong>neural</strong> graph-based parser的工作<a href="https://aclweb.org/anthology/Q16-1023" target="_blank" rel="external">《Simple and Accurate Dependency Parsing Using Bidirectional LSTM Feature Representations》</a>（主要是用BiLSTM代替传统graph-based parser中的score function，对于一个n个词的句子，用MLP算出所有\(n^2\)条可能的弧的分数，然后用dp算法找出最大生成树（MST））。</p>
+<img src="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg" alt="Parser结构" title="Parser结构">
+<p>如图所示，一句话中所有词的Embedding（来自词和词性）作为BiLSTM（多层）的输入，每个词对应的输出通过4个不同的ReLU层，得到4种特殊的向量表示（左侧最上层）：</p>
+<ul>
+<li>该词作为dependent（子节点）寻找head（父节点）</li>
+<li>该词作为head寻找其所有的dependents</li>
+<li>该词作为dependent决定其label（弧标签）</li>
+<li>该词作为head决定其所有dependents的label</li>
+</ul>
+<p>这些向量将在两个biaffine分类器中分别用于计算所有可能弧的分数以及计算给定词对的弧标签。</p>
+<p>接下来给出正式定义</p>
+<p>给定n个词的句子，每个词的表示向量为：</p>
+<p>$$  \textbf{x}_i = \textbf{v}_i^{(word)} \oplus \textbf{v}_i^{(tag)} $$</p>
+<p>将它们输入BiLSTM后获得每个词的输出向量：</p>
+<p>$$ \textbf{r}_i = BiLSTM(\textbf{r}_0, (\textbf{x}_1,\dots,\textbf{x}_n))_i $$<br>$$ \textbf{h}_i, \textbf{c}_i = split(\textbf{r}_i) $$</p>
+<p>然后通过4个独立的MLP获得上述4种向量表示：</p>
+<p>$$ \textbf{h}_i^{(arc-dep)} = MLP^{(arc-dep)}(\textbf{h}_i) $$<br>$$ \textbf{h}_i^{(arc-head)} = MLP^{(arc-head)}(\textbf{h}_i) $$<br>$$ \textbf{h}_i^{(rel-dep)} = MLP^{(rel-dep)}(\textbf{h}_i) $$<br>$$ \textbf{h}_i^{(rel-head)} = MLP^{(rel-head)}(\textbf{h}_i) $$</p>
+<h3 id="预测弧"><a href="#预测弧" class="headerlink" title="预测弧"></a>预测弧</h3><p>这里的intuition是用MLP将两个方向的LSTM输出先组合起来，再进行利用，而以前的工作都是直接将两个方向的输出拼接起来，这样其实还是相当于分别使用两个方向的输出向量。此外，这种处理也能起到<strong>降维</strong>的作用。（这部分感觉<a href="https://web.stanford.edu/~tdozat/files/iclr2016-deep-biaffine.pdf" target="_blank" rel="external">Review的版本</a>讲的清楚一些）</p>
+<p>对于第i个词，其它所有词作为其head的分数为：</p>
+<p>$$ \textbf{s}_i^{(arc)} = H^{(arc-head)}W^{(arc)}\textbf{h}_i^{(arc-dep)} +  H^{(arc-head)}\textbf{b}^{\top(arc)} $$<br>$$ y_i^{(arc)} = \text{arg} \max_j s_j ^{(arc)} $$</p>
+<p>这样就能得到最可能作为第i个词的head的词 \( y_i^{(arc)} \)。</p>
+<p>假设前面4个向量长度均为\(h\)。这里\( H^{(arc-head)} \)维度为\( n \times h \)，参数矩阵 \( W^{(arc)} \)维度为\( h \times h \)，偏置参数向量 \( \textbf{b}^{\top(arc)} \)维度为\( h \times 1 \)。因此得到评分向量\( \textbf{s}_i^{(arc)} \)维度为\( n \times 1 \)。</p>
+<p>上式中的第一项计算的是给定arc-head和arc-dep这两个向量中信息的情况下，词j作为词i的head的概率（例如在知道词i是“the”，词j是”cat”的情况下j是i的head的概率）；第二项计算的是在只知道arc-head的信息的情况下，词j作为词i的head的概率（例如在知道词j是“the”的情况下j是i的head的概率，根据语言学知识我们知道，无论i是什么词，”the”作为其head的概率都很低）。</p>
+<h3 id="预测标签"><a href="#预测标签" class="headerlink" title="预测标签"></a>预测标签</h3><p>在决定了词i的head之后，使用另一个网络预测这条弧的label（下式中\(\textbf{h}<em>y^{(rel-head)}\)其实是\(\textbf{h}</em>{y_i}^{(rel-head)}\)，后者打不出来所以简略…）</p>
+<p>$$ \textbf{s}_i^{(rel)} = \textbf{h}_y^{\top(rel-head)}\textbf{U}^{(rel)}\textbf{h}_i^{(rel-dep)} + W^{(rel)} ( \textbf{h}_i^{(rel-dep)} \oplus \textbf{h}_y^{(rel-head)} ) + \textbf{b}^{(rel)} $$<br>$$ y_i^{(rel)} = \text{arg} \max_j s_j^{(rel)} $$</p>
+<p>假设\(r\)是label的种类。这里\(\textbf{h}_y^{(rel-head)}\)和\(\textbf{h}_y^{(rel-dep)}\)维度为\( h \times 1 \)，\(\textbf{U}^{(rel)}\)是一个参数tensor，维度为\( h \times r \times h \)，参数矩阵\(W^{(rel)}\)维度为\(r \times 2h \)。因此得到对应所有label的评分向量\(\textbf{s}_i^{(rel)}\)维度为\( r \times 1 \)。</p>
+<p>类似的，上式中第一项计算的是在head和dependent都给定的情况下每种label的概率（例如已知词i是“the”，其head是“cat”时label为“det”的概率）；第二项计算的是给定head和dependent其中一个的情况下每种label的概率（例如已知词i是“the”，或者已知词j是“cat”时label为“det”的概率）。</p>
+<p>训练时，以上述两个分类器的softmax交叉熵损失作为优化目标。在测试时，通过为每个可能的根迭代地解决环问题生成一棵符合约束的树，然后选择其中总分最高的。这里的描述看起来像Chu-Liu/Edmonds算法，但是注释里又写了“Although in the future we intend to implement than the Chu-Liu/Edmonds algorithm for nonprojective MST parsing”，所以不知道他们解码的时候到底是用的什么算法，具体还得看<a href="https://github.com/CoNLL-UD-2017/Stanford" target="_blank" rel="external">源码</a>。</p>
+<h2 id="Character-Level-Model"><a href="#Character-Level-Model" class="headerlink" title="Character-Level Model"></a>Character-Level Model</h2><p>在词的表示上，他们首先用了官方提供的用word2vec预训练的embedding（由于Gothic没有提供，他们用了Facebook提供的FastText训练的词向量），以及高频词的holistic word embedding（这个不太清楚什么意思，估计应该是训练过程中更新的词向量）。此外，还用了基于单向LSTM的字级别模型，也就是每个字有一个可训练的向量，将一个词中的所有字按序输入LSTM。</p>
+<p>一般对于这种character-level LSTM会使用最后一个隐层的输出作为整个词的表示。除此之外，也可以利用attension先计算出每个隐层的权，然后用所有隐层输出的加权和还表示该词。这里他们综合了两种方法，将两种方法的结果拼接起来表示这个词。</p>
+<p>接下来给出正式定义</p>
+<p>对于有n个字的词，首先将每个字的向量按顺序输入LSTM：</p>
+<p>$$ \textbf{r}_i = LSTM(\textbf{r}_0, (\textbf{v}_1^{(char)},\dots,\textbf{v}_n^{(char)})_i $$</p>
+<p>$$ \textbf{h}_i, \textbf{c}_i = split(\textbf{r}_i) $$</p>
+<p>接着在隐层输出堆叠矩阵\( H \)上计算linear attention，将得到的加权和与最终层的cell state拼接得到词的表示：</p>
+<p>$$ \textbf{a} = \text{softmax}(H\textbf{w}^{(attn)}) $$<br>$$ \textbf{h} = H^\top \textbf{a} $$<br>$$ \textbf{v} = W(\textbf{h} \oplus \textbf{c}_n) $$</p>
+<p>这里有点奇怪的是他拼接的是final <strong>cell</strong> state(\(\textbf{c}_n\))而不是final <strong>hidden</strong> state(\(\textbf{h}_n\))。</p>
+<p>接下来，把刚刚得到的\(\textbf{v}\)和预训练的词向量以及holistic word embedding求<strong>elementwise sum</strong>。另一边，对UPOS和XPOS的embedding同样做<strong>elementwise sum</strong>。最后这两个向量 <strong>拼接(concatenate)</strong> 起来就是一个词的最终向量表示。</p>
+<h2 id="POS-Tagger"><a href="#POS-Tagger" class="headerlink" title="POS Tagger"></a>POS Tagger</h2><p>除了parser之外，他们还用这套框架写了一个POS tagger。简单来说就是将一句话中的词按顺序输入一个BiLSTM，然后在每个词处用一个ReLU层生成对应所有tag的分数向量。</p>
+<p>首先将词序列输入BiLSTM：</p>
+<p>$$ \textbf{r}_i = BiLSTM(\textbf{r}_0,(\textbf{v}_1^{(word)},\dots,\textbf{v}_n^{(word)})_i $$<br>$$ \textbf{h}_i, \textbf{c}_i = split(\textbf{r}_i) $$</p>
+<p>然后通过一个MLP计算出分数向量：</p>
+<p>$$ \textbf{h}_i^{(pos)} = MLP^{(pos)}(\textbf{h}_i) $$<br>$$ \textbf{s}_i^{(pos)} = W\textbf{h}_i^{(pos)}+\textbf{b}^{(pos)} $$</p>
+<p>训练过程中采用交叉熵损失之和作为优化目标，tagger与parser是分开训练的。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>在实验部分还做了关于非投射性(nonprojectivity)的测试。具体实验这里就不列了，说一下他们得出的结果：</p>
+<ul>
+<li>graph-based和transition-based方法的差距随着非投射情况的增加而变大(p&lt;0.001，graph-based一直要高)。</li>
+<li>当训练集的非投射弧占比远小于测试集时，graph-based方法表现相对较好，当训练集中也存在大量非投射弧时，两种方法的性能变得相近。这一结论暗示了graph-based方法在非投射弧的学习和泛化能力上比transition-based方法优秀。</li>
+</ul>
+<p>当然实验中的transition-based方法选用的是UDPipe的baseline系统，他们自己也说了，以上结论要建立在UDPipe的系统能代表大多数利用了swap动作的transition-based系统的基础上。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Graph-based-Parsing/" rel="tag"># Graph-based Parsing</a>
+          
+            <a href="/tags/Neural-Network/" rel="tag"># Neural Network</a>
+          
+            <a href="/tags/LSTM/" rel="tag"># LSTM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/24/Hexo-Github-Namecheap-搭建个人博客/" rel="next" title="Hexo + Github + Namecheap 搭建个人博客">
+                <i class="fa fa-chevron-left"></i> Hexo + Github + Namecheap 搭建个人博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/18/《猩球崛起3》-非我族类与领袖特质/" rel="prev" title="《猩球崛起3》-非我族类与领袖特质">
+                《猩球崛起3》-非我族类与领袖特质 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDQ0OC83MDAy"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Alex" />
+          <p class="site-author-name" itemprop="name">Alex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/HITalexwang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:hitalexwang@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/alex_ritsu" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Biaffine-Parser"><span class="nav-number">1.</span> <span class="nav-text">Deep Biaffine Parser</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预测弧"><span class="nav-number">1.1.</span> <span class="nav-text">预测弧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预测标签"><span class="nav-number">1.2.</span> <span class="nav-text">预测标签</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Character-Level-Model"><span class="nav-number">2.</span> <span class="nav-text">Character-Level Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#POS-Tagger"><span class="nav-number">3.</span> <span class="nav-text">POS Tagger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Alex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("S6cvzi2hwiImogUXPQ8vzN0M-gzGzoHsz", "hYKhvBujDvkv64nm4Mxloybi");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
