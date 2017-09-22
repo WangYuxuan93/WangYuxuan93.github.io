@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="LTP,Parsing,Semantic Dependency Graph," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="语义依存分析模块是LTP新功能，用于生成中文句子的语义依存图（存在语义关系的两个词之间用带标签的有向弧连接，允许一个词有多个父节点，因此是图结构）。这里记录一下该模块的编译及使用流程，方便使用。">
+<meta name="keywords" content="LTP,Parsing,Semantic Dependency Graph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译并使用ltp语义依存(图)分析模块">
+<meta property="og:url" content="www.alexyxwang.me/2017/09/22/编译并使用ltp语义依存分析模块/index.html">
+<meta property="og:site_name" content="Avalon">
+<meta property="og:description" content="语义依存分析模块是LTP新功能，用于生成中文句子的语义依存图（存在语义关系的两个词之间用带标签的有向弧连接，允许一个词有多个父节点，因此是图结构）。这里记录一下该模块的编译及使用流程，方便使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/2017/09/22/编译并使用ltp语义依存分析模块/sdptree.jpg">
+<meta property="og:image" content="/2017/09/22/编译并使用ltp语义依存分析模块/sdpgraph.jpg">
+<meta property="og:updated_time" content="2017-09-22T09:42:16.977Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译并使用ltp语义依存(图)分析模块">
+<meta name="twitter:description" content="语义依存分析模块是LTP新功能，用于生成中文句子的语义依存图（存在语义关系的两个词之间用带标签的有向弧连接，允许一个词有多个父节点，因此是图结构）。这里记录一下该模块的编译及使用流程，方便使用。">
+<meta name="twitter:image" content="/2017/09/22/编译并使用ltp语义依存分析模块/sdptree.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="www.alexyxwang.me/2017/09/22/编译并使用ltp语义依存分析模块/"/>
+
+
+
+
+
+  <title>编译并使用ltp语义依存(图)分析模块 | Avalon</title>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=63531031";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Avalon</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">全て遠き理想郷</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="www.alexyxwang.me/2017/09/22/编译并使用ltp语义依存分析模块/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Alex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Avalon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">编译并使用ltp语义依存(图)分析模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-22T16:24:42+08:00">
+                2017-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LTP/" itemprop="url" rel="index">
+                    <span itemprop="name">LTP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/09/22/编译并使用ltp语义依存分析模块/" class="leancloud_visitors" data-flag-title="编译并使用ltp语义依存(图)分析模块">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>语义依存分析模块是LTP新功能，用于生成中文句子的语义依存图（存在语义关系的两个词之间用带标签的有向弧连接，允许一个词有多个父节点，因此是图结构）。这里记录一下该模块的编译及使用流程，方便使用。</p>
+<a id="more"></a>
+<h2 id="语义依存分析"><a href="#语义依存分析" class="headerlink" title="语义依存分析"></a>语义依存分析</h2><p>本节对语义依存图进行一个简介，如果只是要使用sdp模块可以直接跳过。</p>
+<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>要让机器能够理解自然语言，需要对原始文本自底向上进行分词、词性标注、命名实体识别和句法分析，若想要机器更智能，像人一样理解和运用语言，还需要对句子进行更深一层的分析，即句子级语义分析。</p>
+<p>语义依存分析是通往语义深层理解的一条蹊径，它通过在句子结构中分析实词间的语义关系（这种关系是一种事实上或逻辑上的关系，且只有当词语进入到句子时才会存在）来回答句子中“<em>Who did what to whom when and where</em>”等问题。</p>
+<p>语义分析可以跨越句子的表层结构直接获取深层语义表达的本质，这种性质在信息检索、机器翻译等诸多领域有重要作用。</p>
+<h3 id="语义依存树"><a href="#语义依存树" class="headerlink" title="语义依存树"></a>语义依存树</h3><p>在对中文语义依存分析的探索中，我们首先尝试了用树结构融合依存结构和语义关系。下图是一个语义依存树的示例。</p>
+<img src="/2017/09/22/编译并使用ltp语义依存分析模块/sdptree.jpg" alt="语义依存树" title="语义依存树">
+<p>哈工大社会计算与信息检索研究中心与北京语言大学邵艳秋教授合作于2011年推出了BH-SDP-v1（BLCU and HIT SDP）语义依存表示体系，并对中文宾州句法树库中的10,068个句子进行了标注。该标注语料经过整理后在SemEval-2012上组织了国际公开评测。这是世界上最早的语义依存分析技术评测。2014年，其他学者才开始组织英文语义依存分析评测。</p>
+<p>该语料库存在如下几个问题：有些语义关系彼此易混淆；语义关系数量太大，有些关系在标注语料中出现次数很少；句子全部来自新闻，涵盖的语言现象有限；依存树结构，刻画语义不全面。</p>
+<h3 id="语义依存图"><a href="#语义依存图" class="headerlink" title="语义依存图"></a>语义依存图</h3><p>对于语义依存树表示体系存在的问题，我们采用的解决方案是用语义依存图分析代替语义依存树分析。形式上类似于依存语法，但必要时突破树形结构（BH-SDP-v2）。这样的突破使得对连动、兼语、概念转位等汉语中常见的现象的分析更全面深入，当然这也给依存分析器的构建带来了很大的难度，因为任何词都可能有多个父节点。下图直观地展示了语义依存树与依存图的区别。</p>
+<img src="/2017/09/22/编译并使用ltp语义依存分析模块/sdpgraph.jpg" alt="语义依存树与语义依存图对比示例" title="语义依存树与语义依存图对比示例">
+<p>语义依存树与语义依存图的主要区别在于，在依存树中，任何一个成分都不能依存于两个或两个以上的成分，而在依存图中则允许句中成分依存于两个或两个以上的成分。且在依存图中允许依存弧之间存在交叉，而依存树中不允许。</p>
+<p>BH-SDP-v2压缩了语义关系类型的数量，重新组织并缩减了语义关系，将关系分为主要语义角色、事件关系、关系标记，从而减少不必要的类间关系混淆。语义关系在保留了一般语义关系、反关系基础上，我们还定义了嵌套关系，用来标记一个事件降级充当了另一个事件的成分。</p>
+<p>我们标注了语义依存图语料库，包含10068句新闻语料和15000句课文句子。新闻句子平均长度是31个词，课本句子平均长度是14个词。我们又基于该标注语料在SemEval-2016上组织了一次国际公开评测。</p>
+<h2 id="LTP的语义依存分析模块"><a href="#LTP的语义依存分析模块" class="headerlink" title="LTP的语义依存分析模块"></a>LTP的语义依存分析模块</h2><h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>语义依存分析（sdp）模块是LTP的一部分，所以只需获得包括sdp模块的LTP源代码，然后按照LTP标准安装步骤进行安装即可，具体可以参考<a href="http://ltp.readthedocs.io/zh_CN/latest/install.html" target="_blank" rel="external">官方在线文档</a>。</p>
+<p>这里简要记录一下Linux下的编译步骤。直接在根目录下用如下命令进行编译：</p>
+<pre><code>./configure
+make
+</code></pre><p>编译完成后我们要使用到的几个二进制程序包括<code>bin</code>目录下的<code>ltp_test</code>（用于从生文本到sdp模块的预测）和<code>bin/examples</code>目录下的<code>lstm_par_cmdline</code>（用于对已完成词性标注的语料获取其语义依存图）。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="ltp-test"><a href="#ltp-test" class="headerlink" title="ltp_test"></a>ltp_test</h4><p>本程序用于从生文本到sdp模块的预测（当然也可以用于一直到srl等模块的预测，这里主要介绍sdp）。</p>
+<p><strong>输入格式</strong>为每句一行。</p>
+<p><strong>调用范例</strong>如下：</p>
+<pre><code>./ltp_test --last-stage sdp --segmentor-model /data/ltp/ltp-models/3.3.1/ltp_data/cws.model --postagger-model /data/ltp/ltp-models/3.3.1/ltp_data/pos.model --sdp-model /users2/yxwang/work/LTP/new_model/sem16.sdp.model --input infile
+</code></pre><p>本程序命令行参数的具体介绍见<a href="http://ltp.readthedocs.io/zh_CN/latest/ltptest.html" target="_blank" rel="external">官方文档</a>，由于这里只用到了分词、词性标注和sdp模块，因此只给出了3个模型位置。</p>
+<p>目前版本的sdp模型位置可以直接在hpc上我的目录下找到：</p>
+<pre><code>/users2/yxwang/work/LTP/new_model/sem16.sdp.model
+</code></pre><p>其他模型为3.3.1的模型。</p>
+<p>返回格式为xml4nlp格式，其他各项解释见<a href="http://ltp.ai/docs/ltpserver.html" target="_blank" rel="external">官方文档</a>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xml4nlp</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">note</span> <span class="attr">sent</span>=<span class="string">"y"</span> <span class="attr">word</span>=<span class="string">"y"</span> <span class="attr">pos</span>=<span class="string">"y"</span> <span class="attr">ne</span>=<span class="string">"n"</span> <span class="attr">parser</span>=<span class="string">"n"</span> <span class="attr">semparser</span>=<span class="string">"n"</span> <span class="attr">lstmsemparser</span>=<span class="string">"y"</span> <span class="attr">wsd</span>=<span class="string">"n"</span> <span class="attr">srl</span>=<span class="string">"n"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">doc</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">para</span> <span class="attr">id</span>=<span class="string">"0"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">sent</span> <span class="attr">id</span>=<span class="string">"0"</span> <span class="attr">cont</span>=<span class="string">"早起使人健康。"</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">word</span> <span class="attr">id</span>=<span class="string">"0"</span> <span class="attr">cont</span>=<span class="string">"早起"</span> <span class="attr">pos</span>=<span class="string">"v"</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">sem</span> <span class="attr">id</span>=<span class="string">"0"</span> <span class="attr">parent</span>=<span class="string">"1"</span> <span class="attr">relate</span>=<span class="string">"Exp"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">word</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">word</span> <span class="attr">id</span>=<span class="string">"1"</span> <span class="attr">cont</span>=<span class="string">"使"</span> <span class="attr">pos</span>=<span class="string">"v"</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">sem</span> <span class="attr">id</span>=<span class="string">"0"</span> <span class="attr">parent</span>=<span class="string">"-1"</span> <span class="attr">relate</span>=<span class="string">"Root"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">word</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">word</span> <span class="attr">id</span>=<span class="string">"2"</span> <span class="attr">cont</span>=<span class="string">"人"</span> <span class="attr">pos</span>=<span class="string">"n"</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">sem</span> <span class="attr">id</span>=<span class="string">"0"</span> <span class="attr">parent</span>=<span class="string">"1"</span> <span class="attr">relate</span>=<span class="string">"Datv"</span> /&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">sem</span> <span class="attr">id</span>=<span class="string">"1"</span> <span class="attr">parent</span>=<span class="string">"3"</span> <span class="attr">relate</span>=<span class="string">"Aft"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">word</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">word</span> <span class="attr">id</span>=<span class="string">"3"</span> <span class="attr">cont</span>=<span class="string">"健康"</span> <span class="attr">pos</span>=<span class="string">"a"</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">sem</span> <span class="attr">id</span>=<span class="string">"0"</span> <span class="attr">parent</span>=<span class="string">"1"</span> <span class="attr">relate</span>=<span class="string">"eResu"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">word</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">word</span> <span class="attr">id</span>=<span class="string">"4"</span> <span class="attr">cont</span>=<span class="string">"。"</span> <span class="attr">pos</span>=<span class="string">"wp"</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">sem</span> <span class="attr">id</span>=<span class="string">"0"</span> <span class="attr">parent</span>=<span class="string">"3"</span> <span class="attr">relate</span>=<span class="string">"mPunc"</span> /&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">word</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">sent</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">para</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">doc</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xml4nlp</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>包括sdp信息的节点标签是<code>sem</code>，每个<code>sem</code>表示当前词的一个父节点，其中<code>id</code>属性表示是第几个父节点，<code>parent</code>属性表示当前父节点的在句中的<code>id</code>（也就是<code>word</code>的<code>id</code>），<code>relate</code>属性表示该词与当前父节点之间弧上的标签。</p>
+<h4 id="lstm-par-cmdline"><a href="#lstm-par-cmdline" class="headerlink" title="lstm_par_cmdline"></a>lstm_par_cmdline</h4><p>运行<code>lstm_par_cmdline</code>后显示说明如下：</p>
+<pre><code>usage: ./lstm_par_cmdline &lt;options&gt;
+
+options:
+  --model-directory arg The directory of model folder 
+                    [default=ltp_data/sdp.model].
+  --input arg           The path to the input file. Input data should contain 
+                    one sentence each line. Words should be separated by 
+                    space with POS tag appended by &apos;_&apos; (e.g. &quot;w1_p1 w2_p2 
+                    w3_p3 w4_p4&quot;).
+  -h [ --help ]         Show help information
+</code></pre><p>其中,</p>
+<ul>
+<li>model-directory：sdp模型路径（与<code>ltp_test</code>中的sdp-model相同）</li>
+<li>input：输入文档路径</li>
+</ul>
+<p><strong>输入格式</strong>如下，每句一行，每个词的位置用 “_” 隔开，前面是词，后面是词性，词之间用tab隔开。（与<code>pos_cmdline</code>输出格式相同）。</p>
+<pre><code>我_n    是_v    中国_a  人_n
+早起_n  使_v    人_n    健康_v
+</code></pre><p><strong>调用范例</strong>如下：</p>
+<pre><code>./lstm_par_cmdline --model-directory /users2/yxwang/work/LTP/new_model/sem16.sdp.model --input infile
+</code></pre><p><strong>输出格式</strong>为CoNLL格式,如下所示：</p>
+<pre><code>1       我      我      n       n       _       2       Exp     _       _
+2       是      是      v       v       _       5       Root    _       _
+3       中国    中国    a       a       _       4       Desc    _       _
+4       人    人    n       n       _       2       Clas    _       _
+
+1       早起    早起    n       n       _       2       Exp     _       _
+2       使      使      v       v       _       5       Root    _       _
+3       人      人      n       n       _       2       Datv    _       _
+3       人      人      n       n       _       4       Agt     _       _
+4       健康    健康    v       v       _       2       eResu   _       _
+</code></pre><p>每句话中的一条弧用一行表示，第一列表示词在句中的<strong>位置</strong>，第二列表示<strong>词</strong>，第四列表示<strong>词性</strong>，第七列表示<strong>父节点位置</strong>，第八列表示该词与当前父节点之间<strong>弧上的标签</strong>。注意有些词有多个父节点（例如第二句中的“人”），这时这个词就会有多行，每行表示其与一个父节点之间的弧信息。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LTP/" rel="tag"># LTP</a>
+          
+            <a href="/tags/Parsing/" rel="tag"># Parsing</a>
+          
+            <a href="/tags/Semantic-Dependency-Graph/" rel="tag"># Semantic Dependency Graph</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/19/在SAE上部署及使用标注系统/" rel="next" title="在SAE上部署及使用标注系统">
+                <i class="fa fa-chevron-left"></i> 在SAE上部署及使用标注系统
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDQ0OC83MDAy"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Alex" />
+          <p class="site-author-name" itemprop="name">Alex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/HITalexwang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:hitalexwang@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/alex_ritsu" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#语义依存分析"><span class="nav-number">1.</span> <span class="nav-text">语义依存分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语义依存树"><span class="nav-number">1.2.</span> <span class="nav-text">语义依存树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语义依存图"><span class="nav-number">1.3.</span> <span class="nav-text">语义依存图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LTP的语义依存分析模块"><span class="nav-number">2.</span> <span class="nav-text">LTP的语义依存分析模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译"><span class="nav-number">2.1.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">2.2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ltp-test"><span class="nav-number">2.2.1.</span> <span class="nav-text">ltp_test</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lstm-par-cmdline"><span class="nav-number">2.2.2.</span> <span class="nav-text">lstm_par_cmdline</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Alex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("S6cvzi2hwiImogUXPQ8vzN0M-gzGzoHsz", "hYKhvBujDvkv64nm4Mxloybi");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
