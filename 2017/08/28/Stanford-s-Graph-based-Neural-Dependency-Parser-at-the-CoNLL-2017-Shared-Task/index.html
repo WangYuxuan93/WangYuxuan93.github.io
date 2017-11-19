@@ -425,7 +425,7 @@
 <p>这样就能得到最可能作为第i个词的head的词 \( y_i^{(arc)} \)。</p>
 <p>假设前面4个向量长度均为\(h\)。这里\( H^{(arc-head)} \)维度为\( n \times h \)，参数矩阵 \( W^{(arc)} \)维度为\( h \times h \)，偏置参数向量 \( \textbf{b}^{\top(arc)} \)维度为\( h \times 1 \)。因此得到评分向量\( \textbf{s}_i^{(arc)} \)维度为\( n \times 1 \)。</p>
 <p>上式中的第一项计算的是给定arc-head和arc-dep这两个向量中信息的情况下，词j作为词i的head的概率（例如在知道词i是“the”，词j是”cat”的情况下j是i的head的概率）；第二项计算的是在只知道arc-head的信息的情况下，词j作为词i的head的概率（例如在知道词j是“the”的情况下j是i的head的概率，根据语言学知识我们知道，无论i是什么词，”the”作为其head的概率都很低）。</p>
-<h3 id="预测标签"><a href="#预测标签" class="headerlink" title="预测标签"></a>预测标签</h3><p>在决定了词i的head之后，使用另一个网络预测这条弧的label（下式中\(\textbf{h}<em>y^{(rel-head)}\)其实是\(\textbf{h}</em>{y_i}^{(rel-head)}\)，后者打不出来所以简略…）</p>
+<h3 id="预测标签"><a href="#预测标签" class="headerlink" title="预测标签"></a>预测标签</h3><p>在决定了词i的head之后，使用另一个网络预测这条弧的label（下式中\(\textbf{h}_y^{(rel-head)}\)其实是\(\textbf{h}_{y_i}^{(rel-head)}\)，后者打不出来所以简略…）</p>
 <p>$$ \textbf{s}_i^{(rel)} = \textbf{h}_y^{\top(rel-head)}\textbf{U}^{(rel)}\textbf{h}_i^{(rel-dep)} + W^{(rel)} ( \textbf{h}_i^{(rel-dep)} \oplus \textbf{h}_y^{(rel-head)} ) + \textbf{b}^{(rel)} $$<br>$$ y_i^{(rel)} = \text{arg} \max_j s_j^{(rel)} $$</p>
 <p>假设\(r\)是label的种类。这里\(\textbf{h}_y^{(rel-head)}\)和\(\textbf{h}_y^{(rel-dep)}\)维度为\( h \times 1 \)，\(\textbf{U}^{(rel)}\)是一个参数tensor，维度为\( h \times r \times h \)，参数矩阵\(W^{(rel)}\)维度为\(r \times 2h \)。因此得到对应所有label的评分向量\(\textbf{s}_i^{(rel)}\)维度为\( r \times 1 \)。</p>
 <p>类似的，上式中第一项计算的是在head和dependent都给定的情况下每种label的概率（例如已知词i是“the”，其head是“cat”时label为“det”的概率）；第二项计算的是给定head和dependent其中一个的情况下每种label的概率（例如已知词i是“the”，或者已知词j是“cat”时label为“det”的概率）。</p>
@@ -577,7 +577,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -599,7 +599,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
