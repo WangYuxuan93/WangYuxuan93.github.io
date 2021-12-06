@@ -128,19 +128,19 @@
 
 
 
-  <meta name="description" content="搭这个博客花了一下午时间，查了很多教程，也遇到一些教程中没有提及的问题。（虽然很多都是很低级的问题…但是到处找不到答案也很急。）这里记录一下整个搭建过程中遇到的问题。">
+  <meta name="description" content="2021年12月重新搭建主页，遇到了一些新问题，因此更新一下这篇笔记。">
 <meta name="keywords" content="Hexo,Github,Namecheap">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo + Github + Namecheap 搭建个人博客">
 <meta property="og:url" content="www.alexyxwang.com/2017/08/24/Hexo-Github-Namecheap-搭建个人博客/index.html">
 <meta property="og:site_name" content="Avalon">
-<meta property="og:description" content="搭这个博客花了一下午时间，查了很多教程，也遇到一些教程中没有提及的问题。（虽然很多都是很低级的问题…但是到处找不到答案也很急。）这里记录一下整个搭建过程中遇到的问题。">
+<meta property="og:description" content="2021年12月重新搭建主页，遇到了一些新问题，因此更新一下这篇笔记。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/24/Hexo-Github-Namecheap-搭建个人博客/08/24/Hexo-Github-Namecheap-搭建个人博客/dns.png">
-<meta property="og:updated_time" content="2021-12-06T02:28:06.825Z">
+<meta property="og:updated_time" content="2021-12-06T08:04:41.156Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo + Github + Namecheap 搭建个人博客">
-<meta name="twitter:description" content="搭这个博客花了一下午时间，查了很多教程，也遇到一些教程中没有提及的问题。（虽然很多都是很低级的问题…但是到处找不到答案也很急。）这里记录一下整个搭建过程中遇到的问题。">
+<meta name="twitter:description" content="2021年12月重新搭建主页，遇到了一些新问题，因此更新一下这篇笔记。">
 <meta name="twitter:image" content="/24/Hexo-Github-Namecheap-搭建个人博客/08/24/Hexo-Github-Namecheap-搭建个人博客/dns.png">
 
 
@@ -421,7 +421,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-06 10:28:06" itemprop="dateModified" datetime="2021-12-06T10:28:06+08:00">2021-12-06</time>
+                <time title="修改时间：2021-12-06 16:04:41" itemprop="dateModified" datetime="2021-12-06T16:04:41+08:00">2021-12-06</time>
               
             
           </span>
@@ -473,10 +473,16 @@
       
 
       
-        <p>搭这个博客花了一下午时间，查了很多教程，也遇到一些教程中没有提及的问题。（虽然很多都是很低级的问题…但是到处找不到答案也很急。）这里记录一下整个搭建过程中遇到的问题。</p>
+        <p>2021年12月重新搭建主页，遇到了一些新问题，因此更新一下这篇笔记。</p>
 <a id="more"></a>
 <h2 id="用Hexo在本地搭建主页"><a href="#用Hexo在本地搭建主页" class="headerlink" title="用Hexo在本地搭建主页"></a>用Hexo在本地搭建主页</h2><p>首先需要安装node.js，从<a href="https://nodejs.org/en/" target="_blank" rel="external">官网</a>下载安装。（同时会安装npm）。</p>
-<p>之后利用npm安装hexo</p>
+<p>建议先安装<a href="https://github.com/coreybutler/nvm-windows/releases" target="_blank" rel="external">NVM (Node Version Manager)</a>，然后再用NVM安装指定版本的node。<br>开始的时候直接安装了最新版的node (v16.13.1)，然后在使用hexo的过程中遇到了各种问题，包括运行时报warning，编译出的html文件为0KB等问题。在网上查了之后发现是node版本过高的原因，因此后面首先安装了NVM，然后使用以下命令安装/控制node版本。</p>
+<pre><code>$ nvm list　　//查看目前已经安装的版本
+$ nvm list available //显示可下载版本的部分列表
+$ nvm install 10.15.0 //安装指定的版本的nodejs
+$ nvm use 10.15.0 //使用指定版本的nodejs，这个命令需要管理员权限
+$ npm install -g cnpm --registry=https://registry.npm.taobao.org  //使用淘宝镜像
+</code></pre><p>之后利用npm安装hexo</p>
 <pre><code>$ npm install -g hexo-cli
 </code></pre><p>查看hexo版本</p>
 <pre><code>$ hexo -v
