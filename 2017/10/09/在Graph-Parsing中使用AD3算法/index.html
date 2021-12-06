@@ -136,13 +136,13 @@
 <meta property="og:site_name" content="Avalon">
 <meta property="og:description" content="$AD^3$(alternating directions dual decomposition)算法出自《Dual Decomposition with Many Overlapping Components》，是对dual decomposition算法的改进，通过增加额外的二次惩罚项来加速收敛，在理论和实践中都更快。这里记录一下将该算法应用于Graph Parsing的子任务解决方法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/09/在Graph-Parsing中使用AD3算法/10/09/在Graph-Parsing中使用AD3算法/parts.jpg">
-<meta property="og:image" content="/09/在Graph-Parsing中使用AD3算法/10/09/在Graph-Parsing中使用AD3算法/algorithm1.jpg">
+<meta property="og:image" content="/2017/10/09/在Graph-Parsing中使用AD3算法/parts.jpg">
+<meta property="og:image" content="/2017/10/09/在Graph-Parsing中使用AD3算法/algorithm1.jpg">
 <meta property="og:updated_time" content="2017-10-09T13:02:07.088Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Graph Parsing中使用AD3算法">
 <meta name="twitter:description" content="$AD^3$(alternating directions dual decomposition)算法出自《Dual Decomposition with Many Overlapping Components》，是对dual decomposition算法的改进，通过增加额外的二次惩罚项来加速收敛，在理论和实践中都更快。这里记录一下将该算法应用于Graph Parsing的子任务解决方法。">
-<meta name="twitter:image" content="/09/在Graph-Parsing中使用AD3算法/10/09/在Graph-Parsing中使用AD3算法/parts.jpg">
+<meta name="twitter:image" content="/2017/10/09/在Graph-Parsing中使用AD3算法/parts.jpg">
 
 
 
@@ -465,10 +465,10 @@
         <p>$AD^3$(alternating directions dual decomposition)算法出自<a href="http://www.cs.cmu.edu/~afm/Home_files/emnlp2011b.pdf" target="_blank" rel="external">《Dual Decomposition with Many Overlapping Components》</a>，是对<a href="https://people.csail.mit.edu/dsontag/papers/RusSonColJaa_emnlp10.pdf" target="_blank" rel="external">dual decomposition算法</a>的改进，通过增加额外的二次惩罚项来加速收敛，在理论和实践中都更快。这里记录一下将该算法应用于Graph Parsing的子任务解决方法。</p>
 <a id="more"></a>
 <h2 id="A-Second-Order-Graph-Parser"><a href="#A-Second-Order-Graph-Parser" class="headerlink" title="A Second-Order Graph Parser"></a>A Second-Order Graph Parser</h2><p>最先使用$AD^3$算法的是参加 SemEval 2014 Task 8 的<a href="https://andre-martins.github.io/docs/semeval2014_task8.pdf" target="_blank" rel="external">《Priberam: A Turbo Semantic Parser with Second Order Features》</a>。他们使用了包括基础的predicate, arc, labeled arc以及二阶的grandparent, siblings等子结构。除此之外，由于目的是要生成图结构，因此还首次使用了<strong>co-parent</strong>结构（也就是一个词和其多个父节点组成的结构）。</p>
-<img src="/09/在Graph-Parsing中使用AD3算法/10/09/在Graph-Parsing中使用AD3算法/parts.jpg" alt="不同子结构" title="不同子结构">
+<img src="/2017/10/09/在Graph-Parsing中使用AD3算法/parts.jpg" alt="不同子结构" title="不同子结构">
 <p>需要强调的一点是：$AD^3$算法只是用于解决一个结构预测问题的不同分解之间存在部分重叠情况下的优化问题。在parsing中，最终生成图还是生成树还是取决于$AD^3$算法中每个子问题使用的解码算法得到的是图还是树。</p>
 <h3 id="解决子问题"><a href="#解决子问题" class="headerlink" title="解决子问题"></a>解决子问题</h3><h4 id="Predicate-and-Arc-Factored-Parts"><a href="#Predicate-and-Arc-Factored-Parts" class="headerlink" title="Predicate and Arc-Factored Parts"></a>Predicate and Arc-Factored Parts</h4><p>对于上图中最上面三种结构，这里用一个component统一解决，下面给出算法：</p>
-<img src="/09/在Graph-Parsing中使用AD3算法/10/09/在Graph-Parsing中使用AD3算法/algorithm1.jpg" alt="Algorithm for Basic Parts" title="Algorithm for Basic Parts">
+<img src="/2017/10/09/在Graph-Parsing中使用AD3算法/algorithm1.jpg" alt="Algorithm for Basic Parts" title="Algorithm for Basic Parts">
 <p>该算法外层循环分别对每个predicate找出其argument，内层循环对每个argument首先找出当前predicate-argument对间分数最高的label，然后判断unlabeled score和labeled score之和，如果大于0则将这条边加入该predicate的侯选边集合，同时把该和加到当前predicate的总分中。当一个predicate的所有argument都判断完之后，如果predicate总分大于0，则把这些侯选边加入输出的依存图中。</p>
 <p>注意，解决这个子问题的算法本身产生的就是图结构。</p>
 <p><a href="http://samthomson.com/papers/peng+etal.acl2017.pdf" target="_blank" rel="external">《Deep Multitask Learning for Semantic Dependency Parsing》</a> 中的baseline方法也采用了这三种结构，但是如果用上面给出的算法，应该不需要再使用$AD^3$算法，所以猜测他们应该是至少将这三种结构分成两个component解决的。由于在他们的论文中没有详细描述decoding算法，需要看一下代码。</p>

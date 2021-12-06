@@ -136,12 +136,12 @@
 <meta property="og:site_name" content="Avalon">
 <meta property="og:description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
+<meta property="og:image" content="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
 <meta property="og:updated_time" content="2017-08-29T06:19:22.184Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Stanford&#39;s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》">
 <meta name="twitter:description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
-<meta name="twitter:image" content="/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
+<meta name="twitter:image" content="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
 
 
 
@@ -476,7 +476,7 @@
         <p>Stanford的<a href="http://universaldependencies.org/conll17/" target="_blank" rel="external">CoNLL 2017</a>参赛系统研究，文章见 <a href="http://aclweb.org/anthology/K17-3002.pdf" target="_blank" rel="external">《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》</a>。该系统来自他们ICLR 2017的文章 <a href="https://openreview.net/pdf?id=Hk95PK9le" target="_blank" rel="external">《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》</a>，其中删掉了对预测弧标签部分网络结构的具体介绍，可以在<a href="https://web.stanford.edu/~tdozat/files/iclr2016-deep-biaffine.pdf" target="_blank" rel="external">Review的版本</a>中找到（虽然有很多错误）。</p>
 <a id="more"></a>
 <h2 id="Deep-Biaffine-Parser"><a href="#Deep-Biaffine-Parser" class="headerlink" title="Deep Biaffine Parser"></a>Deep Biaffine Parser</h2><p>他们的网络结构灵感来源于第一篇 <strong>neural</strong> graph-based parser的工作<a href="https://aclweb.org/anthology/Q16-1023" target="_blank" rel="external">《Simple and Accurate Dependency Parsing Using Bidirectional LSTM Feature Representations》</a>（主要是用BiLSTM代替传统graph-based parser中的score function，对于一个n个词的句子，用MLP算出所有\(n^2\)条可能的弧的分数，然后用dp算法找出最大生成树（MST））。</p>
-<img src="/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg" alt="Parser结构" title="Parser结构">
+<img src="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg" alt="Parser结构" title="Parser结构">
 <p>如图所示，一句话中所有词的Embedding（来自词和词性）作为BiLSTM（多层）的输入，每个词对应的输出通过4个不同的ReLU层，得到4种特殊的向量表示（左侧最上层）：</p>
 <ul>
 <li>该词作为dependent（子节点）寻找head（父节点）</li>
