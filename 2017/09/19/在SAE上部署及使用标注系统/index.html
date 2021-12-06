@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-CN">
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -135,7 +135,7 @@
 <meta property="og:url" content="www.alexyxwang.com/2017/09/19/在SAE上部署及使用标注系统/index.html">
 <meta property="og:site_name" content="Avalon">
 <meta property="og:description" content="现在用的这个在线标注系统部署使用起来有些麻烦，过段时间就忘了，所以这里记录下来。 本文包括三部分，第一部分介绍如何在SAE上部署标注系统，包括代码部分和数据库部分。第二部分介绍预处理和后处理，包括主要php文件概述，CoNLL文件与数据库中保存格式的互相转换。第三部分介绍标注系统使用流程，标注者直接看这里就好。">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/19/在SAE上部署及使用标注系统/09/19/在SAE上部署及使用标注系统/login.jpg">
 <meta property="og:image" content="/19/在SAE上部署及使用标注系统/09/19/在SAE上部署及使用标注系统/label_dep.jpg">
 <meta property="og:image" content="/19/在SAE上部署及使用标注系统/09/19/在SAE上部署及使用标注系统/label_dep2.jpg">
@@ -202,7 +202,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -233,7 +233,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -261,7 +261,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Startseite</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
 
   </li>
         
@@ -278,7 +278,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>Über</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
 
   </li>
         
@@ -295,7 +295,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>Tags</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
 
   </li>
         
@@ -312,7 +312,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
 
   </li>
 
@@ -400,14 +400,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2017-09-19 16:10:11" itemprop="dateCreated datePublished" datetime="2017-09-19T16:10:11+08:00">2017-09-19</time>
+              <time title="创建时间：2017-09-19 16:10:11" itemprop="dateCreated datePublished" datetime="2017-09-19T16:10:11+08:00">2017-09-19</time>
             
 
             
@@ -422,9 +422,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2018-01-19 18:36:41" itemprop="dateModified" datetime="2018-01-19T18:36:41+08:00">2018-01-19</time>
+                <time title="修改时间：2018-01-19 18:36:41" itemprop="dateModified" datetime="2018-01-19T18:36:41+08:00">2018-01-19</time>
               
             
           </span>
@@ -438,7 +438,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">in</span>
+                <span class="post-meta-item-text">分类于</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Website/" itemprop="url" rel="index"><span itemprop="name">Website</span></a></span>
@@ -646,10 +646,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Inhaltsverzeichnis
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Übersicht
+            站点概览
           </li>
         </ul>
       
@@ -674,7 +674,7 @@
                   <a href="/archives">
                 
                     <span class="site-state-item-count">7</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -695,7 +695,7 @@
                       
                     
                     <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">Kategorien</span>
+                    <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
               
@@ -746,7 +746,7 @@
                       
                     
                     <span class="site-state-item-count">19</span>
-                    <span class="site-state-item-name">Tags</span>
+                    <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
               
@@ -850,7 +850,7 @@
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.3.8</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.3.8</div>
 
 
 
@@ -858,7 +858,7 @@
 
 
 
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
 
 
 
@@ -919,6 +919,12 @@
 
 
 
+
+  
+    
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
 
 
 
