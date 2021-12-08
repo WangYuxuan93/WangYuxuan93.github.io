@@ -137,7 +137,7 @@
 <meta property="og:description" content="2021年12月重新搭建主页，遇到了一些新问题，因此更新一下这篇笔记。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/2017/08/24/Hexo-Github-Namecheap-搭建个人博客/dns.png">
-<meta property="og:updated_time" content="2021-12-06T09:17:45.688Z">
+<meta property="og:updated_time" content="2021-12-08T03:15:04.754Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo + Github + Namecheap 搭建个人博客">
 <meta name="twitter:description" content="2021年12月重新搭建主页，遇到了一些新问题，因此更新一下这篇笔记。">
@@ -421,7 +421,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-06 17:17:45" itemprop="dateModified" datetime="2021-12-06T17:17:45+08:00">2021-12-06</time>
+                <time title="修改时间：2021-12-08 11:15:04" itemprop="dateModified" datetime="2021-12-08T11:15:04+08:00">2021-12-08</time>
               
             
           </span>
@@ -550,7 +550,14 @@ $ hexo deploy (hexo d)
 <li>再添加一条 <code>A Record</code> 类型，<code>Host</code> 填 <code>@</code>，<code>Value</code> 填 <code>192.30.252.154</code>。</li>
 <li>添加一条 <code>CNAME Record</code> 类型，<code>Host</code> 填 <code>www</code>， <code>Value</code> 填刚才建好的github上的博客网址<code>username.github.io.</code>（注意最后有个点）。</li>
 </ol>
-<p>至此Namecheap上的DNS就设置完了（这里DNS的更新需要等待一段时间才会生效），还需要在Github上设置一下<code>custom domain name</code>。 比较推荐的方法是在本地的<code>source</code>文件夹里加一个名为<code>CNAME</code>的文件，内容只有一行，为自己的域名。然后再<code>generate</code>并<code>deploy</code>就可以了。这时候打开github里刚为博客建立的那个repo，可以看到根目录下也多了一个相同的<code>CNAME</code>文件。而打开<code>Settings</code>可以看到在<code>Github Pages</code>里的<code>Custom domain</code>这一项已经填入了CNAME里的域名。现在访问自己的域名时打开的就是一开始创建的个人博客了。</p>
+<p>更新：</p>
+<p>目前github的IP地址已经更改，见<a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site" target="_blank" rel="external">官网说明</a>。<br>使用上面的地址更新时会受到邮件 <code>The custom domain for your GitHub Pages site is pointed at an outdated IP address. You must update your site&#39;s DNS records if you&#39;d like it to be available via your custom domain.</code> </p>
+<p>因此上面的1,2两条IP地址需要更新为以下4个：</p>
+<pre><code>185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+</code></pre><p>至此Namecheap上的DNS就设置完了（这里DNS的更新需要等待一段时间才会生效），还需要在Github上设置一下<code>custom domain name</code>。 比较推荐的方法是在本地的<code>source</code>文件夹里加一个名为<code>CNAME</code>的文件，内容只有一行，为自己的域名。然后再<code>generate</code>并<code>deploy</code>就可以了。这时候打开github里刚为博客建立的那个repo，可以看到根目录下也多了一个相同的<code>CNAME</code>文件。而打开<code>Settings</code>可以看到在<code>Github Pages</code>里的<code>Custom domain</code>这一项已经填入了CNAME里的域名。现在访问自己的域名时打开的就是一开始创建的个人博客了。</p>
 
       
     </div>
