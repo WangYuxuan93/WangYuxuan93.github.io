@@ -136,10 +136,13 @@
 <meta property="og:site_name" content="Avalon">
 <meta property="og:description" content="论文题目：ERNIE 3.0: Large-scale Knowledge Enhanced Pre-training for Language Understanding and Generation 作者：Yu Sun, Shuohuan Wang, Shikun Feng, Siyu Ding, Chao Pang, Junyuan Shang, Jiaxiang Liu, Xuyi Che">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-12-09T09:15:16.604Z">
+<meta property="og:image" content="/2021/12/09/论文笔记-ERNIE-3-0-Large-scale-Knowledge-Enhanced-Pre-training-for-Language-Understanding-and-Generation/model.png">
+<meta property="og:image" content="/2021/12/09/论文笔记-ERNIE-3-0-Large-scale-Knowledge-Enhanced-Pre-training-for-Language-Understanding-and-Generation/knowledge.png">
+<meta property="og:updated_time" content="2021-12-10T08:28:31.660Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[论文笔记] ERNIE 3.0: Large-scale Knowledge Enhanced Pre-training for Language Understanding and Generation">
 <meta name="twitter:description" content="论文题目：ERNIE 3.0: Large-scale Knowledge Enhanced Pre-training for Language Understanding and Generation 作者：Yu Sun, Shuohuan Wang, Shikun Feng, Siyu Ding, Chao Pang, Junyuan Shang, Jiaxiang Liu, Xuyi Che">
+<meta name="twitter:image" content="/2021/12/09/论文笔记-ERNIE-3-0-Large-scale-Knowledge-Enhanced-Pre-training-for-Language-Understanding-and-Generation/model.png">
 
 
 
@@ -402,12 +405,24 @@
                 
               
 
-              <time title="创建时间：2021-12-09 17:02:01 / 修改时间：17:15:16" itemprop="dateCreated datePublished" datetime="2021-12-09T17:02:01+08:00">2021-12-09</time>
+              <time title="创建时间：2021-12-09 17:02:01" itemprop="dateCreated datePublished" datetime="2021-12-09T17:02:01+08:00">2021-12-09</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-12-10 16:28:31" itemprop="dateModified" datetime="2021-12-10T16:28:31+08:00">2021-12-10</time>
               
             
           </span>
@@ -471,6 +486,63 @@
 <li>训练了10B参数的模型，在54个中文NLP任务上取得SOTA效果，在英文SuperGLUE上取得了第一 (2021.07.03)。</li>
 </ul>
 <p>另外继承了ERNIE的主要优点，即融入了外部知识。</p>
+<p>总的来说，相比于其他预训练模型ERNIE 3.0特点是使用Transformer-XL结构和Document LM预训练任务强化了模型处理长文本的能力。<br>最大贡献是提出了Knowledge-aware Pre-training预训练任务，将结构化知识图应用于预训练中。<br>另外一个比较有意思的trick是progressive learning，在warm-up时将输入文本长度、batch size和dropout rate与学习率同步增加。</p>
+<h1 id="ERNIE-3-0"><a href="#ERNIE-3-0" class="headerlink" title="ERNIE 3.0"></a>ERNIE 3.0</h1><h2 id="整体模型框架"><a href="#整体模型框架" class="headerlink" title="整体模型框架"></a>整体模型框架</h2><p>整体模型框架如下图所示，总的来说，ERNIE 3.0使用了Continual Multi-Paradigms Unified Pre-training Framework。<br>具体来说，在训练时采用了ERNIE 2.0 (<a href="https://arxiv.org/pdf/1907.12412.pdf" target="_blank" rel="external">ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding</a>) 的continual multi-task learning framework，在训练时使用了多种不同paradigm的任务。<br>而在模型结构上共享底层参数 (Universal Representation Module)，用于获取词汇、句法等通用的抽象特征，在顶层对不同任务使用独立参数 (Task-specific Representation Modules)，用于获取特定任务的特征。<br>实现中使用了2个Task-specific Representation Modules，分别用于处理NLU任务和NLG任务。</p>
+<img src="/2021/12/09/论文笔记-ERNIE-3-0-Large-scale-Knowledge-Enhanced-Pre-training-for-Language-Understanding-and-Generation/model.png" alt="model.png" title="">
+<h3 id="Universal-Representation-Module"><a href="#Universal-Representation-Module" class="headerlink" title="Universal Representation Module"></a>Universal Representation Module</h3><p>这部分使用了Transformer-XL (<a href="https://aclanthology.org/P19-1285.pdf" target="_blank" rel="external">Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context</a>) 网络，其在普通transformer基础上增加了一个recurrence memory module用于建模长文本，避免了普通transformer中由于输入长度限制不得不对长文本进行切分从而导致损失长距离依赖的问题。</p>
+<p>为了保证共享参数部分有足够大的模型容量来捕获和保存通用的词汇、句法等信息，ERNIE 3.0采用了large size的Universal Representation Module。</p>
+<h3 id="Task-specific-Representation-Module"><a href="#Task-specific-Representation-Module" class="headerlink" title="Task-specific Representation Module"></a>Task-specific Representation Module</h3><p>这部分同样使用了Transformer-XL，但使用了base size模型。<br>相对于使用MLP或普通transformer作为task-specific层，该选择有3个优点：</p>
+<ul>
+<li>Transformer-XL比MLP或普通transformer捕获信息能力更强；</li>
+<li>使用base size保证了不会显著增加模型参数量；</li>
+<li>实际应用时可以固定底层参数共享模块，只fine-tune上层小规模的task-specific模块。</li>
+</ul>
+<p><del>这三点有点强行解释的感觉…</del></p>
+<h2 id="预训练任务"><a href="#预训练任务" class="headerlink" title="预训练任务"></a>预训练任务</h2><p>在预训练中本文使用了3类预训练任务。</p>
+<h3 id="Word-aware-Pre-training-Tasks"><a href="#Word-aware-Pre-training-Tasks" class="headerlink" title="Word-aware Pre-training Tasks"></a>Word-aware Pre-training Tasks</h3><ul>
+<li>Knowledge Masked Language Modeling：ERNIE 1.0 (<a href="https://aclanthology.org/P19-1139.pdf" target="_blank" rel="external">ERNIE: Enhanced Representation through Knowledge Integration</a>) 中提出的将短语 (phrase) 和命名实体 (name entity) 一起mask后进行预测的任务。</li>
+<li>Document Language Modeling：在普通的LM任务基础上，为了强化对长文本建模的能力，增加ERNIE-Doc (<a href="https://arxiv.org/pdf/2012.15688.pdf" target="_blank" rel="external">ERNIE-Doc: A Retrospective Long-Document Modeling Transformer</a>) 中提出的Enhanced Recurrence Memory Mechanism，做法是把传统recurrence Transformer中的shifting-one-layer-downwards recurrence改为same-layer<br>recurrence.</li>
+</ul>
+<h3 id="Structure-aware-Pre-training-Tasks"><a href="#Structure-aware-Pre-training-Tasks" class="headerlink" title="Structure-aware Pre-training Tasks"></a>Structure-aware Pre-training Tasks</h3><ul>
+<li>Sentence Reordering：ERNIE 2.0中提出的句子重排序任务，将输入段落切分成1到m段并打乱顺序，然后让模型以多分类的形式预测正确的顺序。 (类别为所有可能的句子顺序)</li>
+<li>Sentence Distance：最原始的next sentence prediction (NSP) 任务的扩展，形式为3分类问题，目标是预测两个句子的关系：1.相邻；2.不相邻但来自同一文档；3.来自不同文档。这是一个较常用的预训练任务。</li>
+</ul>
+<h3 id="Knowledge-aware-Pre-training-Tasks"><a href="#Knowledge-aware-Pre-training-Tasks" class="headerlink" title="Knowledge-aware Pre-training Tasks"></a>Knowledge-aware Pre-training Tasks</h3><ul>
+<li>Universal Knowledge-Text Prediction：该任务是Knowledge Masked Language Modeling的扩展，需要结构化的知识图和对应文本。形式如下图所示，给定一个知识图和对应的文本 (来自百科全书)，随机mask三元组中的关系或者文本中的词。模型在预测三元组中的关系时，需要找到对应句子中的head和tail词并确定他们之间的语义关系；而模型在预测句子中的词时，则需要同时考虑句子中的依存信息 (dependency information) 和三元组中的逻辑关系 (logical relationship)。</li>
+</ul>
+<img src="/2021/12/09/论文笔记-ERNIE-3-0-Large-scale-Knowledge-Enhanced-Pre-training-for-Language-Understanding-and-Generation/knowledge.png" alt="knowledge.png" title="">
+<p>实践中，获取知识图和对应文本的流程为：给定百科全书中的一个文档，首先搜索候选三元组，要求是其head或tail entity是该文档的题目 (按照原文理解这里应该是题目，但是我感觉是不是应该只要出现在文档中就算？也可能是我理解错误，因此把这段的原文放在下面)。然后从候选三元组中选出head和tail出现在同一个句子中的三元组。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Given a document from encyclopedia, we first find the candidate triples in the knowledge graph whose mentions of head entity or tail entity is title of the document, and then select triples from candidate triples whose mentions of head entity and tail entity are mentioned in the same sentence in the document.</div></pre></td></tr></table></figure>
+<p>文中给出了上述几个预训练任务的作用：</p>
+<ul>
+<li>使用knowledge masked language modeling任务训练NLU网络增强其捕获词汇信息的能力；</li>
+<li>使用sentence reordering和sentence distance discerning任务增强模型捕获句法信息的能力；</li>
+<li>使用universal knowledge-text prediction任务增强模型对知识的记忆和推理能力；</li>
+<li>使用document language modeling任务训练NLG网络增强其生成不同风格的文本的能力。</li>
+</ul>
+<font color="red">其中第1,4点明确说明了该任务只训练了某一个具体的task-specific网络，但2,3点没说，不知道是否也是只训练NLU网络。</font>
+
+<p>总的来说，感觉在预训练任务这块，本文主要贡献是提出了Universal Knowledge-Text Prediction任务。其他任务基本都是使用此前的工作提出的。另外可以看出ERNIE 3.0中对于长文本的处理比较重视，在结构上使用了Transformer-XL，在任务上使用了Document LM都是为了增强模型处理长文本的能力。</p>
+<h2 id="预训练细节"><a href="#预训练细节" class="headerlink" title="预训练细节"></a>预训练细节</h2><h3 id="Progressive-Training"><a href="#Progressive-Training" class="headerlink" title="Progressive Training"></a>Progressive Training</h3><p>为了加快预训练过程中的模型收敛速度，本文提出了逐渐增加训练正则因子 (training regularization factor) 的方法。<br>具体来说就是在训练过程中逐步且同时增加输入序列长度、batch size、学习率和dropout rate。<br>在一般的transformer训练中都会使用warm-up策略逐步增加学习率，本文提出了将batch size等其他因子同时增加的策略。</p>
+<h3 id="预训练数据"><a href="#预训练数据" class="headerlink" title="预训练数据"></a>预训练数据</h3><p>在训练时使用了4TB来自11个类别的中文语料，超过了目前中文的所有预训练语料库：</p>
+<ul>
+<li>CLUECorpus2020 (100GB)</li>
+<li>Chinese multi-modal pre-training data (300G)</li>
+<li>WuDaoCorpus2.0 (2.3TB中文，300GB英文)</li>
+<li>PanGu Corpus (1.1TB)</li>
+</ul>
+<h3 id="模型超参"><a href="#模型超参" class="headerlink" title="模型超参"></a>模型超参</h3><ul>
+<li>universal representation module: 48 layers, 4096 hidden units and 64 heads;</li>
+<li>task-specific representation modules: 12 layers, 768 hidden units and 12 heads;</li>
+<li>激活函数: GeLU</li>
+<li>maximum sequence length of context: 512;</li>
+<li>memory length of language generation: 128;</li>
+<li>batch size (all pre-training tasks): 6144;</li>
+<li>optimizer: Adam, lr=1e-4, $\beta_1$=0.9, $\beta_2$=0.999, L2 weight decay=0.01, lr warm-up: 10,000 steps, linear decay;</li>
+<li>trained for a total of 375 billion tokens with 384 NVDIA v100 GPU cards;</li>
+<li>framework: PaddlePaddle. </li>
+</ul>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>在54个中文NLP任务上取得了SOTA结果 (包括fine-tuning在NLU和NLG上以及zero-shot learning)，同时在英文SuperGLUE上也取得了当时最好结果。<br>由于实验太多这里就不列了。</p>
 
       
     </div>
@@ -765,7 +837,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快速总结"><span class="nav-number">1.</span> <span class="nav-text">快速总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快速总结"><span class="nav-number">1.</span> <span class="nav-text">快速总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-3-0"><span class="nav-number">2.</span> <span class="nav-text">ERNIE 3.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#整体模型框架"><span class="nav-number">2.1.</span> <span class="nav-text">整体模型框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Universal-Representation-Module"><span class="nav-number">2.1.1.</span> <span class="nav-text">Universal Representation Module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-specific-Representation-Module"><span class="nav-number">2.1.2.</span> <span class="nav-text">Task-specific Representation Module</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务"><span class="nav-number">2.2.</span> <span class="nav-text">预训练任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word-aware-Pre-training-Tasks"><span class="nav-number">2.2.1.</span> <span class="nav-text">Word-aware Pre-training Tasks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Structure-aware-Pre-training-Tasks"><span class="nav-number">2.2.2.</span> <span class="nav-text">Structure-aware Pre-training Tasks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Knowledge-aware-Pre-training-Tasks"><span class="nav-number">2.2.3.</span> <span class="nav-text">Knowledge-aware Pre-training Tasks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练细节"><span class="nav-number">2.3.</span> <span class="nav-text">预训练细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Progressive-Training"><span class="nav-number">2.3.1.</span> <span class="nav-text">Progressive Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预训练数据"><span class="nav-number">2.3.2.</span> <span class="nav-text">预训练数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型超参"><span class="nav-number">2.3.3.</span> <span class="nav-text">模型超参</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a></li></ol></div>
             
 
           </div>
