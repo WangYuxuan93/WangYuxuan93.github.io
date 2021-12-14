@@ -128,22 +128,26 @@
 
 
 
-  <meta name="description" content="大规模预训练模型对比。">
+  <meta name="description" content="2019年-2021年大规模预训练模型对比，从最开始2019年的8.5B的Megatron，到最近2021年底的280B的Gopher。">
 <meta name="keywords" content="Paper Note,Pre-training">
 <meta property="og:type" content="article">
 <meta property="og:title" content="大规模预训练模型对比">
 <meta property="og:url" content="www.alexyxwang.com/2021/12/13/大规模预训练模型对比/index.html">
 <meta property="og:site_name" content="Avalon">
-<meta property="og:description" content="大规模预训练模型对比。">
+<meta property="og:description" content="2019年-2021年大规模预训练模型对比，从最开始2019年的8.5B的Megatron，到最近2021年底的280B的Gopher。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/megatron.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/t5.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/gpt3.png">
+<meta property="og:image" content="/2021/12/13/大规模预训练模型对比/gpt3-data.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/switch-transformer.png">
-<meta property="og:updated_time" content="2021-12-13T09:31:25.128Z">
+<meta property="og:image" content="/2021/12/13/大规模预训练模型对比/m6.png">
+<meta property="og:image" content="/2021/12/13/大规模预训练模型对比/pangu.png">
+<meta property="og:image" content="/2021/12/13/大规模预训练模型对比/mt5.png">
+<meta property="og:updated_time" content="2021-12-14T09:03:18.289Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="大规模预训练模型对比">
-<meta name="twitter:description" content="大规模预训练模型对比。">
+<meta name="twitter:description" content="2019年-2021年大规模预训练模型对比，从最开始2019年的8.5B的Megatron，到最近2021年底的280B的Gopher。">
 <meta name="twitter:image" content="/2021/12/13/大规模预训练模型对比/megatron.png">
 
 
@@ -407,12 +411,24 @@
                 
               
 
-              <time title="创建时间：2021-12-13 10:24:11 / 修改时间：17:31:25" itemprop="dateCreated datePublished" datetime="2021-12-13T10:24:11+08:00">2021-12-13</time>
+              <time title="创建时间：2021-12-13 10:24:11" itemprop="dateCreated datePublished" datetime="2021-12-13T10:24:11+08:00">2021-12-13</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-12-14 17:03:18" itemprop="dateModified" datetime="2021-12-14T17:03:18+08:00">2021-12-14</time>
               
             
           </span>
@@ -464,16 +480,16 @@
       
 
       
-        <p>大规模预训练模型对比。</p>
+        <p>2019年-2021年大规模预训练模型对比，从最开始2019年的8.5B的Megatron，到最近2021年底的280B的Gopher。</p>
 <a id="more"></a>
-<table>
+<h1 id="模型信息"><a href="#模型信息" class="headerlink" title="模型信息"></a>模型信息</h1><table>
 <thead>
 <tr>
-<th>Name</th>
-<th>Date</th>
-<th>Language</th>
-<th style="text-align:right">Size</th>
-<th>Architecture</th>
+<th>模型名称</th>
+<th>发表日期</th>
+<th>语言</th>
+<th style="text-align:right">模型参数</th>
+<th>模型结构</th>
 </tr>
 </thead>
 <tbody>
@@ -482,7 +498,7 @@
 <td>2019.09</td>
 <td>English</td>
 <td style="text-align:right">8.5B</td>
-<td>BERT/GPT-2</td>
+<td>BERT/GPT</td>
 </tr>
 <tr>
 <td>T5</td>
@@ -496,7 +512,7 @@
 <td>2020.03</td>
 <td>English</td>
 <td style="text-align:right">175B</td>
-<td>GPT-2</td>
+<td>GPT</td>
 </tr>
 <tr>
 <td>Switch Transformer</td>
@@ -510,51 +526,153 @@
 <td>2021.08</td>
 <td>English</td>
 <td style="text-align:right">178B</td>
-<td></td>
+<td>GPT</td>
 </tr>
 <tr>
 <td>Megatron-Turing NLG</td>
 <td>2021.10</td>
 <td>English</td>
 <td style="text-align:right">530B</td>
-<td></td>
+<td>transformer-decoder</td>
 </tr>
 <tr>
 <td>Gopher</td>
 <td>2021.12</td>
 <td>English</td>
 <td style="text-align:right">280B</td>
-<td></td>
+<td>GPT</td>
 </tr>
 <tr>
 <td>CPM</td>
 <td>2020.12</td>
 <td>Chinese</td>
 <td style="text-align:right">2.6B</td>
+<td>GPT</td>
 </tr>
 <tr>
 <td>M6</td>
 <td>2021.03</td>
 <td>Chinese</td>
 <td style="text-align:right">100B</td>
+<td>unified-transformer</td>
 </tr>
 <tr>
 <td>PanGu</td>
 <td>2021.04</td>
 <td>Chinese</td>
 <td style="text-align:right">200B</td>
+<td>GPT</td>
 </tr>
 <tr>
 <td>CPM-2</td>
 <td>2021.06</td>
 <td>Chinese</td>
 <td style="text-align:right">11B</td>
+<td>MLM+encoder-decoder</td>
 </tr>
 <tr>
 <td>HyperCLOVA</td>
 <td>2021.09</td>
 <td>Korean</td>
-<td style="text-align:right">204B</td>
+<td style="text-align:right">82B</td>
+<td>GPT</td>
+</tr>
+<tr>
+<td>mT5</td>
+<td>2020.10</td>
+<td>101 Lans</td>
+<td style="text-align:right">13B</td>
+<td>T5</td>
+</tr>
+</tbody>
+</table>
+<h1 id="数据信息"><a href="#数据信息" class="headerlink" title="数据信息"></a>数据信息</h1><table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th style="text-align:right">模型参数</th>
+<th style="text-align:right">数据规模</th>
+<th>是否公开</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Megatron</td>
+<td style="text-align:right">8.5B</td>
+<td style="text-align:right">174G</td>
+<td>否</td>
+</tr>
+<tr>
+<td>T5</td>
+<td style="text-align:right">11B</td>
+<td style="text-align:right">750G</td>
+<td>是 (<a href="https://www.tensorflow.org/datasets/catalog/c4" target="_blank" rel="external">C4</a>)</td>
+</tr>
+<tr>
+<td>GPT-3</td>
+<td style="text-align:right">175B</td>
+<td style="text-align:right">570G</td>
+<td>否</td>
+</tr>
+<tr>
+<td>Switch Transformer</td>
+<td style="text-align:right">26.3B</td>
+<td style="text-align:right">750G</td>
+<td>是 (C4)</td>
+</tr>
+<tr>
+<td>Jurassic-1</td>
+<td style="text-align:right">178B</td>
+<td style="text-align:right">300B toks</td>
+<td>否</td>
+</tr>
+<tr>
+<td>Megatron-Turing NLG</td>
+<td style="text-align:right">530B</td>
+<td style="text-align:right">270B toks</td>
+<td><a href="https://developer.nvidia.com/blog/using-deepspeed-and-megatron-to-train-megatron-turing-nlg-530b-the-worlds-largest-and-most-powerful-generative-language-model/" target="_blank" rel="external">部分</a></td>
+</tr>
+<tr>
+<td>Gopher</td>
+<td style="text-align:right">280B</td>
+<td style="text-align:right">300B toks</td>
+<td>否</td>
+</tr>
+<tr>
+<td>CPM</td>
+<td style="text-align:right">2.6B</td>
+<td style="text-align:right">100G</td>
+<td>否</td>
+</tr>
+<tr>
+<td>M6</td>
+<td style="text-align:right">100B</td>
+<td style="text-align:right">292G</td>
+<td>否</td>
+</tr>
+<tr>
+<td>PanGu</td>
+<td style="text-align:right">200B</td>
+<td style="text-align:right">1.1T</td>
+<td>否</td>
+</tr>
+<tr>
+<td>CPM-2</td>
+<td style="text-align:right">11B</td>
+<td style="text-align:right">2.3T(zh)+300G(en)</td>
+<td><a href="https://resource.wudaoai.cn/home" target="_blank" rel="external">部分 (200G)</a></td>
+</tr>
+<tr>
+<td>HyperCLOVA</td>
+<td style="text-align:right">82B</td>
+<td style="text-align:right">560B toks</td>
+<td>否</td>
+</tr>
+<tr>
+<td>mT5</td>
+<td style="text-align:right">13B</td>
+<td style="text-align:right">6.3T toks</td>
+<td>是 (<a href="https://www.tensorflow.org/datasets/catalog/c4#c4multilingual_nights_stay" target="_blank" rel="external">mC4</a>)</td>
 </tr>
 </tbody>
 </table>
@@ -567,7 +685,8 @@
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/megatron.png" alt="megatron.png" title=""> </div>
 
-
+<p>数据：</p>
+<p><code>We create an aggregate dataset consisting of Wikipedia (Devlin et al., 2018), CC-Stories (Trinh &amp; Le, 2018), RealNews (Zellers et al., 2019), and OpenWebtext (Radford et al., 2019). For BERT models we include BooksCorpus (Zhu et al., 2015) in the training dataset.</code></p>
 <h1 id="Text-to-Text-Transfer-Transformer-T5"><a href="#Text-to-Text-Transfer-Transformer-T5" class="headerlink" title="Text-to-Text Transfer Transformer (T5)"></a>Text-to-Text Transfer Transformer (T5)</h1><p>论文题目：Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer</p>
 <p>单位：Google</p>
 <p>主要贡献：</p>
@@ -577,7 +696,6 @@
 <li>进行了大量的预训练模型，setting实验，最终选择encoder-decoder结构并给出推荐参数。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/t5.png" alt="t5.png" title=""> </div>
-
 
 <h1 id="GPT-3"><a href="#GPT-3" class="headerlink" title="GPT-3"></a>GPT-3</h1><p>论文题目：Language Models are Few-Shot Learners</p>
 <p>单位：OpenAI</p>
@@ -589,13 +707,114 @@
 <div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/gpt3.png" alt="gpt3.png" title=""> </div>
 
 
+<p>数据：</p>
+<div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/gpt3-data.png" alt="gpt3-data.png" title=""> </div>
+
 <h1 id="Switch-Transformer"><a href="#Switch-Transformer" class="headerlink" title="Switch Transformer"></a>Switch Transformer</h1><p>论文题目：Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity</p>
 <p>单位：Google Brain</p>
 <p>主要贡献：</p>
 <ul>
-<li>在Mixture of Experts (MoE) 思想上简化了MoE routing算法，从而降低了communication and computational costs。</li>
+<li>通过简化Mixture of Experts (MoE) routing算法，降低了通讯和计算损失 (communication and computational costs)；</li>
+<li>使用C4数据训练了26.3B的T5模型。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/switch-transformer.png" alt="switch-transformer.png" title=""> </div>
+
+
+<h1 id="Jurassic-1"><a href="#Jurassic-1" class="headerlink" title="Jurassic-1"></a>Jurassic-1</h1><p>论文题目：Jurassic-1: Technical details and evaluation</p>
+<p>单位：AI21 Lab</p>
+<p>主要贡献：</p>
+<p>在GPT-3模型结构的基础上做出了两点改变</p>
+<ul>
+<li>参考<a href="https://papers.nips.cc/paper/2020/file/ff4dfdf5904e920ce52b48c1cef97829-Paper.pdf" target="_blank" rel="external">Limits to Depth-Efficiencies of Self-Attention</a>中的结论，将GPT-3中的层数从96层降为76层，由于将模型深度转换为跨度，加快了推理速度 (平行运算比GPT-3更多) ；</li>
+<li>使用T5使用的SentencePiece tokenizer，训练一个超过GPT-3 (50K) 词典大小的256K词典，加快了分词速度。</li>
+</ul>
+<h1 id="Megatron-Turing-NLG"><a href="#Megatron-Turing-NLG" class="headerlink" title="Megatron-Turing NLG"></a>Megatron-Turing NLG</h1><p>论文题目：<a href="https://developer.nvidia.com/blog/using-deepspeed-and-megatron-to-train-megatron-turing-nlg-530b-the-worlds-largest-and-most-powerful-generative-language-model/" target="_blank" rel="external">Using DeepSpeed and Megatron to Train Megatron-Turing NLG 530B, the World’s Largest and Most Powerful Generative Language Model</a></p>
+<p>单位：NVIDIA</p>
+<p>主要贡献：</p>
+<ul>
+<li>目前最大预训练模型，结构上仍然沿用transformer decoder单向语言模型，同时使用prompt。主要贡献是模型并行，但是似乎并没有具体说明，只有一个blog。</li>
+</ul>
+<h1 id="Gopher"><a href="#Gopher" class="headerlink" title="Gopher"></a>Gopher</h1><p>论文题目：Scaling Language Models: Methods, Analysis &amp; Insights from Training Gopher</p>
+<p>单位：DeepMind</p>
+<p>主要贡献：<br>在GPT-2模型的基础上做了2点改进</p>
+<ul>
+<li>用RMSNorm (<a href="https://arxiv.org/pdf/1910.07467.pdf" target="_blank" rel="external">Root Mean Square Layer Normalization</a>)代替了LayerNorm；</li>
+<li>用相对位置向量代替了绝对位置向量。</li>
+</ul>
+<p>其他：</p>
+<ul>
+<li>tokenizer也换成了SentencePiece，词典大小为32,000；</li>
+<li>同时测试了fine-tuning和prompting；</li>
+<li>使用<a href="https://github.com/google/jax" target="_blank" rel="external">JAX</a>实现模型、数据并行，使用TPUv3训练。</li>
+</ul>
+<p>结论：</p>
+<ul>
+<li>模型规模的收益不是平均的，某些需要更复杂的数学或逻辑推理的任务上，Gopher模型规模增加无法带来显著的效果提升。</li>
+</ul>
+<h1 id="CPM"><a href="#CPM" class="headerlink" title="CPM"></a>CPM</h1><p>论文题目：CPM: A Large-scale Generative Chinese Pre-trained Language Model</p>
+<p>单位：Tsinghua University, Beijing Academy of Artificial Intelligence (BAAI)</p>
+<p>主要贡献：</p>
+<ul>
+<li>训练了2.6B的autoregressive LM模型CPM；</li>
+<li>为适应中文使用了新的基于中文分词的词表，并使用3072 batch size。</li>
+</ul>
+<p>其他：</p>
+<ul>
+<li>使用中仍然延续了GPT-3的prompt思想。</li>
+</ul>
+<h1 id="Multi-Modality-to-Multi-Modality-Multitask-Mega-transformer-M6"><a href="#Multi-Modality-to-Multi-Modality-Multitask-Mega-transformer-M6" class="headerlink" title="Multi-Modality to Multi-Modality Multitask Mega-transformer (M6)"></a>Multi-Modality to Multi-Modality Multitask Mega-transformer (M6)</h1><p>论文题目：M6: A chinese multimodal pretrainer</p>
+<p>单位：Alibaba Group, Tsinghua University</p>
+<p>主要贡献：</p>
+<ul>
+<li>使用了2T的图片和300G的文本用于中文多模态预训练模型训练。</li>
+</ul>
+<p>其他：</p>
+<ul>
+<li>使用了Megatron-LM提出的模型并行方法；</li>
+<li>在100B版本的模型中也使用了MoE策略，使用<a href="https://arxiv.org/pdf/2011.09208.pdf" target="_blank" rel="external">Whale</a>实现，支持GPU并行；</li>
+<li>测试了fine-tuning和prompting两种方法。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/m6.png" alt="m6.png" title=""> </div>
+
+
+<h1 id="PanGu"><a href="#PanGu" class="headerlink" title="PanGu"></a>PanGu</h1><p>论文题目：Pangu-alpha: Large-scale autoregressive pretrained chinese language models with auto-parallel computation</p>
+<p>单位：华为云，循环智能</p>
+<p>主要贡献：</p>
+<ul>
+<li>使用<a href="https://www.mindspore.cn/" target="_blank" rel="external">MindSpore</a>实现了5个维度的自动并行，包括数据并行、op-level模型并行、pipeline模型并行、optimizer模型并行和重计算 (rematerialization)，在2048个Ascend 910 AI processors上训练了200B预训练模型；</li>
+<li>在transformer层上额外加了一个query layer，用于预测下个token。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/pangu.png" alt="pangu.png" title=""> </div>
+
+<h1 id="CPM-2"><a href="#CPM-2" class="headerlink" title="CPM-2"></a>CPM-2</h1><p>论文题目：CPM-2: Large-scale Cost-effective Pre-trained Language Models</p>
+<p>单位：Tsinghua University, Beijing Academy of Artificial Intelligence (BAAI)</p>
+<p>主要贡献：</p>
+<ul>
+<li>使用knowledge inheritance (<a href="https://arxiv.org/abs/2105.13880" target="_blank" rel="external">Knowledge inheritance for pre-trained language models</a>) 加速预训练过程。即利用已有的预训练模型帮助预训练新的模型，避免了从头开始训练浪费大量计算资源。</li>
+<li>使用prompt tuning (<a href="https://arxiv.org/abs/2104.08691" target="_blank" rel="external">The Power of Scale for Parameter-Efficient Prompt Tuning</a>) 代替传统fine-tuning减少针对具体任务的参数量。该方法中针对每个具体任务微调时会固定预训练模型，只训练prompt token的向量，其参数量只占整个模型的0.01%。</li>
+<li>使用Mixture-of-Experts (MoE) 技术 (<a href="https://arxiv.org/pdf/2101.03961.pdf" target="_blank" rel="external">Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity</a>, <a href="http://proceedings.mlr.press/v139/lewis21a/lewis21a.pdf" target="_blank" rel="external">BASE Layers: Simplifying Training of Large, Sparse Models</a>) 训练198B的大规模预训练模型，并设计高性能、内存利用率高的推理框架INFMoE，实现了在单GPU上运行MoE模型。</li>
+</ul>
+<p>其他：</p>
+<ul>
+<li>模型结构上采用了MLM encoder-decoder框架，其思路跟GLM (<a href="https://arxiv.org/pdf/2103.10360.pdf" target="_blank" rel="external">All NLP Tasks Are Generation Tasks: A General Pretraining Framework</a>) 比较像，在encoder中随机用特殊token代替span，在decoder中预测这些span；</li>
+<li>CPM-2-11B和CPM-2-MoE (198B)<a href="https://wudaoai.cn/model/detail/CPM%E7%B3%BB%E5%88%97" target="_blank" rel="external">模型</a>均支持中英双语，使用WuDaoCorpus2.0 (2.3TB中文，300GB英文) 训练。</li>
+</ul>
+<h1 id="HyperCLOVA"><a href="#HyperCLOVA" class="headerlink" title="HyperCLOVA"></a>HyperCLOVA</h1><p>论文题目：What Changes Can Large-scale Language Models Bring? Intensive Study on HyperCLOVA: Billions-scale Korean Generative Pretrained Transformers</p>
+<p>单位：NAVER</p>
+<p>主要贡献：</p>
+<ul>
+<li>韩语版GPT-3，使用韩语560B token语料训练的82B GPT-3模型。</li>
+</ul>
+<h1 id="mT5"><a href="#mT5" class="headerlink" title="mT5"></a>mT5</h1><p>论文题目：mT5: A massively multilingual pre-trained text-to-text transformer</p>
+<p>单位：Google Research</p>
+<p>主要贡献：</p>
+<ul>
+<li>13B参数量的多语言版本T5；</li>
+<li>公布了包含101种语言的27T预训练语料<a href="https://www.tensorflow.org/datasets/catalog/c4#c4multilingual_nights_stay" target="_blank" rel="external">mC4</a>。</li>
+</ul>
+<p>mT5和其他多语言预训练模型对比。</p>
+<div style="width:70%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/mt5.png" alt="mt5.png" title=""> </div>
+
       
     </div>
 
@@ -887,7 +1106,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Megatron-LM"><span class="nav-number">1.</span> <span class="nav-text">Megatron-LM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Text-to-Text-Transfer-Transformer-T5"><span class="nav-number">2.</span> <span class="nav-text">Text-to-Text Transfer Transformer (T5)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GPT-3"><span class="nav-number">3.</span> <span class="nav-text">GPT-3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Switch-Transformer"><span class="nav-number">4.</span> <span class="nav-text">Switch Transformer</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据信息"><span class="nav-number">2.</span> <span class="nav-text">数据信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Megatron-LM"><span class="nav-number">3.</span> <span class="nav-text">Megatron-LM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Text-to-Text-Transfer-Transformer-T5"><span class="nav-number">4.</span> <span class="nav-text">Text-to-Text Transfer Transformer (T5)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GPT-3"><span class="nav-number">5.</span> <span class="nav-text">GPT-3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Switch-Transformer"><span class="nav-number">6.</span> <span class="nav-text">Switch Transformer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jurassic-1"><span class="nav-number">7.</span> <span class="nav-text">Jurassic-1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Megatron-Turing-NLG"><span class="nav-number">8.</span> <span class="nav-text">Megatron-Turing NLG</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gopher"><span class="nav-number">9.</span> <span class="nav-text">Gopher</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPM"><span class="nav-number">10.</span> <span class="nav-text">CPM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multi-Modality-to-Multi-Modality-Multitask-Mega-transformer-M6"><span class="nav-number">11.</span> <span class="nav-text">Multi-Modality to Multi-Modality Multitask Mega-transformer (M6)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PanGu"><span class="nav-number">12.</span> <span class="nav-text">PanGu</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPM-2"><span class="nav-number">13.</span> <span class="nav-text">CPM-2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HyperCLOVA"><span class="nav-number">14.</span> <span class="nav-text">HyperCLOVA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT5"><span class="nav-number">15.</span> <span class="nav-text">mT5</span></a></li></ol></div>
             
 
           </div>
