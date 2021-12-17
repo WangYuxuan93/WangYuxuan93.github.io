@@ -142,7 +142,9 @@
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie2-data.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie2-cmtl.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/knowbert.png">
-<meta property="og:updated_time" content="2021-12-16T09:27:11.232Z">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kepler.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/bert-mk.png">
+<meta property="og:updated_time" content="2021-12-17T09:14:09.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识增强预训练模型总结">
 <meta name="twitter:description" content="知识增强预训练模型 (Knowledge Enhanced Pre-trained Language Model) 总结与对比。">
@@ -426,7 +428,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-16 17:27:11" itemprop="dateModified" datetime="2021-12-16T17:27:11+08:00">2021-12-16</time>
+                <time title="修改时间：2021-12-17 17:14:09" itemprop="dateModified" datetime="2021-12-17T17:14:09+08:00">2021-12-17</time>
               
             
           </span>
@@ -527,8 +529,8 @@
 <tr>
 <td>KEPLER</td>
 <td>2019.11</td>
-<td></td>
-<td></td>
+<td>EN</td>
+<td>BERT</td>
 <td>TACL 2021</td>
 <td>100</td>
 </tr>
@@ -670,15 +672,48 @@
 <ul>
 <li>提出Knowledge Attention and Recontextualization component (KAR)，将知识库 (knowledge base) 融合到预训练模型中。</li>
 </ul>
+<p>模型结构如下图所示，具体包括：</p>
+<ul>
+<li><code>Mention-Span Representation</code>：利用现有的KB entity selector从输入文本中识别若干候选mention。BERT上一层的表示首先通过一个线性层投射到一个较小的维度 (图中第1步)。然后候选mention所在的span中的表示通过self-attentive span pooling的方式转化为C个mention-span的表示向量$S$ (图中第2步)。</li>
+<li><p><code>Entity Linker</code>：mention-span通过一个transformer block获取其它mention信息，从而变为$S^e$ (图中第3步)；使用$S^{e}$ 和mention-span的候选entity的向量以及KB中定义的先验概率计算每个entity linking (即mention-span和entity对应关系) 的分数，之后过滤掉分数低于某一阈值的entity，并将剩余的entity embedding按分数加权平均作为对应的entity embedding (图中第4步)：</p>
+</li>
+<li><p><code>Knowledge Enhanced Entity-Span Representation</code>：将上一步获取的weighted entity embedding加上此前的mention-span representation作为entity-span representation (图中第5步)。</p>
+</li>
+<li><code>Recontextualization</code>：在降维和BERT表示和上一步获得的entity-span representation之间使用word-to-entity-span attention (即transformer block把self-attention改成这两个表示之间的attention) (图中第6步)。最后通过线性层升维到BERT的隐层大小 (图中第7步)，作为BERT下一层的输入。</li>
+</ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/knowbert.png" alt="knowbert.png" title=""> </div>
 
 
+<p>其他：</p>
+<ul>
+<li>预训练过程中如果有外部数据能提供entity linking的监督信号，则通过log-likelihood和max-margin计算其loss并与BERT原始loss相加一起使用；</li>
+<li>应用时可以在BERT的不同层插入不同来源的KB，本文尝试了分别使用Wikipedia和WordNet以及同时使用二者；</li>
+<li>训练BERT之前先使用现有方法在KB基础上训练entity embedding，之后训练中固定该embedding。</li>
+</ul>
 <h1 id="KEPLER"><a href="#KEPLER" class="headerlink" title="KEPLER"></a>KEPLER</h1><p>论文题目：KEPLER: A Unified Model for Knowledge Embedding and Pre-trained Language Representation</p>
 <p>单位：BNRist, Tsinghua University, Princeton University, Mila-Québec AI Institute, Univesité de Montréal</p>
 <p>主要贡献：</p>
+<ul>
+<li>提出了Knowledge Embedding任务，与MLM任务同时学习，将来自KG的知识融入预训练模型。</li>
+<li>公布了来自Wikidata的Knowledge graph dataset，<a href="https://deepgraphlearning.github.io/project/wikidata5m" target="_blank" rel="external">Wikidata5M</a>。</li>
+</ul>
+<p>Knowledge Embedding：<br>本文在预训练时使用的框架如下图所示，统KE学习算法都使用固定的embedding表示entity和relation，本文主要思想是使用BERT encode他们对应的说明文本作为其表示。<br>具体来说，首先提出了3种方法获取表示：</p>
+<ul>
+<li>使用BERT获取head和tail的表示，relation仍然使用固定向量；</li>
+<li>使用BERT获取head、tail和relation的表示；</li>
+<li>使用BERT获取head和tail的表示，在计算relation表示时，拼接head和relation的说明文本作为输入。</li>
+</ul>
+<p>然后使用了<a href="https://openreview.net/pdf?id=HkgEQnRqYQ" target="_blank" rel="external">RotatE: Knowledge Graph Embedding by Relational Rotation in Complex</a>中提出的max-margin loss作为KE任务的学习目标 (其中使用了负采样方法)。损失函数中的scoring function采用了<a href="https://proceedings.neurips.cc/paper/2013/file/1cecc7a77928ca8133fa24680a88d2f9-Paper.pdf" target="_blank" rel="external">TransE</a>中定义的损失函数$||h+r-t||_p$。(学习目标似乎是让正确的head向量+relation向量与tail向量间的距离尽量近，而错误的尽量远。)</p>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/kepler.png" alt="kepler.png" title=""> </div>
+
 <h1 id="BERT-MK"><a href="#BERT-MK" class="headerlink" title="BERT-MK"></a>BERT-MK</h1><p>论文题目：BERT-MK: Integrating Graph Contextualized Knowledge into Pre-trained Language Models</p>
 <p>单位：Huawei Noah’s Ark Lab, Huawei Cloud &amp; AI, University of Science and Technology of China</p>
 <p>主要贡献：</p>
+<ul>
+<li>在ERNIE (Tsinghua) 的基础上将其输入的由TransE训练的固定entity embedding替换为由医学知识抽取的subgraph计算的contextualized knowledge。(主要解决的问题是TransE无法处理一对多、多对一和多对多等复杂的关系，这种关系在医学知识图谱中是非常多的。)</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/bert-mk.png" alt="bert-mk.png" title=""> </div>
+
 <h1 id="WKLM"><a href="#WKLM" class="headerlink" title="WKLM"></a>WKLM</h1><p>论文题目：Pretrained Encyclopedia: Weakly Supervised Knowledge-Pretrained Language Model</p>
 <p>单位：University of California Santa Barbara, Facebook AI</p>
 <p>主要贡献：</p>
