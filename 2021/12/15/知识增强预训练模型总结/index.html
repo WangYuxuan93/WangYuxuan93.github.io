@@ -152,7 +152,13 @@
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/colake-model.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/wk-graph.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/colake-comparison.png">
-<meta property="og:updated_time" content="2021-12-20T09:30:19.685Z">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/calm-generative.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/calm-contrastive.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/calm-joint.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie-m-camlm.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie-m-btmlm.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kmlm-knowledge.png">
+<meta property="og:updated_time" content="2021-12-21T09:28:50.716Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识增强预训练模型总结">
 <meta name="twitter:description" content="知识增强预训练模型 (Knowledge Enhanced Pre-trained Language Model) 总结与对比。">
@@ -436,7 +442,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-20 17:30:19" itemprop="dateModified" datetime="2021-12-20T17:30:19+08:00">2021-12-20</time>
+                <time title="修改时间：2021-12-21 17:28:50" itemprop="dateModified" datetime="2021-12-21T17:28:50+08:00">2021-12-21</time>
               
             
           </span>
@@ -528,12 +534,36 @@
 <td>287</td>
 </tr>
 <tr>
+<td>SenseBERT</td>
+<td>2019.08</td>
+<td>EN</td>
+<td></td>
+<td>ACL 2020</td>
+<td>92</td>
+</tr>
+<tr>
 <td>KnowBert</td>
 <td>2019.09</td>
 <td>EN</td>
 <td>BERT-init</td>
 <td>EMNLP 2019</td>
 <td>284</td>
+</tr>
+<tr>
+<td>LIBERT</td>
+<td>2019.09</td>
+<td>EN</td>
+<td></td>
+<td>Arxiv 2019</td>
+<td>19</td>
+</tr>
+<tr>
+<td>K-BERT</td>
+<td>2019.09</td>
+<td>EN</td>
+<td></td>
+<td>AAAI 2020</td>
+<td>219</td>
 </tr>
 <tr>
 <td>KEPLER</td>
@@ -550,6 +580,14 @@
 <td>BERT</td>
 <td>EMNLP F. 2020</td>
 <td>29</td>
+</tr>
+<tr>
+<td>E-BERT</td>
+<td>2019.11</td>
+<td>EN</td>
+<td></td>
+<td>EMNLP F. 2020</td>
+<td>43</td>
 </tr>
 <tr>
 <td>WKLM</td>
@@ -570,34 +608,42 @@
 <tr>
 <td>CoLAKE</td>
 <td>2020.10</td>
-<td></td>
-<td></td>
+<td>EN</td>
+<td>RoBERTa-init</td>
 <td>COLING 2020</td>
 <td>28</td>
 </tr>
 <tr>
 <td>CALM</td>
 <td>2020.02</td>
-<td></td>
-<td></td>
+<td>EN</td>
+<td>T5-init</td>
 <td>ICLR 2021</td>
 <td>10</td>
 </tr>
 <tr>
 <td>ERNIE-M</td>
 <td>2020.12</td>
-<td></td>
-<td></td>
+<td>96 lans</td>
+<td>XLM-R-init</td>
 <td>EMNLP 2021</td>
 <td>11</td>
 </tr>
 <tr>
 <td>ERNIE 3.0</td>
-<td>2020.12</td>
+<td>2021.07</td>
 <td>EN,ZH</td>
 <td>MLM+enc-dec</td>
 <td>Arxiv 2021</td>
 <td>15</td>
+</tr>
+<tr>
+<td>KMLM</td>
+<td>2021.11</td>
+<td></td>
+<td></td>
+<td>Arxiv 2021</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -675,6 +721,12 @@
 <li>虽然本文说该方法的一个优点是不需要提前准备好所有的预训练任务，但是从表中策略来看，每个预训练任务的step分配应该也需要知道总共的预训练任务个数。(可能在实际应用中每个任务第一次出现更新一个固定的比较多的step数，例如50k；后面训练时更新一个固定的较少的step数，例如10k)</li>
 <li>在多个任务同时存在的训练阶段是同时计算每个任务loss一起更新还是每个batch单独训练不同的任务？(文中没有找到明确的说明，但考虑到不同任务可能不是在同样的文本上构建的，应该是后者)</li>
 </ul>
+<h1 id="SenseBERT"><a href="#SenseBERT" class="headerlink" title="SenseBERT"></a>SenseBERT</h1><p>论文题目：SenseBERT: Driving Some Sense into BERT</p>
+<p>单位：AI21</p>
+<p>主要贡献：</p>
+<ul>
+<li></li>
+</ul>
 <h1 id="KnowBERT"><a href="#KnowBERT" class="headerlink" title="KnowBERT"></a>KnowBERT</h1><p>论文题目：Knowledge Enhanced Contextual Word Representations</p>
 <p>单位：AI2, University of California, University of Washington</p>
 <p>主要贡献：</p>
@@ -698,6 +750,12 @@
 <li>预训练过程中如果有外部数据能提供entity linking的监督信号，则通过log-likelihood和max-margin计算其loss并与BERT原始loss相加一起使用；</li>
 <li>应用时可以在BERT的不同层插入不同来源的KB，本文尝试了分别使用Wikipedia和WordNet以及同时使用二者；</li>
 <li>训练BERT之前先使用现有方法在KB基础上训练entity embedding，之后训练中固定该embedding。</li>
+</ul>
+<h1 id="LIBERT"><a href="#LIBERT" class="headerlink" title="LIBERT"></a>LIBERT</h1><p>论文题目：Informing Unsupervised Pretraining with External Linguistic Knowledge</p>
+<p>单位：University of Mannheim, University of Cambridge</p>
+<p>主要贡献：</p>
+<ul>
+<li></li>
 </ul>
 <h1 id="KEPLER"><a href="#KEPLER" class="headerlink" title="KEPLER"></a>KEPLER</h1><p>论文题目：KEPLER: A Unified Model for Knowledge Embedding and Pre-trained Language Representation</p>
 <p>单位：BNRist, Tsinghua University, Princeton University, Mila-Québec AI Institute, Univesité de Montréal</p>
@@ -742,6 +800,9 @@
 <li>这里GCKE模块是用于替换ERNIE里的TransE算法，论文中的实验对比也是对比的同样的框架下使用这两种entity embedding计算方法；</li>
 <li>在具体实现中使用了TransE算法获得的embedding对GCKE中的embedding进行初始化。</li>
 </ul>
+<h1 id="E-BERT"><a href="#E-BERT" class="headerlink" title="E-BERT"></a>E-BERT</h1><p>论文题目：E-BERT: Efficient-Yet-Effective Entity Embeddings for BERT</p>
+<p>单位：LMU Munich, Siemens AG Munich</p>
+<p>主要贡献：</p>
 <h1 id="WKLM"><a href="#WKLM" class="headerlink" title="WKLM"></a>WKLM</h1><p>论文题目：Pretrained Encyclopedia: Weakly Supervised Knowledge-Pretrained Language Model</p>
 <p>单位：University of California Santa Barbara, Facebook AI</p>
 <p>主要贡献：</p>
@@ -808,9 +869,62 @@
 <h1 id="CALM"><a href="#CALM" class="headerlink" title="CALM"></a>CALM</h1><p>论文题目：Pre-training Text-to-Text Transformers for Concept-centric Common Sense</p>
 <p>单位：Beihang University, University of Southern California</p>
 <p>主要贡献：</p>
+<ul>
+<li>提出了同时使用generative和contrastive目标的MTL框架，用于从文本中学习commen sense；</li>
+<li>提出了concept-to-sentence generation (C2S) 和concept order recovering (COR) 两个预训练任务，用于从文本中学习commensense；</li>
+<li>对比此前方法的一个优点是不需外部KB。</li>
+</ul>
+<p>Generative目标：</p>
+<ul>
+<li>预处理 (Concept Extraction)：对于给定输入，使用Spacy工具进行词性标注，抽取其中的动词、名词和专有名词 (Proper Nouns)，作为concept。</li>
+<li><code>Concept-to-Sentence Generation (C2S)</code>：将concept打乱顺序，然后训练模型根据打乱顺序的concept重新生成原句 (由于该任务与COR使用同一模型训练，在输入之前加上&lt; c2s &gt;前缀)；</li>
+<li><code>Concept Order Recovering (COR)</code>：将原句中concept同样词性的互相之间打乱顺序 (即名词和名词换，动词和动词换，目的是为了使句子的语法仍然保持正确)，然后训练模型预测正确的原句 (加&lt; cor &gt;前缀)。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/calm-generative.png" alt="calm-generative.png" title=""> </div>
+
+<p>Contrastive目标：</p>
+<ul>
+<li>将原句和一个错误的句子 (distractor) 拼接同时输入模型 (输入前加&lt; cont &gt;前缀)，训练模型预测正确的句子。</li>
+</ul>
+<div style="width:40%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/calm-contrastive.png" alt="calm-contrastive.png" title=""> </div>
+
+<p>Joint目标：</p>
+<ul>
+<li>先训练固定轮数的generator；</li>
+<li>然后用generator生成的句子作为distractor训练discriminator；</li>
+<li>每次从两个generative目标生成的句子中随机sample一个作为distractor。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/calm-joint.png" alt="calm-joint.png" title=""> </div>
+
+<p>实验：</p>
+<ul>
+<li>在CSQA、OBQA、PIQA等commonsense reasoning数据集上性能超过了ERNIE、KnowBERT和T5-base。</li>
+</ul>
 <h1 id="ERNIE-M"><a href="#ERNIE-M" class="headerlink" title="ERNIE-M"></a>ERNIE-M</h1><p>论文题目：ERNIE-M: Enhanced Multilingual Representation by Aligning Cross-lingual Semantics with Monolingual Corpora</p>
 <p>单位：Baidu Inc.</p>
 <p>主要贡献：</p>
+<ul>
+<li>使用back-translation方法从单语数据中构建伪双语平行数据，用于预训练，解决了此前跨语言预训练模型受限于双语平行数据量的问题。</li>
+</ul>
+<p>预训练任务；</p>
+<ul>
+<li>TLM：这个是XLM中使用的预训练任务，需要双语平行数据；</li>
+<li>MMLM：直接把来自两个语言的句子拼接输入进行MLM，由于不是平行数据，因此预测每个语言的mask时只能attend自己语言中的token；</li>
+<li><code>Cross-attention Masked Language Modeling (CAMLM)</code>：在双语平行句子中做MLM，与TLM的区别是预测一种语言中被mask的token时，只能用另一种语言的信息 (具体实现中有一个mask matrix阻止两个语言相互attend)；</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/ernie-m-camlm.png" alt="ernie-m-camlm.png" title=""> </div>
+
+<ul>
+<li><code>Back-translation Masked Language Modeling (BTMLM)</code>：第一步，用CAMLM训练好的模型构造伪双语平行数据，具体流程为在单语句子后添加若干[MASK]，然后用language embedding和position embedding控制要生成的语言和长度 (<font color="red">这里有个问题是目标语言句子长度如何控制？这个应该是MLM做生成的一个问题，即需要预先知道生成句子的长度</font>)；第二步，将原始单语句子和生成的伪翻译句子拼接作为输入，mask原始单语句子中的词并预测。</li>
+</ul>
+<div style="width:40%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/ernie-m-btmlm.png" alt="ernie-m-btmlm.png" title=""> </div>
+
+<p>其他：</p>
+<ul>
+<li>在训练TLM和CAMLM任务时，仍然需要真实的双语平行数据，本文在实验中也使用了与INFOXLM相同的双语平行数据；</li>
+<li>在XNLI、CoNLL NER、MLQA、PAWS-X (Paraphrase Identification)等任务上和mBERT、XLM-R、INFOXLM等模型进行了对比，取得了SOTA；</li>
+<li>论文的主要贡献在于提出了CAMLM和BTMLM两个预训练任务，解决的是此前跨语言模型受限于平行数据量的问题，似乎并没有融合额外的知识。</li>
+</ul>
 <h1 id="ERNIE-3-0"><a href="#ERNIE-3-0" class="headerlink" title="ERNIE 3.0"></a>ERNIE 3.0</h1><p>论文题目：ERNIE 3.0: Large-scale Knowledge Enhanced Pre-training for Language Understanding and Generation</p>
 <p>单位：Baidu Inc.</p>
 <p>主要贡献：</p>
@@ -818,6 +932,19 @@
 <li>ERNIE 3.0模型结合了auto-regressive和auto-encoding两种network，因此能既能处理NLU也能处理生成任务。</li>
 <li>训练了10B参数的模型，在54个中文NLP任务上取得SOTA效果，在英文SuperGLUE上取得了第一 (2021.07.03)。</li>
 </ul>
+<h1 id="KMLM"><a href="#KMLM" class="headerlink" title="KMLM"></a>KMLM</h1><p>论文题目：Knowledge Based Multilingual Language Model</p>
+<p>单位：DAMO Academy, Nanyang Technological University</p>
+<p>主要贡献：</p>
+<ul>
+<li>使用Wikidata KG生成大量code-switched人造训练数据 (包括<code>code-switched knowledge data</code>和<code>reasoning data</code>)，并提出两种预训练任务，增强模型记忆知识的能力和推理能力。</li>
+</ul>
+<p>相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点：</p>
+<ul>
+<li>训练中直接使用了logical reasoning任务，因此能从数据中学习logical pattern；</li>
+<li>不需要额外的encoder编码KG，也不需要entity linker将文本和entity进行连接；</li>
+<li>在训练和fine-tune阶段都不改变预训练模型结构 (这一点和WKLM相同)。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/kmlm-knowledge.png" alt="kmlm-knowledge.png" title=""> </div>
 
       
     </div>
@@ -1112,7 +1239,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE"><span class="nav-number">2.</span> <span class="nav-text">ERNIE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-1-0"><span class="nav-number">3.</span> <span class="nav-text">ERNIE 1.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-2-0"><span class="nav-number">4.</span> <span class="nav-text">ERNIE 2.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KnowBERT"><span class="nav-number">5.</span> <span class="nav-text">KnowBERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KEPLER"><span class="nav-number">6.</span> <span class="nav-text">KEPLER</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BERT-MK"><span class="nav-number">7.</span> <span class="nav-text">BERT-MK</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKLM"><span class="nav-number">8.</span> <span class="nav-text">WKLM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K-Adapter"><span class="nav-number">9.</span> <span class="nav-text">K-Adapter</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CoLAKE"><span class="nav-number">10.</span> <span class="nav-text">CoLAKE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CALM"><span class="nav-number">11.</span> <span class="nav-text">CALM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-M"><span class="nav-number">12.</span> <span class="nav-text">ERNIE-M</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-3-0"><span class="nav-number">13.</span> <span class="nav-text">ERNIE 3.0</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE"><span class="nav-number">2.</span> <span class="nav-text">ERNIE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-1-0"><span class="nav-number">3.</span> <span class="nav-text">ERNIE 1.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-2-0"><span class="nav-number">4.</span> <span class="nav-text">ERNIE 2.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SenseBERT"><span class="nav-number">5.</span> <span class="nav-text">SenseBERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KnowBERT"><span class="nav-number">6.</span> <span class="nav-text">KnowBERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBERT"><span class="nav-number">7.</span> <span class="nav-text">LIBERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KEPLER"><span class="nav-number">8.</span> <span class="nav-text">KEPLER</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BERT-MK"><span class="nav-number">9.</span> <span class="nav-text">BERT-MK</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#E-BERT"><span class="nav-number">10.</span> <span class="nav-text">E-BERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKLM"><span class="nav-number">11.</span> <span class="nav-text">WKLM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K-Adapter"><span class="nav-number">12.</span> <span class="nav-text">K-Adapter</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CoLAKE"><span class="nav-number">13.</span> <span class="nav-text">CoLAKE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CALM"><span class="nav-number">14.</span> <span class="nav-text">CALM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-M"><span class="nav-number">15.</span> <span class="nav-text">ERNIE-M</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-3-0"><span class="nav-number">16.</span> <span class="nav-text">ERNIE 3.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KMLM"><span class="nav-number">17.</span> <span class="nav-text">KMLM</span></a></li></ol></div>
             
 
           </div>
