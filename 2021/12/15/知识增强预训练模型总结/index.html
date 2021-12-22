@@ -163,7 +163,7 @@
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kmlm-knowledge.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kmlm-cycle.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kmlm-logic.png">
-<meta property="og:updated_time" content="2021-12-22T08:55:48.311Z">
+<meta property="og:updated_time" content="2021-12-22T09:11:12.663Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识增强预训练模型总结">
 <meta name="twitter:description" content="知识增强预训练模型 (Knowledge Enhanced Pre-trained Language Model) 总结与对比。">
@@ -447,7 +447,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-22 16:55:48" itemprop="dateModified" datetime="2021-12-22T16:55:48+08:00">2021-12-22</time>
+                <time title="修改时间：2021-12-22 17:11:12" itemprop="dateModified" datetime="2021-12-22T17:11:12+08:00">2021-12-22</time>
               
             
           </span>
@@ -778,10 +778,11 @@
 <h1 id="KEPLER"><a href="#KEPLER" class="headerlink" title="KEPLER"></a>KEPLER</h1><p>论文题目：KEPLER: A Unified Model for Knowledge Embedding and Pre-trained Language Representation</p>
 <p>单位：BNRist, Tsinghua University, Princeton University, Mila-Québec AI Institute, Univesité de Montréal</p>
 <h2 id="主要贡献-7"><a href="#主要贡献-7" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
-<li>提出了Knowledge Embedding任务，与MLM任务同时学习，将来自KG的知识融入预训练模型。</li>
-<li>公布了来自Wikidata的Knowledge graph dataset，<a href="https://deepgraphlearning.github.io/project/wikidata5m" target="_blank" rel="external">Wikidata5M</a>。</li>
+<li>提出了Knowledge Embedding任务，与MLM任务同时学习，将来自KG的知识融入预训练模型；</li>
+<li>公布了来自Wikidata的Knowledge graph dataset，<a href="https://deepgraphlearning.github.io/project/wikidata5m" target="_blank" rel="external">Wikidata5M</a>；</li>
+<li>相比此前方法，该方法在fine-tuning和inference阶段不引入额外参数和计算。</li>
 </ul>
-<h2 id="Knowledge-Embedding"><a href="#Knowledge-Embedding" class="headerlink" title="Knowledge Embedding"></a>Knowledge Embedding</h2><p>本文在预训练时使用的框架如下图所示，统KE学习算法都使用固定的embedding表示entity和relation，本文主要思想是使用BERT encode他们对应的说明文本作为其表示。<br>具体来说，首先提出了3种方法获取表示：</p>
+<h2 id="Knowledge-Embedding"><a href="#Knowledge-Embedding" class="headerlink" title="Knowledge Embedding"></a>Knowledge Embedding</h2><p>本文在预训练时使用的框架如下图所示，传统KE学习算法都使用固定的embedding表示entity和relation，本文主要思想是使用BERT encode他们对应的说明文本作为其表示。<br>具体来说，首先提出了3种方法获取表示：</p>
 <ul>
 <li>使用BERT获取head和tail的表示，relation仍然使用固定向量；</li>
 <li>使用BERT获取head、tail和relation的表示；</li>
