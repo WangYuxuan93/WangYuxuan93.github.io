@@ -141,10 +141,13 @@
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie2.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie2-data.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie2-cmtl.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/sensebert.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/knowbert.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/k-bert.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kepler.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/bert-mk.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/bert-mk-knowledge.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/e-bert.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/wklm.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/k-adapter.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/k-adapter-comparison.png">
@@ -158,7 +161,9 @@
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie-m-camlm.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/ernie-m-btmlm.png">
 <meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kmlm-knowledge.png">
-<meta property="og:updated_time" content="2021-12-21T09:28:50.716Z">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kmlm-cycle.png">
+<meta property="og:image" content="/2021/12/15/知识增强预训练模型总结/kmlm-logic.png">
+<meta property="og:updated_time" content="2021-12-22T08:55:48.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识增强预训练模型总结">
 <meta name="twitter:description" content="知识增强预训练模型 (Knowledge Enhanced Pre-trained Language Model) 总结与对比。">
@@ -442,7 +447,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-21 17:28:50" itemprop="dateModified" datetime="2021-12-21T17:28:50+08:00">2021-12-21</time>
+                <time title="修改时间：2021-12-22 16:55:48" itemprop="dateModified" datetime="2021-12-22T16:55:48+08:00">2021-12-22</time>
               
             
           </span>
@@ -537,7 +542,7 @@
 <td>SenseBERT</td>
 <td>2019.08</td>
 <td>EN</td>
-<td></td>
+<td>BERT-scratch</td>
 <td>ACL 2020</td>
 <td>92</td>
 </tr>
@@ -553,7 +558,7 @@
 <td>LIBERT</td>
 <td>2019.09</td>
 <td>EN</td>
-<td></td>
+<td>BERT-scratch</td>
 <td>Arxiv 2019</td>
 <td>19</td>
 </tr>
@@ -561,7 +566,7 @@
 <td>K-BERT</td>
 <td>2019.09</td>
 <td>EN</td>
-<td></td>
+<td>BERT-scratch</td>
 <td>AAAI 2020</td>
 <td>219</td>
 </tr>
@@ -585,7 +590,7 @@
 <td>E-BERT</td>
 <td>2019.11</td>
 <td>EN</td>
-<td></td>
+<td>BERT-init</td>
 <td>EMNLP F. 2020</td>
 <td>43</td>
 </tr>
@@ -640,8 +645,8 @@
 <tr>
 <td>KMLM</td>
 <td>2021.11</td>
-<td></td>
-<td></td>
+<td>10 lans</td>
+<td>XLM-R-init</td>
 <td>Arxiv 2021</td>
 <td>-</td>
 </tr>
@@ -649,34 +654,30 @@
 </table>
 <h1 id="ERNIE"><a href="#ERNIE" class="headerlink" title="ERNIE"></a>ERNIE</h1><p>论文题目：ERNIE: Enhanced Language Representation with Informative Entities</p>
 <p>单位：Tsinghua University, Huawei Noah’s Ark Lab</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献"><a href="#主要贡献" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>使用K-Encoder将使用TransE算法 (<a href="https://papers.nips.cc/paper/2013/file/1cecc7a77928ca8133fa24680a88d2f9-Paper.pdf" target="_blank" rel="external">Translating Embeddings for Modeling Multi-relational Data</a>) 生成的entity embedding作为额外输入；</li>
 <li>提出了新的<code>denoising auto-encoder (dEA)</code> 预训练任务，将entity和输入文本中的alignment随机遮盖，重新预测对齐关系。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/ernie.png" alt="ernie.png" title=""> </div>
 
-<p>预训练任务：</p>
-<ul>
+<h2 id="预训练任务"><a href="#预训练任务" class="headerlink" title="预训练任务"></a>预训练任务</h2><ul>
 <li>dEA</li>
 <li>MLM</li>
 <li>NSP</li>
 </ul>
-<p>其他：</p>
-<ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
 <li>dEA预训练任务：(1) 5%情况下将和token对齐的entity替换为另一个随机entity; (2) 15%情况下遮盖token和entity的对齐; (3) 其他情况下保持对齐不变；</li>
 <li>使用英文Wikipedia作为预训练数据，并将其与Wikidata对齐；</li>
 <li>在预训练之前，使用TransE算法在<a href="http://www.wikidata.org/" target="_blank" rel="external">Wikidata</a>上训练entity embedding (使用部分wikidata，包括5,040,986个entity和24,267,796个三元组)，该embedding在训练ERNIE过程中是固定的；</li>
 <li>在使用ERNIE模型前先识别文本中的named entity mention，然后将其与知识图谱中的entity对齐。 (这里对齐的作用是使用TransE在KG上训练的entity embedding作为额外输入)</li>
 </ul>
-<p>补充：</p>
+<p>补充</p>
 <ul>
 <li><a href="https://stackoverflow.com/questions/69136904/extracting-rdf-triples-from-wikidata" target="_blank" rel="external">如何从Wikidata里获取三元组？</a></li>
 </ul>
 <h1 id="ERNIE-1-0"><a href="#ERNIE-1-0" class="headerlink" title="ERNIE 1.0"></a>ERNIE 1.0</h1><p>论文题目：ERNIE: Enhanced Representation through Knowledge Integration (有两篇叫ERNIE的文章，后面把百度这篇称为ERNIE 1.0)</p>
 <p>单位：Baidu Inc.</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-1"><a href="#主要贡献-1" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>提出了entity masking和phrase masking预训练任务，强化这类外部知识。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/ernie1.png" alt="ernie1.png" title=""> </div>
@@ -684,15 +685,13 @@
 <p>这个点比较小，其他都跟BERT一样，因此一直没发表。</p>
 <h1 id="ERNIE-2-0"><a href="#ERNIE-2-0" class="headerlink" title="ERNIE 2.0"></a>ERNIE 2.0</h1><p>论文题目：ERNIE 2.0: A Continual Pre-Training Framework for Language Understanding</p>
 <p>单位：Baidu Inc.</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-2"><a href="#主要贡献-2" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li><code>Continual Pre-training Framework</code>：逐渐增加预训练任务个数，每次增加新的预训练任务时使用上次训练的模型初始化参数，然后将新任务和之前的任务共同训练，从而避免灾难性遗忘；</li>
 <li>提出3类共7种预训练任务，证明上述框架的有效性。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/ernie2.png" alt="ernie2.png" title=""> </div>
 
-<p>预训练任务：</p>
-<p>Word-aware Pre-training Tasks：</p>
+<h2 id="预训练任务-1"><a href="#预训练任务-1" class="headerlink" title="预训练任务"></a>预训练任务</h2><p>Word-aware Pre-training Tasks：</p>
 <ul>
 <li><code>Knowledge Masking Task</code>：ERNIE 1.0中提出的phrase masking和named entity masking任务；</li>
 <li><code>Capitalization Prediction Task</code>：为了结合cased和uncased两种模型的优点，使用该任务预测一个词是否应为大写；</li>
@@ -716,25 +715,30 @@
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/ernie2-cmtl.png" alt="ernie2-cmtl.png" title=""> </div>
 
 
-<p>有两个问题：</p>
-<ul>
+<h2 id="两个问题"><a href="#两个问题" class="headerlink" title="两个问题"></a>两个问题</h2><ul>
 <li>虽然本文说该方法的一个优点是不需要提前准备好所有的预训练任务，但是从表中策略来看，每个预训练任务的step分配应该也需要知道总共的预训练任务个数。(可能在实际应用中每个任务第一次出现更新一个固定的比较多的step数，例如50k；后面训练时更新一个固定的较少的step数，例如10k)</li>
 <li>在多个任务同时存在的训练阶段是同时计算每个任务loss一起更新还是每个batch单独训练不同的任务？(文中没有找到明确的说明，但考虑到不同任务可能不是在同样的文本上构建的，应该是后者)</li>
 </ul>
 <h1 id="SenseBERT"><a href="#SenseBERT" class="headerlink" title="SenseBERT"></a>SenseBERT</h1><p>论文题目：SenseBERT: Driving Some Sense into BERT</p>
 <p>单位：AI21</p>
-<p>主要贡献：</p>
+<h2 id="主要贡献-3"><a href="#主要贡献-3" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出了supersense预测任务，在预测mask的token的同时也预测该token从WordNet中定义的allowed supersense (优化目标为最小化当前被mask的token的每个可能的supersense，并使它们之间的概率分布尽量平均，这两个目标分别使用一个损失函数，然后把这两个损失函数相加)；</li>
+<li>在计算BERT输入的时候使用额外的supersense embedding matrix，然后使用WordNet中定义的每个token的allowed supersense构建对应的0-1 matrix将supersense embedding投射到对应词。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/sensebert.png" alt="sensebert.png" title=""> </div>
+
+<h2 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h2><p>统计allowed supersense时，有以下三种不计算，认为允许集合为空：</p>
 <ul>
-<li></li>
+<li>少于3个字母的词；</li>
+<li>停用词；</li>
+<li>表示部分词的token (即被BERT切分了的word piece，本文中有实验用于处理这种情况，例如将BERT原始30K词表扩大到60K等)。</li>
 </ul>
 <h1 id="KnowBERT"><a href="#KnowBERT" class="headerlink" title="KnowBERT"></a>KnowBERT</h1><p>论文题目：Knowledge Enhanced Contextual Word Representations</p>
 <p>单位：AI2, University of California, University of Washington</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-4"><a href="#主要贡献-4" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>提出Knowledge Attention and Recontextualization component (KAR)，将知识库 (knowledge base) 融合到预训练模型中。</li>
 </ul>
-<p>模型结构如下图所示，具体包括：</p>
-<ul>
+<h2 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h2><ul>
 <li><code>Mention-Span Representation</code>：利用现有的KB entity selector从输入文本中识别若干候选mention。BERT上一层的表示首先通过一个线性层投射到一个较小的维度 (图中第1步)。然后候选mention所在的span中的表示通过self-attentive span pooling的方式转化为C个mention-span的表示向量$S$ (图中第2步)。</li>
 <li><p><code>Entity Linker</code>：mention-span通过一个transformer block获取其它mention信息，从而变为$S^e$ (图中第3步)；使用$S^{e}$ 和mention-span的候选entity的向量以及KB中定义的先验概率计算每个entity linking (即mention-span和entity对应关系) 的分数，之后过滤掉分数低于某一阈值的entity，并将剩余的entity embedding按分数加权平均作为对应的entity embedding (图中第4步)：</p>
 </li>
@@ -745,26 +749,39 @@
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/knowbert.png" alt="knowbert.png" title=""> </div>
 
 
-<p>其他：</p>
-<ul>
+<h2 id="其他-2"><a href="#其他-2" class="headerlink" title="其他"></a>其他</h2><ul>
 <li>预训练过程中如果有外部数据能提供entity linking的监督信号，则通过log-likelihood和max-margin计算其loss并与BERT原始loss相加一起使用；</li>
 <li>应用时可以在BERT的不同层插入不同来源的KB，本文尝试了分别使用Wikipedia和WordNet以及同时使用二者；</li>
 <li>训练BERT之前先使用现有方法在KB基础上训练entity embedding，之后训练中固定该embedding。</li>
 </ul>
 <h1 id="LIBERT"><a href="#LIBERT" class="headerlink" title="LIBERT"></a>LIBERT</h1><p>论文题目：Informing Unsupervised Pretraining with External Linguistic Knowledge</p>
 <p>单位：University of Mannheim, University of Cambridge</p>
-<p>主要贡献：</p>
-<ul>
-<li></li>
+<h2 id="主要贡献-5"><a href="#主要贡献-5" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出了一个预训练任务，首先收集近义词对 (synonyms) 和上下文关系词对 (hyponym-hypernym)，然后将每个词对的两个词拼接，中间加上[SEP]标记作为正例，然后根据每个batch中的词向量距离挑选距离最近的词替换词对中的一个作为负例，训练目标为2分类，即二者是否是正例。</li>
+</ul>
+<h1 id="K-BERT"><a href="#K-BERT" class="headerlink" title="K-BERT"></a>K-BERT</h1><p>论文题目：K-BERT: Enabling Language Representation with Knowledge Graph</p>
+<p>单位：Peking University, Tencent Research, Beijing Normal University</p>
+<h2 id="主要贡献-6"><a href="#主要贡献-6" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出了一种在fine-tuning阶段将KG融入BERT的方法，通过soft position和visible matrix缓解了知识过多导致的knowledge noise问题。</li>
+</ul>
+<h2 id="模型结构-1"><a href="#模型结构-1" class="headerlink" title="模型结构"></a>模型结构</h2><ul>
+<li><code>Knowledge Layer</code>：可以视为预处理阶段，首先识别输入文本中的entity，然后从KG中搜索每个entity对应的三元组，将其以分支的形式插入句子中，形成一个sentence tree (注意这里树的深度最大为1，也就是说不会迭代地搜索三元组)；</li>
+<li><code>Token Embedding</code>：将sentence tree中的每个token按照hard position顺序压缩成序列，然后根据BERT的embedding matrix转化成对应embedding (这里注意的是来自KG中的entity的embedding也是用BERT embedding表示的，文中说这是为了解决此前方法中普通token向量和entity向量不一致的问题)；</li>
+<li><code>Soft-position Embedding</code>：首先将原句中的token按照顺序标上位置向量，然后每个分支的位置向量由该分支的 (在原句中的) head的位置id开始增加，该embedding作为BERT输入中的位置向量输入；</li>
+<li><code>Visible Matrix</code>：为了避免插入的知识影响其他不相关的token，在计算attention时使用visible matrix只允许每个token看到自己相关分支的表示向量。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/k-bert.png" alt="k-bert.png" title=""> </div>
+
+<h2 id="其他-3"><a href="#其他-3" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>虽然该方法是直接应用到已经预训练完的模型的fine-tuning阶段的，但在本文的实验中其BERT模型仍然是从头开始预训练的，其预训练setting与BERT原文相同。</li>
 </ul>
 <h1 id="KEPLER"><a href="#KEPLER" class="headerlink" title="KEPLER"></a>KEPLER</h1><p>论文题目：KEPLER: A Unified Model for Knowledge Embedding and Pre-trained Language Representation</p>
 <p>单位：BNRist, Tsinghua University, Princeton University, Mila-Québec AI Institute, Univesité de Montréal</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-7"><a href="#主要贡献-7" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>提出了Knowledge Embedding任务，与MLM任务同时学习，将来自KG的知识融入预训练模型。</li>
 <li>公布了来自Wikidata的Knowledge graph dataset，<a href="https://deepgraphlearning.github.io/project/wikidata5m" target="_blank" rel="external">Wikidata5M</a>。</li>
 </ul>
-<p>Knowledge Embedding：<br>本文在预训练时使用的框架如下图所示，统KE学习算法都使用固定的embedding表示entity和relation，本文主要思想是使用BERT encode他们对应的说明文本作为其表示。<br>具体来说，首先提出了3种方法获取表示：</p>
+<h2 id="Knowledge-Embedding"><a href="#Knowledge-Embedding" class="headerlink" title="Knowledge Embedding"></a>Knowledge Embedding</h2><p>本文在预训练时使用的框架如下图所示，统KE学习算法都使用固定的embedding表示entity和relation，本文主要思想是使用BERT encode他们对应的说明文本作为其表示。<br>具体来说，首先提出了3种方法获取表示：</p>
 <ul>
 <li>使用BERT获取head和tail的表示，relation仍然使用固定向量；</li>
 <li>使用BERT获取head、tail和relation的表示；</li>
@@ -775,14 +792,12 @@
 
 <h1 id="BERT-MK"><a href="#BERT-MK" class="headerlink" title="BERT-MK"></a>BERT-MK</h1><p>论文题目：BERT-MK: Integrating Graph Contextualized Knowledge into Pre-trained Language Models</p>
 <p>单位：Huawei Noah’s Ark Lab, Huawei Cloud &amp; AI, University of Science and Technology of China</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-8"><a href="#主要贡献-8" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>在ERNIE (Tsinghua) 的基础上将其输入的由TransE训练的固定entity embedding替换为由医学知识抽取的subgraph计算的contextualized knowledge。(主要解决的问题是TransE无法处理一对多、多对一和多对多等复杂的关系，这种关系在医学知识图谱中是非常多的。)</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/bert-mk.png" alt="bert-mk.png" title=""> </div>
 
-<p>预处理阶段如下图所示：</p>
-<ul>
+<h2 id="预处理阶段"><a href="#预处理阶段" class="headerlink" title="预处理阶段"></a>预处理阶段</h2><ul>
 <li>原始KG见图中 (a) 部分，包括4个1跳关系，首先将relation也变成节点，即图中 (b) 部分；</li>
 <li>然后按照顺序将entity和relation的节点按顺序排列 (node sequence)；</li>
 <li>获取node position index，其中三个index分别表示head、relation和tail在节点序列中的位置；</li>
@@ -790,47 +805,48 @@
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/bert-mk-knowledge.png" alt="bert-mk-knowledge.png" title=""> </div>
 
-<p>Graph Contextualized Knowledge Embedding (GCKE) 模块：</p>
-<ul>
+<h2 id="Graph-Contextualized-Knowledge-Embedding-GCKE-模块"><a href="#Graph-Contextualized-Knowledge-Embedding-GCKE-模块" class="headerlink" title="Graph Contextualized Knowledge Embedding (GCKE) 模块"></a>Graph Contextualized Knowledge Embedding (GCKE) 模块</h2><ul>
 <li>结构图右边为GCKE模块，首先输入的是预处理阶段的node sequence (以及对应的邻接矩阵)</li>
 <li>之后利用node position index获取每个三元组的head、relation和tail节点的表示向量，然后将最小化margin-based loss作为学习目标 (与KEPLER中的loss类似，负例通过将head或tail随机替换为不在KG中的entity生成)。</li>
 </ul>
-<p>其他：</p>
-<ul>
+<h2 id="其他-4"><a href="#其他-4" class="headerlink" title="其他"></a>其他</h2><ul>
 <li>这里GCKE模块是用于替换ERNIE里的TransE算法，论文中的实验对比也是对比的同样的框架下使用这两种entity embedding计算方法；</li>
 <li>在具体实现中使用了TransE算法获得的embedding对GCKE中的embedding进行初始化。</li>
 </ul>
 <h1 id="E-BERT"><a href="#E-BERT" class="headerlink" title="E-BERT"></a>E-BERT</h1><p>论文题目：E-BERT: Efficient-Yet-Effective Entity Embeddings for BERT</p>
 <p>单位：LMU Munich, Siemens AG Munich</p>
-<p>主要贡献：</p>
+<h2 id="主要贡献-9"><a href="#主要贡献-9" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>通过Wikipedia2Vec (<a href="https://arxiv.org/pdf/1601.01343.pdf" target="_blank" rel="external">Joint learning of the embedding<br>of words and entities for named entity disambiguation</a>)训练entity embedding，并将其与BERT的wordpiece embedding对齐，从而将对齐后的entity embedding视为BERT的原始embedding直接使用 (本文主要解决的是知识增强模型中普通token embedding和entity embedding不一致的问题，和K-BERT解决的第二个问题相同)；</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/e-bert.png" alt="e-bert.png" title=""> </div>
+
+<h2 id="其他-5"><a href="#其他-5" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>本文的目标是将entity embedding投射到BERT wordpiece embedding的空间，但由于二者没有交集，因此首先学习一个由Wikipedia2Vec生成的word embedding到BERT wordpiece embedding的线性变换矩阵W。因为Wikipedia2Vec生成的word embedding和entity embedding是在同一空间中的，该变换矩阵W也可以直接应用在entity embedding上从而将其映射到BERT wordpiece embedding的空间中；</li>
+<li>应用到下游任务时，将BERT wordpiece embedding和变换过的entity embedding固定，fine-tune其他的参数。</li>
+</ul>
 <h1 id="WKLM"><a href="#WKLM" class="headerlink" title="WKLM"></a>WKLM</h1><p>论文题目：Pretrained Encyclopedia: Weakly Supervised Knowledge-Pretrained Language Model</p>
 <p>单位：University of California Santa Barbara, Facebook AI</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-10"><a href="#主要贡献-10" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>提出一种新的预训练任务，将原始文本中的entity mention随机替换为同类的其他entity，然后训练模型分辨文本中表示的知识是否正确。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/wklm.png" alt="wklm.png" title=""> </div>
 
-<p>相对于ERNIE和KnowBERT的优点：</p>
-<ul>
+<h2 id="相对于ERNIE和KnowBERT的优点"><a href="#相对于ERNIE和KnowBERT的优点" class="headerlink" title="相对于ERNIE和KnowBERT的优点"></a>相对于ERNIE和KnowBERT的优点</h2><ul>
 <li>WKLM能从非结构化文本中直接获取真实世界的知识；</li>
 <li>WKLM不需要额外的数据处理，在fine-tune时不用对BERT模型做任何改变。</li>
 </ul>
-<p>其他：</p>
-<ul>
+<h2 id="其他-6"><a href="#其他-6" class="headerlink" title="其他"></a>其他</h2><ul>
 <li>预训练时同时使用MLM任务 (以Multi-task Learning方式)；</li>
 <li>在Entity Typing任务上和ERNIE进行了对比，但没有和KnowBERT对比。</li>
 </ul>
 <h1 id="K-Adapter"><a href="#K-Adapter" class="headerlink" title="K-Adapter"></a>K-Adapter</h1><p>论文题目：K-Adapter: Infusing Knowledge into Pre-Trained Models with Adapters</p>
 <p>单位：Fudan University, Microsoft</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-11"><a href="#主要贡献-11" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>fix RoBERTa参数，用multi-task learning方式训练多种任务，每种任务对应一组adapter，预测时拼接多个adapter的表示。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/k-adapter.png" alt="k-adapter.png" title=""> </div>
 
-<p>预训练任务：</p>
-<ul>
+<h2 id="预训练任务-2"><a href="#预训练任务-2" class="headerlink" title="预训练任务"></a>预训练任务</h2><ul>
 <li><p><code>Factual Adapter</code>：从<a href="https://aclanthology.org/L18-1544.pdf" target="_blank" rel="external">T-REx</a>数据集 (Wikipedia摘要和Wikidata里的三元组的对齐数据集) 中抽取出所有出现超过50次的三元组 (包括430个关系和5.5M的句子)，在该数据集上训练关系分类任务 (relation classification，拼接两个entity的表示进行分类)。</p>
 </li>
 <li><p><code>Linguistic Adapter</code>：使用Stanford Parser自动生成1M句子的句法树，在该数据集上训练依存关系预测任务，即为每个token预测其在句法依存树上的父节点。</p>
@@ -841,19 +857,17 @@
 
 <h1 id="CoLAKE"><a href="#CoLAKE" class="headerlink" title="CoLAKE"></a>CoLAKE</h1><p>论文题目：CoLAKE: Contextualized Language and Knowledge Embedding</p>
 <p>单位：Fudan University, Amazon Shanghai AI Lab</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-12"><a href="#主要贡献-12" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>通过构建Word-Knowledge graph (WK graph)获取文本中的entity及其相关的entity组成的子图，利用transformer encode该子图，从而将真正的contextualized konwledge融入模型中。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/colake.png" alt="colake.png" title=""> </div>
 
-<p>WK Graph构造：</p>
-<ul>
+<h2 id="WK-Graph构造"><a href="#WK-Graph构造" class="headerlink" title="WK Graph构造"></a>WK Graph构造</h2><ul>
 <li>将输入文本tokenize成token序列，表示为全连接图，识别其中的entity mention；</li>
 <li>用entity linker将这些mention与KG中的entity连接，并用entity替换这些mention token，称为<code>anchor nodes</code>；</li>
 <li>从KG中搜索这些<code>anchor node</code>的相邻entity (或称为knowledge context)，将这些三元组和原来的全连接图组合成为WK graph。</li>
 </ul>
-<p>上述的WK graph使用方法如下图所示，作为transformer输入：</p>
+<h2 id="模型结构-2"><a href="#模型结构-2" class="headerlink" title="模型结构"></a>模型结构</h2><p>上述的WK graph使用方法如下图所示，作为transformer输入：</p>
 <ul>
 <li>使用type embedding区分原始文本中的token，KG中的entity和relation；</li>
 <li>训练任务是对MLM的改进，分别包括mask word/entity/relation三种节点。</li>
@@ -868,46 +882,39 @@
 
 <h1 id="CALM"><a href="#CALM" class="headerlink" title="CALM"></a>CALM</h1><p>论文题目：Pre-training Text-to-Text Transformers for Concept-centric Common Sense</p>
 <p>单位：Beihang University, University of Southern California</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-13"><a href="#主要贡献-13" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>提出了同时使用generative和contrastive目标的MTL框架，用于从文本中学习commen sense；</li>
 <li>提出了concept-to-sentence generation (C2S) 和concept order recovering (COR) 两个预训练任务，用于从文本中学习commensense；</li>
 <li>对比此前方法的一个优点是不需外部KB。</li>
 </ul>
-<p>Generative目标：</p>
-<ul>
+<h2 id="Generative目标"><a href="#Generative目标" class="headerlink" title="Generative目标"></a>Generative目标</h2><ul>
 <li>预处理 (Concept Extraction)：对于给定输入，使用Spacy工具进行词性标注，抽取其中的动词、名词和专有名词 (Proper Nouns)，作为concept。</li>
 <li><code>Concept-to-Sentence Generation (C2S)</code>：将concept打乱顺序，然后训练模型根据打乱顺序的concept重新生成原句 (由于该任务与COR使用同一模型训练，在输入之前加上&lt; c2s &gt;前缀)；</li>
 <li><code>Concept Order Recovering (COR)</code>：将原句中concept同样词性的互相之间打乱顺序 (即名词和名词换，动词和动词换，目的是为了使句子的语法仍然保持正确)，然后训练模型预测正确的原句 (加&lt; cor &gt;前缀)。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/calm-generative.png" alt="calm-generative.png" title=""> </div>
 
-<p>Contrastive目标：</p>
-<ul>
+<h2 id="Contrastive目标"><a href="#Contrastive目标" class="headerlink" title="Contrastive目标"></a>Contrastive目标</h2><ul>
 <li>将原句和一个错误的句子 (distractor) 拼接同时输入模型 (输入前加&lt; cont &gt;前缀)，训练模型预测正确的句子。</li>
 </ul>
 <div style="width:40%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/calm-contrastive.png" alt="calm-contrastive.png" title=""> </div>
 
-<p>Joint目标：</p>
-<ul>
+<h2 id="Joint目标"><a href="#Joint目标" class="headerlink" title="Joint目标"></a>Joint目标</h2><ul>
 <li>先训练固定轮数的generator；</li>
 <li>然后用generator生成的句子作为distractor训练discriminator；</li>
 <li>每次从两个generative目标生成的句子中随机sample一个作为distractor。</li>
 </ul>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/calm-joint.png" alt="calm-joint.png" title=""> </div>
 
-<p>实验：</p>
-<ul>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><ul>
 <li>在CSQA、OBQA、PIQA等commonsense reasoning数据集上性能超过了ERNIE、KnowBERT和T5-base。</li>
 </ul>
 <h1 id="ERNIE-M"><a href="#ERNIE-M" class="headerlink" title="ERNIE-M"></a>ERNIE-M</h1><p>论文题目：ERNIE-M: Enhanced Multilingual Representation by Aligning Cross-lingual Semantics with Monolingual Corpora</p>
 <p>单位：Baidu Inc.</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-14"><a href="#主要贡献-14" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>使用back-translation方法从单语数据中构建伪双语平行数据，用于预训练，解决了此前跨语言预训练模型受限于双语平行数据量的问题。</li>
 </ul>
-<p>预训练任务；</p>
-<ul>
+<h2 id="预训练任务-3"><a href="#预训练任务-3" class="headerlink" title="预训练任务"></a>预训练任务</h2><ul>
 <li>TLM：这个是XLM中使用的预训练任务，需要双语平行数据；</li>
 <li>MMLM：直接把来自两个语言的句子拼接输入进行MLM，由于不是平行数据，因此预测每个语言的mask时只能attend自己语言中的token；</li>
 <li><code>Cross-attention Masked Language Modeling (CAMLM)</code>：在双语平行句子中做MLM，与TLM的区别是预测一种语言中被mask的token时，只能用另一种语言的信息 (具体实现中有一个mask matrix阻止两个语言相互attend)；</li>
@@ -919,32 +926,67 @@
 </ul>
 <div style="width:40%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/ernie-m-btmlm.png" alt="ernie-m-btmlm.png" title=""> </div>
 
-<p>其他：</p>
-<ul>
+<h2 id="其他-7"><a href="#其他-7" class="headerlink" title="其他"></a>其他</h2><ul>
 <li>在训练TLM和CAMLM任务时，仍然需要真实的双语平行数据，本文在实验中也使用了与INFOXLM相同的双语平行数据；</li>
 <li>在XNLI、CoNLL NER、MLQA、PAWS-X (Paraphrase Identification)等任务上和mBERT、XLM-R、INFOXLM等模型进行了对比，取得了SOTA；</li>
 <li>论文的主要贡献在于提出了CAMLM和BTMLM两个预训练任务，解决的是此前跨语言模型受限于平行数据量的问题，似乎并没有融合额外的知识。</li>
 </ul>
 <h1 id="ERNIE-3-0"><a href="#ERNIE-3-0" class="headerlink" title="ERNIE 3.0"></a>ERNIE 3.0</h1><p>论文题目：ERNIE 3.0: Large-scale Knowledge Enhanced Pre-training for Language Understanding and Generation</p>
 <p>单位：Baidu Inc.</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-15"><a href="#主要贡献-15" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>ERNIE 3.0模型结合了auto-regressive和auto-encoding两种network，因此能既能处理NLU也能处理生成任务。</li>
 <li>训练了10B参数的模型，在54个中文NLP任务上取得SOTA效果，在英文SuperGLUE上取得了第一 (2021.07.03)。</li>
 </ul>
 <h1 id="KMLM"><a href="#KMLM" class="headerlink" title="KMLM"></a>KMLM</h1><p>论文题目：Knowledge Based Multilingual Language Model</p>
 <p>单位：DAMO Academy, Nanyang Technological University</p>
-<p>主要贡献：</p>
-<ul>
+<h2 id="主要贡献-16"><a href="#主要贡献-16" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
 <li>使用Wikidata KG生成大量code-switched人造训练数据 (包括<code>code-switched knowledge data</code>和<code>reasoning data</code>)，并提出两种预训练任务，增强模型记忆知识的能力和推理能力。</li>
 </ul>
-<p>相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点：</p>
-<ul>
+<h2 id="相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点"><a href="#相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点" class="headerlink" title="相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点"></a>相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点</h2><ul>
 <li>训练中直接使用了logical reasoning任务，因此能从数据中学习logical pattern；</li>
 <li>不需要额外的encoder编码KG，也不需要entity linker将文本和entity进行连接；</li>
 <li>在训练和fine-tune阶段都不改变预训练模型结构 (这一点和WKLM相同)。</li>
 </ul>
+<h2 id="生成训练集流程"><a href="#生成训练集流程" class="headerlink" title="生成训练集流程"></a>生成训练集流程</h2><p><code>Code Switched Synthetic Sentences</code>：</p>
+<ul>
+<li>确定语言对，本文中始终使用英语作为源语言，因此只需要决定目标语言；</li>
+<li>找到英文上的三元组(h,r,t)，如下图所示，WikiData中每个entity有多个别名 (alias)，这里三元组使用原始的标签 (Label这列的值)；</li>
+<li>对于三元组中每个对象，以50%概率决定是否用目标语言中对应的label替换它；</li>
+<li>在三元组中间插入两个[MASK]，得到“h [MASK] r [MASK] t”。</li>
+</ul>
+<p>生成同义词替换句子也按照上面流程，区别是在第3步中从alias这一列sample出替换的词来。</p>
 <div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/kmlm-knowledge.png" alt="kmlm-knowledge.png" title=""> </div>
+
+<p><code>Reasoning Based Training Data</code>：</p>
+<ul>
+<li>从WikiData中搜索长度为3和4的环 (搜索时将KG视为无向图，要求长度为4的环中必须存在一个对角线关系);</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/kmlm-cycle.png" alt="kmlm-cycle.png" title=""> </div>
+
+<ul>
+<li>将环中的每个三元组通过<code>Code Switched Synthetic Sentences</code>方法转换成一句话，然后把环中的每句话拼接起来作为训练数据。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/15/知识增强预训练模型总结/kmlm-logic.png" alt="kmlm-logic.png" title=""> </div>
+
+<h2 id="预训练任务-4"><a href="#预训练任务-4" class="headerlink" title="预训练任务"></a>预训练任务</h2><ul>
+<li><p><code>Multilingual Knowledge Oriented Pretraining</code>：使用<code>Code Switched Synthetic Sentences</code>步骤生成的训练数据进行训练，由于中间插入的两个[MASK]实际应该对应的token是不确定的 (甚至无法确定这里应该插入[MASK]或者说这里[MASK]个数不确定)，这里预训练时是在其他token中进行mask，然后预测这些被mask的entity和relation。</p>
+</li>
+<li><p><code>Logical Reasoning Oriented Pretraining</code>：使用<code>Reasoning Based Training Data</code>步骤生成的训练数据进行训练。</p>
+<ul>
+<li>对于长度为3的环，在每个例子中每个entity正好出现2次，如果对entity进行mask，则可以很容易的通过统计缺少的entity来预测，因此对每个例子随机mask掉一个relation进行预测。</li>
+<li>对于长度为4的环，在80%情况下，首先随机mask一个relation，然后为了增加难度，再随机mask掉1-2个entity；在剩余20%情况下，随机mask掉其中一个句子的head和tail两个entity。</li>
+</ul>
+</li>
+</ul>
+<p>最后上述两个预训练任务的loss相加之后前面乘以一个超参再与原始MLM任务相加。</p>
+<h2 id="其他-8"><a href="#其他-8" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>使用了10种语言训练，包括：English (en), Vietnamese (vi), Dutch (nl), German (de), French (fr), Italian (it), Spanish (es), Japanese (ja), Korean (ko), Chinese (zh)；</li>
+<li>训练时使用了KEPLER公布的<a href="https://deepgraphlearning.github.io/project/wikidata5m" target="_blank" rel="external">Wikidata5M</a>中的5M个entity和822个relation，生成了250M code-switched synthetic sentence (code-switched和aliase replaced各125M)和100M reasoning based data；</li>
+<li>还从<a href="https://data.statmt.org/cc-100/" target="_blank" rel="external">CC100数据集</a> (数据来自<a href="https://aclanthology.org/2020.lrec-1.494" target="_blank" rel="external">CCNet: Extracting high quality monolingual datasets from web crawl data</a>)，但是不知道为啥目前显示Service Unavailable) 中sample了260M的10种语言数据来训练普通MLM；</li>
+<li>分别使用XLM-R-base/large和mBERT-base初始化训练模型；</li>
+<li>实验包括跨语言NER (CoNLL02/03、WikiAnn)、factual knowledge retrieval (X-FACTR)、Relation Classification (RELX)、cross-lingual logic reasoning (XLR，该数据由本文构造，给定两个三元组，问题是其中没有直接标注的两个entity之间的关系，给出6个选项作为候选答案，该任务实际上是专门为本文的<code>Logical Reasoning Oriented Pretraining</code>任务设计，构建数据集时也使用的是里面的logic examples。其中人工标注1000句作为测试集，训练和开发集都是自动构造。)以及来自XTREME中的跨语言POS、QA和分类任务；实验使用的都是zero-shot cross-lingual learning setting；</li>
+<li><font color="red">只跟XLM-R和mBERT进行了对比，没有跟其他更强的跨语言预训练模型对比。</font></li>
+</ul>
 
       
     </div>
@@ -1239,7 +1281,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE"><span class="nav-number">2.</span> <span class="nav-text">ERNIE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-1-0"><span class="nav-number">3.</span> <span class="nav-text">ERNIE 1.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-2-0"><span class="nav-number">4.</span> <span class="nav-text">ERNIE 2.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SenseBERT"><span class="nav-number">5.</span> <span class="nav-text">SenseBERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KnowBERT"><span class="nav-number">6.</span> <span class="nav-text">KnowBERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBERT"><span class="nav-number">7.</span> <span class="nav-text">LIBERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KEPLER"><span class="nav-number">8.</span> <span class="nav-text">KEPLER</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BERT-MK"><span class="nav-number">9.</span> <span class="nav-text">BERT-MK</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#E-BERT"><span class="nav-number">10.</span> <span class="nav-text">E-BERT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKLM"><span class="nav-number">11.</span> <span class="nav-text">WKLM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K-Adapter"><span class="nav-number">12.</span> <span class="nav-text">K-Adapter</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CoLAKE"><span class="nav-number">13.</span> <span class="nav-text">CoLAKE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CALM"><span class="nav-number">14.</span> <span class="nav-text">CALM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-M"><span class="nav-number">15.</span> <span class="nav-text">ERNIE-M</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-3-0"><span class="nav-number">16.</span> <span class="nav-text">ERNIE 3.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KMLM"><span class="nav-number">17.</span> <span class="nav-text">KMLM</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE"><span class="nav-number">2.</span> <span class="nav-text">ERNIE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献"><span class="nav-number">2.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务"><span class="nav-number">2.2.</span> <span class="nav-text">预训练任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">2.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-1-0"><span class="nav-number">3.</span> <span class="nav-text">ERNIE 1.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-1"><span class="nav-number">3.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-2-0"><span class="nav-number">4.</span> <span class="nav-text">ERNIE 2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-2"><span class="nav-number">4.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务-1"><span class="nav-number">4.2.</span> <span class="nav-text">预训练任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两个问题"><span class="nav-number">4.3.</span> <span class="nav-text">两个问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SenseBERT"><span class="nav-number">5.</span> <span class="nav-text">SenseBERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-3"><span class="nav-number">5.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-1"><span class="nav-number">5.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KnowBERT"><span class="nav-number">6.</span> <span class="nav-text">KnowBERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-4"><span class="nav-number">6.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型结构"><span class="nav-number">6.2.</span> <span class="nav-text">模型结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-2"><span class="nav-number">6.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LIBERT"><span class="nav-number">7.</span> <span class="nav-text">LIBERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-5"><span class="nav-number">7.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K-BERT"><span class="nav-number">8.</span> <span class="nav-text">K-BERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-6"><span class="nav-number">8.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型结构-1"><span class="nav-number">8.2.</span> <span class="nav-text">模型结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-3"><span class="nav-number">8.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KEPLER"><span class="nav-number">9.</span> <span class="nav-text">KEPLER</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-7"><span class="nav-number">9.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Knowledge-Embedding"><span class="nav-number">9.2.</span> <span class="nav-text">Knowledge Embedding</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BERT-MK"><span class="nav-number">10.</span> <span class="nav-text">BERT-MK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-8"><span class="nav-number">10.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预处理阶段"><span class="nav-number">10.2.</span> <span class="nav-text">预处理阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Contextualized-Knowledge-Embedding-GCKE-模块"><span class="nav-number">10.3.</span> <span class="nav-text">Graph Contextualized Knowledge Embedding (GCKE) 模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-4"><span class="nav-number">10.4.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#E-BERT"><span class="nav-number">11.</span> <span class="nav-text">E-BERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-9"><span class="nav-number">11.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-5"><span class="nav-number">11.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKLM"><span class="nav-number">12.</span> <span class="nav-text">WKLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-10"><span class="nav-number">12.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相对于ERNIE和KnowBERT的优点"><span class="nav-number">12.2.</span> <span class="nav-text">相对于ERNIE和KnowBERT的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-6"><span class="nav-number">12.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K-Adapter"><span class="nav-number">13.</span> <span class="nav-text">K-Adapter</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-11"><span class="nav-number">13.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务-2"><span class="nav-number">13.2.</span> <span class="nav-text">预训练任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CoLAKE"><span class="nav-number">14.</span> <span class="nav-text">CoLAKE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-12"><span class="nav-number">14.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WK-Graph构造"><span class="nav-number">14.2.</span> <span class="nav-text">WK Graph构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型结构-2"><span class="nav-number">14.3.</span> <span class="nav-text">模型结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CALM"><span class="nav-number">15.</span> <span class="nav-text">CALM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-13"><span class="nav-number">15.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generative目标"><span class="nav-number">15.2.</span> <span class="nav-text">Generative目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Contrastive目标"><span class="nav-number">15.3.</span> <span class="nav-text">Contrastive目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Joint目标"><span class="nav-number">15.4.</span> <span class="nav-text">Joint目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验"><span class="nav-number">15.5.</span> <span class="nav-text">实验</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-M"><span class="nav-number">16.</span> <span class="nav-text">ERNIE-M</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-14"><span class="nav-number">16.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务-3"><span class="nav-number">16.2.</span> <span class="nav-text">预训练任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-7"><span class="nav-number">16.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERNIE-3-0"><span class="nav-number">17.</span> <span class="nav-text">ERNIE 3.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-15"><span class="nav-number">17.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KMLM"><span class="nav-number">18.</span> <span class="nav-text">KMLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-16"><span class="nav-number">18.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点"><span class="nav-number">18.2.</span> <span class="nav-text">相对ERNIE、K-BERT、KnowBERT、K-Adapter的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成训练集流程"><span class="nav-number">18.3.</span> <span class="nav-text">生成训练集流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务-4"><span class="nav-number">18.4.</span> <span class="nav-text">预训练任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-8"><span class="nav-number">18.5.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
             
 
           </div>
