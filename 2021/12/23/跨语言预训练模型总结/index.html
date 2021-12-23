@@ -128,27 +128,29 @@
 
 
 
-  <meta name="description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
-<meta name="keywords" content="Graph-based Parsing,Neural Network,LSTM">
+  <meta name="description" content="跨语言预训练模型 (Cross-Lingual Pre-trained Language Model) 总结与对比。">
+<meta name="keywords" content="Paper Note,Pre-training,Cross-Lingual">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《Stanford&#39;s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》">
-<meta property="og:url" content="www.alexyxwang.com/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/index.html">
+<meta property="og:title" content="跨语言预训练模型总结">
+<meta property="og:url" content="www.alexyxwang.com/2021/12/23/跨语言预训练模型总结/index.html">
 <meta property="og:site_name" content="Avalon">
-<meta property="og:description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
+<meta property="og:description" content="跨语言预训练模型 (Cross-Lingual Pre-trained Language Model) 总结与对比。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
-<meta property="og:updated_time" content="2017-08-29T06:19:22.184Z">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/xlm.png">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/xnlg.png">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/mbart.png">
+<meta property="og:updated_time" content="2021-12-23T09:11:15.923Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《Stanford&#39;s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》">
-<meta name="twitter:description" content="Stanford的CoNLL 2017参赛系统研究，文章见 《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》。该系统来自他们ICLR 2017的文章 《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》，其中删掉了对预测弧标签部分网">
-<meta name="twitter:image" content="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg">
+<meta name="twitter:title" content="跨语言预训练模型总结">
+<meta name="twitter:description" content="跨语言预训练模型 (Cross-Lingual Pre-trained Language Model) 总结与对比。">
+<meta name="twitter:image" content="/2021/12/23/跨语言预训练模型总结/xlm.png">
 
 
 
 
 
 
-  <link rel="canonical" href="www.alexyxwang.com/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/"/>
+  <link rel="canonical" href="www.alexyxwang.com/2021/12/23/跨语言预训练模型总结/"/>
 
 
 
@@ -158,7 +160,7 @@
   };
 </script>
 
-  <title>《Stanford's Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》 | Avalon</title>
+  <title>跨语言预训练模型总结 | Avalon</title>
   
 
 
@@ -361,7 +363,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="www.alexyxwang.com/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/"/>
+    <link itemprop="mainEntityOfPage" href="www.alexyxwang.com/2021/12/23/跨语言预训练模型总结/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Alex"/>
@@ -378,7 +380,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《Stanford's Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》
+          <h1 class="post-title" itemprop="name headline">跨语言预训练模型总结
 
               
             
@@ -404,24 +406,12 @@
                 
               
 
-              <time title="创建时间：2017-08-28 15:53:49" itemprop="dateCreated datePublished" datetime="2017-08-28T15:53:49+08:00">2017-08-28</time>
+              <time title="创建时间：2021-12-23 14:31:49 / 修改时间：17:11:15" itemprop="dateCreated datePublished" datetime="2021-12-23T14:31:49+08:00">2021-12-23</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2017-08-29 14:19:22" itemprop="dateModified" datetime="2017-08-29T14:19:22+08:00">2017-08-29</time>
               
             
           </span>
@@ -438,7 +428,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Parsing/" itemprop="url" rel="index"><span itemprop="name">Parsing</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Paper-Note/" itemprop="url" rel="index"><span itemprop="name">Paper Note</span></a></span>
 
                 
                 
@@ -473,59 +463,193 @@
       
 
       
-        <p>Stanford的<a href="http://universaldependencies.org/conll17/" target="_blank" rel="external">CoNLL 2017</a>参赛系统研究，文章见 <a href="http://aclweb.org/anthology/K17-3002.pdf" target="_blank" rel="external">《Stanford’s Graph-based Neural Dependency Parser at the CoNLL 2017 Shared Task》</a>。该系统来自他们ICLR 2017的文章 <a href="https://openreview.net/pdf?id=Hk95PK9le" target="_blank" rel="external">《DEEP BIAFFINE ATTENTION FOR NEURAL DEPENDENCY PARSING》</a>，其中删掉了对预测弧标签部分网络结构的具体介绍，可以在<a href="https://web.stanford.edu/~tdozat/files/iclr2016-deep-biaffine.pdf" target="_blank" rel="external">Review的版本</a>中找到（虽然有很多错误）。</p>
+        <p>跨语言预训练模型 (Cross-Lingual Pre-trained Language Model) 总结与对比。</p>
 <a id="more"></a>
-<h2 id="Deep-Biaffine-Parser"><a href="#Deep-Biaffine-Parser" class="headerlink" title="Deep Biaffine Parser"></a>Deep Biaffine Parser</h2><p>他们的网络结构灵感来源于第一篇 <strong>neural</strong> graph-based parser的工作<a href="https://aclweb.org/anthology/Q16-1023" target="_blank" rel="external">《Simple and Accurate Dependency Parsing Using Bidirectional LSTM Feature Representations》</a>（主要是用BiLSTM代替传统graph-based parser中的score function，对于一个n个词的句子，用MLP算出所有\(n^2\)条可能的弧的分数，然后用dp算法找出最大生成树（MST））。</p>
-<img src="/2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/parser.jpg" alt="Parser结构" title="Parser结构">
-<p>如图所示，一句话中所有词的Embedding（来自词和词性）作为BiLSTM（多层）的输入，每个词对应的输出通过4个不同的ReLU层，得到4种特殊的向量表示（左侧最上层）：</p>
-<ul>
-<li>该词作为dependent（子节点）寻找head（父节点）</li>
-<li>该词作为head寻找其所有的dependents</li>
-<li>该词作为dependent决定其label（弧标签）</li>
-<li>该词作为head决定其所有dependents的label</li>
+<h1 id="模型信息"><a href="#模型信息" class="headerlink" title="模型信息"></a>模型信息</h1><table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>发表日期</th>
+<th>语言数</th>
+<th>模型结构</th>
+<th>发表</th>
+<th>引用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XLM</td>
+<td>2019.01</td>
+<td>15</td>
+<td>BERT</td>
+<td>NIPS 2019</td>
+<td>840</td>
+</tr>
+<tr>
+<td>XNLG</td>
+<td>2019.09</td>
+<td>15</td>
+<td>enc-dec</td>
+<td>AAAI 2020</td>
+<td>58</td>
+</tr>
+<tr>
+<td>XLM-R</td>
+<td>2019.11</td>
+<td>100</td>
+<td>BERT</td>
+<td>ACL 2020</td>
+<td>1209</td>
+</tr>
+<tr>
+<td>mBART</td>
+<td>2020.01</td>
+<td></td>
+<td></td>
+<td>TACL 2020</td>
+<td>355</td>
+</tr>
+<tr>
+<td>X-STILTs</td>
+<td>2020.03</td>
+<td></td>
+<td></td>
+<td>AACL 2020</td>
+<td>34</td>
+</tr>
+<tr>
+<td>MARGE</td>
+<td>2020.06</td>
+<td></td>
+<td></td>
+<td>Arxiv 2020</td>
+<td>69</td>
+</tr>
+<tr>
+<td>INFO-XLM</td>
+<td>2020.07</td>
+<td></td>
+<td></td>
+<td>NAACL 2021</td>
+<td>64</td>
+</tr>
+<tr>
+<td>FILTER</td>
+<td>2020.09</td>
+<td></td>
+<td></td>
+<td>AAAI 2021</td>
+<td>19</td>
+</tr>
+<tr>
+<td>RemBERT</td>
+<td>2020.10</td>
+<td></td>
+<td></td>
+<td>Arxiv 2020</td>
+<td>18</td>
+</tr>
+<tr>
+<td>VECO</td>
+<td>2020.10</td>
+<td></td>
+<td></td>
+<td>ACL 2021</td>
+<td>1</td>
+</tr>
+<tr>
+<td>mT5</td>
+<td>2020.10</td>
+<td>101</td>
+<td>T5</td>
+<td>NAACL 2021</td>
+<td>194</td>
+</tr>
+<tr>
+<td>mT6</td>
+<td>2021.04</td>
+<td></td>
+<td></td>
+<td>EMNLP 2021</td>
+<td>11</td>
+</tr>
+<tr>
+<td>XLM-E</td>
+<td>2021.06</td>
+<td></td>
+<td></td>
+<td>Arxiv 2021</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<h1 id="XLM"><a href="#XLM" class="headerlink" title="XLM"></a>XLM</h1><p>论文题目：Cross-lingual Language Model Pretraining</p>
+<p>单位：Facebook AI Research</p>
+<h2 id="主要贡献"><a href="#主要贡献" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出了CLM (由前面的词预测当前的词) 和TLM (输入为来自2个语言的平行句子，任务仍然是MLM) 2个新的预训练任务，其中后者需要双语平行数据。</li>
 </ul>
-<p>这些向量将在两个biaffine分类器中分别用于计算所有可能弧的分数以及计算给定词对的弧标签。</p>
-<p>接下来给出正式定义</p>
-<p>给定n个词的句子，每个词的表示向量为：</p>
-<p>$$  \textbf{x}_i = \textbf{v}_i^{(word)} \oplus \textbf{v}_i^{(tag)} $$</p>
-<p>将它们输入BiLSTM后获得每个词的输出向量：</p>
-<p>$$ \textbf{r}_i = BiLSTM(\textbf{r}_0, (\textbf{x}_1,\dots,\textbf{x}_n))_i $$<br>$$ \textbf{h}_i, \textbf{c}_i = split(\textbf{r}_i) $$</p>
-<p>然后通过4个独立的MLP获得上述4种向量表示：</p>
-<p>$$ \textbf{h}_i^{(arc-dep)} = MLP^{(arc-dep)}(\textbf{h}_i) $$<br>$$ \textbf{h}_i^{(arc-head)} = MLP^{(arc-head)}(\textbf{h}_i) $$<br>$$ \textbf{h}_i^{(rel-dep)} = MLP^{(rel-dep)}(\textbf{h}_i) $$<br>$$ \textbf{h}_i^{(rel-head)} = MLP^{(rel-head)}(\textbf{h}_i) $$</p>
-<h3 id="预测弧"><a href="#预测弧" class="headerlink" title="预测弧"></a>预测弧</h3><p>这里的intuition是用MLP将两个方向的LSTM输出先组合起来，再进行利用，而以前的工作都是直接将两个方向的输出拼接起来，这样其实还是相当于分别使用两个方向的输出向量。此外，这种处理也能起到<strong>降维</strong>的作用。（这部分感觉<a href="https://web.stanford.edu/~tdozat/files/iclr2016-deep-biaffine.pdf" target="_blank" rel="external">Review的版本</a>讲的清楚一些）</p>
-<p>对于第i个词，其它所有词作为其head的分数为：</p>
-<p>$$ \textbf{s}_i^{(arc)} = H^{(arc-head)}W^{(arc)}\textbf{h}_i^{(arc-dep)} +  H^{(arc-head)}\textbf{b}^{\top(arc)} $$<br>$$ y_i^{(arc)} = \text{arg} \max_j s_j ^{(arc)} $$</p>
-<p>这样就能得到最可能作为第i个词的head的词 \( y_i^{(arc)} \)。</p>
-<p>假设前面4个向量长度均为\(h\)。这里\( H^{(arc-head)} \)维度为\( n \times h \)，参数矩阵 \( W^{(arc)} \)维度为\( h \times h \)，偏置参数向量 \( \textbf{b}^{\top(arc)} \)维度为\( h \times 1 \)。因此得到评分向量\( \textbf{s}_i^{(arc)} \)维度为\( n \times 1 \)。</p>
-<p>上式中的第一项计算的是给定arc-head和arc-dep这两个向量中信息的情况下，词j作为词i的head的概率（例如在知道词i是“the”，词j是”cat”的情况下j是i的head的概率）；第二项计算的是在只知道arc-head的信息的情况下，词j作为词i的head的概率（例如在知道词j是“the”的情况下j是i的head的概率，根据语言学知识我们知道，无论i是什么词，”the”作为其head的概率都很低）。</p>
-<h3 id="预测标签"><a href="#预测标签" class="headerlink" title="预测标签"></a>预测标签</h3><p>在决定了词i的head之后，使用另一个网络预测这条弧的label（下式中\(\textbf{h}<em>y^{(rel-head)}\)其实是\(\textbf{h}</em>{y_i}^{(rel-head)}\)，后者打不出来所以简略…）</p>
-<p>$$ \textbf{s}_i^{(rel)} = \textbf{h}_y^{\top(rel-head)}\textbf{U}^{(rel)}\textbf{h}_i^{(rel-dep)} + W^{(rel)} ( \textbf{h}_i^{(rel-dep)} \oplus \textbf{h}_y^{(rel-head)} ) + \textbf{b}^{(rel)} $$<br>$$ y_i^{(rel)} = \text{arg} \max_j s_j^{(rel)} $$</p>
-<p>假设\(r\)是label的种类。这里\(\textbf{h}_y^{(rel-head)}\)和\(\textbf{h}_y^{(rel-dep)}\)维度为\( h \times 1 \)，\(\textbf{U}^{(rel)}\)是一个参数tensor，维度为\( h \times r \times h \)，参数矩阵\(W^{(rel)}\)维度为\(r \times 2h \)。因此得到对应所有label的评分向量\(\textbf{s}_i^{(rel)}\)维度为\( r \times 1 \)。</p>
-<p>类似的，上式中第一项计算的是在head和dependent都给定的情况下每种label的概率（例如已知词i是“the”，其head是“cat”时label为“det”的概率）；第二项计算的是给定head和dependent其中一个的情况下每种label的概率（例如已知词i是“the”，或者已知词j是“cat”时label为“det”的概率）。</p>
-<p>训练时，以上述两个分类器的softmax交叉熵损失作为优化目标。在测试时，通过为每个可能的根迭代地解决环问题生成一棵符合约束的树，然后选择其中总分最高的。这里的描述看起来像Chu-Liu/Edmonds算法，但是注释里又写了“Although in the future we intend to implement than the Chu-Liu/Edmonds algorithm for nonprojective MST parsing”，所以不知道他们解码的时候到底是用的什么算法，具体还得看<a href="https://github.com/CoNLL-UD-2017/Stanford" target="_blank" rel="external">源码</a>。</p>
-<h2 id="Character-Level-Model"><a href="#Character-Level-Model" class="headerlink" title="Character-Level Model"></a>Character-Level Model</h2><p>在词的表示上，他们首先用了官方提供的用word2vec预训练的embedding（由于Gothic没有提供，他们用了Facebook提供的FastText训练的词向量），以及高频词的holistic word embedding（这个不太清楚什么意思，估计应该是训练过程中更新的词向量）。此外，还用了基于单向LSTM的字级别模型，也就是每个字有一个可训练的向量，将一个词中的所有字按序输入LSTM。</p>
-<p>一般对于这种character-level LSTM会使用最后一个隐层的输出作为整个词的表示。除此之外，也可以利用attension先计算出每个隐层的权，然后用所有隐层输出的加权和还表示该词。这里他们综合了两种方法，将两种方法的结果拼接起来表示这个词。</p>
-<p>接下来给出正式定义</p>
-<p>对于有n个字的词，首先将每个字的向量按顺序输入LSTM：</p>
-<p>$$ \textbf{r}_i = LSTM(\textbf{r}_0, (\textbf{v}_1^{(char)},\dots,\textbf{v}_n^{(char)})_i $$</p>
-<p>$$ \textbf{h}_i, \textbf{c}_i = split(\textbf{r}_i) $$</p>
-<p>接着在隐层输出堆叠矩阵\( H \)上计算linear attention，将得到的加权和与最终层的cell state拼接得到词的表示：</p>
-<p>$$ \textbf{a} = \text{softmax}(H\textbf{w}^{(attn)}) $$<br>$$ \textbf{h} = H^\top \textbf{a} $$<br>$$ \textbf{v} = W(\textbf{h} \oplus \textbf{c}_n) $$</p>
-<p>这里有点奇怪的是他拼接的是final <strong>cell</strong> state(\(\textbf{c}_n\))而不是final <strong>hidden</strong> state(\(\textbf{h}_n\))。</p>
-<p>接下来，把刚刚得到的\(\textbf{v}\)和预训练的词向量以及holistic word embedding求<strong>elementwise sum</strong>。另一边，对UPOS和XPOS的embedding同样做<strong>elementwise sum</strong>。最后这两个向量 <strong>拼接(concatenate)</strong> 起来就是一个词的最终向量表示。</p>
-<h2 id="POS-Tagger"><a href="#POS-Tagger" class="headerlink" title="POS Tagger"></a>POS Tagger</h2><p>除了parser之外，他们还用这套框架写了一个POS tagger。简单来说就是将一句话中的词按顺序输入一个BiLSTM，然后在每个词处用一个ReLU层生成对应所有tag的分数向量。</p>
-<p>首先将词序列输入BiLSTM：</p>
-<p>$$ \textbf{r}_i = BiLSTM(\textbf{r}_0,(\textbf{v}_1^{(word)},\dots,\textbf{v}_n^{(word)})_i $$<br>$$ \textbf{h}_i, \textbf{c}_i = split(\textbf{r}_i) $$</p>
-<p>然后通过一个MLP计算出分数向量：</p>
-<p>$$ \textbf{h}_i^{(pos)} = MLP^{(pos)}(\textbf{h}_i) $$<br>$$ \textbf{s}_i^{(pos)} = W\textbf{h}_i^{(pos)}+\textbf{b}^{(pos)} $$</p>
-<p>训练过程中采用交叉熵损失之和作为优化目标，tagger与parser是分开训练的。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>在实验部分还做了关于非投射性(nonprojectivity)的测试。具体实验这里就不列了，说一下他们得出的结果：</p>
-<ul>
-<li>graph-based和transition-based方法的差距随着非投射情况的增加而变大(p&lt;0.001，graph-based一直要高)。</li>
-<li>当训练集的非投射弧占比远小于测试集时，graph-based方法表现相对较好，当训练集中也存在大量非投射弧时，两种方法的性能变得相近。这一结论暗示了graph-based方法在非投射弧的学习和泛化能力上比transition-based方法优秀。</li>
-</ul>
-<p>当然实验中的transition-based方法选用的是UDPipe的baseline系统，他们自己也说了，以上结论要建立在UDPipe的系统能代表大多数利用了swap动作的transition-based系统的基础上。</p>
+<div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/xlm.png" alt="xlm.png" title=""> </div>
 
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>本文中使用的MLM跟原始BERT的MLM区别是选择任意连续的句子而非两个句子作为输入。</li>
+</ul>
+<h1 id="XNLG"><a href="#XNLG" class="headerlink" title="XNLG"></a>XNLG</h1><p>论文题目：Cross-Lingual Natural Language Generation via Pre-Training</p>
+<p>单位：Beijing Institute of Technology, Microsoft Corporation</p>
+<h2 id="主要贡献-1"><a href="#主要贡献-1" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出2个新的预训练任务，训练跨语言的encoder-decoder框架。</li>
+</ul>
+<h2 id="预训练任务"><a href="#预训练任务" class="headerlink" title="预训练任务"></a>预训练任务</h2><ul>
+<li><code>MLM</code>：BERT任务；</li>
+<li><code>XMLM</code>：跟XLM中的TLM任务一样，输入为双语平行句子的MLM任务；</li>
+<li><code>Denoising Auto-Encoding (DAE)</code>：根据perturbed文本预测原始文本任务，预处理包括：1) shuffle词序，2) 0.1概率删除token，3) 0.1概率用[P]替换token；</li>
+<li><code>Cross-Lingual Auto-Encoding (XAE)</code>：实际上是MT任务。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/xnlg.png" alt="xnlg.png" title=""> </div>
+
+<h2 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>使用XLM初始化encoder和decoder。</li>
+</ul>
+<h1 id="XLM-R"><a href="#XLM-R" class="headerlink" title="XLM-R"></a>XLM-R</h1><p>论文题目：Unsupervised Cross-lingual Representation Learning at Scale</p>
+<p>单位：Facebook AI Research</p>
+<h2 id="主要贡献-2"><a href="#主要贡献-2" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>在XLM的基础上使用大规模无监督学习方法训练跨语言模型。</li>
+</ul>
+<h2 id="其他-2"><a href="#其他-2" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>Tokenization：SentencePiece (<a href="https://aclanthology.org/D18-2012.pdf" target="_blank" rel="external">Sentencepiece: A simple and language independent subword tokenizer and detokenizer for neural text processing</a>)；</li>
+<li>训练时只使用了MLM目标，且相对XLM来说去掉了language embedding。</li>
+</ul>
+<h1 id="mBART"><a href="#mBART" class="headerlink" title="mBART"></a>mBART</h1><p>论文题目：Multilingual Denoising Pre-training for Neural Machine Translation</p>
+<p>单位：Facebook AI Research</p>
+<h2 id="主要贡献-3"><a href="#主要贡献-3" class="headerlink" title="主要贡献"></a>主要贡献</h2><div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/mbart.png" alt="mbart.png" title=""> </div>
+
+
+<h1 id="X-STILTs"><a href="#X-STILTs" class="headerlink" title="X-STILTs"></a>X-STILTs</h1><p>论文题目：English Intermediate-Task Training Improves Zero-Shot Cross-Lingual Transfer Too</p>
+<p>单位：New York University, University of Amsterdam, University of Colorado Boulder</p>
+<h2 id="主要贡献-4"><a href="#主要贡献-4" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="MARGE"><a href="#MARGE" class="headerlink" title="MARGE"></a>MARGE</h1><p>论文题目：Pre-training via Paraphrasing</p>
+<p>单位：Facebook AI Research</p>
+<h2 id="主要贡献-5"><a href="#主要贡献-5" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="INFO-XLM"><a href="#INFO-XLM" class="headerlink" title="INFO-XLM"></a>INFO-XLM</h1><p>论文题目：InfoXLM: An Information-Theoretic Framework for Cross-Lingual Language Model Pre-Training</p>
+<p>单位：Beijing Institute of Technology, Microsoft Corporation</p>
+<h2 id="主要贡献-6"><a href="#主要贡献-6" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="FILTER"><a href="#FILTER" class="headerlink" title="FILTER"></a>FILTER</h1><p>论文题目：FILTER: An Enhanced Fusion Method for Cross-lingual Language Understanding</p>
+<p>单位：Microsoft Dynamics 365 AI Research</p>
+<h2 id="主要贡献-7"><a href="#主要贡献-7" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="RemBERT"><a href="#RemBERT" class="headerlink" title="RemBERT"></a>RemBERT</h1><p>论文题目：Rethinking Embedding Coupling in Pre-trained Language Models</p>
+<p>单位：Google Research</p>
+<h2 id="主要贡献-8"><a href="#主要贡献-8" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="VECO"><a href="#VECO" class="headerlink" title="VECO"></a>VECO</h1><p>论文题目：VECO: Variable and Flexible Cross-lingual Pre-training for Language Understanding and Generation</p>
+<p>单位：Alibaba Group</p>
+<h2 id="主要贡献-9"><a href="#主要贡献-9" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="mT5"><a href="#mT5" class="headerlink" title="mT5"></a>mT5</h1><p>论文题目：mT5: A Massively Multilingual Pre-trained Text-to-Text Transformer </p>
+<p>单位：Google Research</p>
+<h2 id="主要贡献-10"><a href="#主要贡献-10" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>13B参数量的多语言版本T5；</li>
+<li>公布了包含101种语言的27T预训练语料<a href="https://www.tensorflow.org/datasets/catalog/c4#c4multilingual_nights_stay" target="_blank" rel="external">mC4</a>。</li>
+</ul>
+<p>mT5和其他多语言预训练模型对比。</p>
+<div style="width:70%;margin:auto">  </div>
+
+
+<h1 id="mT6"><a href="#mT6" class="headerlink" title="mT6"></a>mT6</h1><p>论文题目：mT6: Multilingual Pretrained Text-to-Text Transformer with Translation Pairs</p>
+<p>单位：Beijing Institute of Technology, Microsoft Research</p>
+<h2 id="主要贡献-11"><a href="#主要贡献-11" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="XLM-E"><a href="#XLM-E" class="headerlink" title="XLM-E"></a>XLM-E</h1><p>论文题目：XLM-E: Cross-lingual Language Model Pre-training via ELECTRA</p>
+<p>单位：Microsoft Corporation</p>
+<h2 id="主要贡献-12"><a href="#主要贡献-12" class="headerlink" title="主要贡献"></a>主要贡献</h2>
       
     </div>
 
@@ -548,11 +672,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Graph-based-Parsing/" rel="tag"># Graph-based Parsing</a>
+            <a href="/tags/Paper-Note/" rel="tag"># Paper Note</a>
           
-            <a href="/tags/Neural-Network/" rel="tag"># Neural Network</a>
+            <a href="/tags/Pre-training/" rel="tag"># Pre-training</a>
           
-            <a href="/tags/LSTM/" rel="tag"># LSTM</a>
+            <a href="/tags/Cross-Lingual/" rel="tag"># Cross-Lingual</a>
           
         </div>
       
@@ -565,8 +689,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/24/Hexo-Github-Namecheap-搭建个人博客/" rel="next" title="Hexo + Github + Namecheap 搭建个人博客">
-                <i class="fa fa-chevron-left"></i> Hexo + Github + Namecheap 搭建个人博客
+              <a href="/2021/12/15/知识增强预训练模型总结/" rel="next" title="知识增强预训练模型总结">
+                <i class="fa fa-chevron-left"></i> 知识增强预训练模型总结
               </a>
             
           </div>
@@ -574,10 +698,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/18/《猩球崛起3》-非我族类与领袖特质/" rel="prev" title="《猩球崛起3》-非我族类与领袖特质">
-                《猩球崛起3》-非我族类与领袖特质 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -825,7 +945,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Biaffine-Parser"><span class="nav-number">1.</span> <span class="nav-text">Deep Biaffine Parser</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预测弧"><span class="nav-number">1.1.</span> <span class="nav-text">预测弧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预测标签"><span class="nav-number">1.2.</span> <span class="nav-text">预测标签</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Character-Level-Model"><span class="nav-number">2.</span> <span class="nav-text">Character-Level Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#POS-Tagger"><span class="nav-number">3.</span> <span class="nav-text">POS Tagger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM"><span class="nav-number">2.</span> <span class="nav-text">XLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献"><span class="nav-number">2.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">2.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XNLG"><span class="nav-number">3.</span> <span class="nav-text">XNLG</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-1"><span class="nav-number">3.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务"><span class="nav-number">3.2.</span> <span class="nav-text">预训练任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-1"><span class="nav-number">3.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM-R"><span class="nav-number">4.</span> <span class="nav-text">XLM-R</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-2"><span class="nav-number">4.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-2"><span class="nav-number">4.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mBART"><span class="nav-number">5.</span> <span class="nav-text">mBART</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-3"><span class="nav-number">5.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#X-STILTs"><span class="nav-number">6.</span> <span class="nav-text">X-STILTs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-4"><span class="nav-number">6.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MARGE"><span class="nav-number">7.</span> <span class="nav-text">MARGE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-5"><span class="nav-number">7.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#INFO-XLM"><span class="nav-number">8.</span> <span class="nav-text">INFO-XLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-6"><span class="nav-number">8.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FILTER"><span class="nav-number">9.</span> <span class="nav-text">FILTER</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-7"><span class="nav-number">9.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RemBERT"><span class="nav-number">10.</span> <span class="nav-text">RemBERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-8"><span class="nav-number">10.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VECO"><span class="nav-number">11.</span> <span class="nav-text">VECO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-9"><span class="nav-number">11.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT5"><span class="nav-number">12.</span> <span class="nav-text">mT5</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-10"><span class="nav-number">12.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT6"><span class="nav-number">13.</span> <span class="nav-text">mT6</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-11"><span class="nav-number">13.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM-E"><span class="nav-number">14.</span> <span class="nav-text">XLM-E</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-12"><span class="nav-number">14.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -991,7 +1111,7 @@
   
     <script>
   window.livereOptions = {
-    refer: '2017/08/28/Stanford-s-Graph-based-Neural-Dependency-Parser-at-the-CoNLL-2017-Shared-Task/'
+    refer: '2021/12/23/跨语言预训练模型总结/'
   };
   (function(d, s) {
     var j, e = d.getElementsByTagName(s)[0];
