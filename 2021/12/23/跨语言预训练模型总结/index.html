@@ -139,7 +139,12 @@
 <meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/xlm.png">
 <meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/xnlg.png">
 <meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/mbart.png">
-<meta property="og:updated_time" content="2021-12-23T09:11:15.923Z">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/x-stilts.png">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/marge.png">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/filter.png">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/mt6.png">
+<meta property="og:image" content="/2021/12/23/跨语言预训练模型总结/xlm-e.png">
+<meta property="og:updated_time" content="2021-12-24T09:31:11.522Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="跨语言预训练模型总结">
 <meta name="twitter:description" content="跨语言预训练模型 (Cross-Lingual Pre-trained Language Model) 总结与对比。">
@@ -406,12 +411,24 @@
                 
               
 
-              <time title="创建时间：2021-12-23 14:31:49 / 修改时间：17:11:15" itemprop="dateCreated datePublished" datetime="2021-12-23T14:31:49+08:00">2021-12-23</time>
+              <time title="创建时间：2021-12-23 14:31:49" itemprop="dateCreated datePublished" datetime="2021-12-23T14:31:49+08:00">2021-12-23</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-12-24 17:31:11" itemprop="dateModified" datetime="2021-12-24T17:31:11+08:00">2021-12-24</time>
               
             
           </span>
@@ -504,40 +521,40 @@
 <tr>
 <td>mBART</td>
 <td>2020.01</td>
-<td></td>
-<td></td>
+<td>25</td>
+<td>enc-dec</td>
 <td>TACL 2020</td>
 <td>355</td>
 </tr>
 <tr>
 <td>X-STILTs</td>
 <td>2020.03</td>
-<td></td>
-<td></td>
+<td>100</td>
+<td>BERT</td>
 <td>AACL 2020</td>
 <td>34</td>
 </tr>
 <tr>
 <td>MARGE</td>
 <td>2020.06</td>
-<td></td>
-<td></td>
+<td>26</td>
+<td>enc-dec</td>
 <td>Arxiv 2020</td>
 <td>69</td>
 </tr>
 <tr>
 <td>INFO-XLM</td>
 <td>2020.07</td>
-<td></td>
-<td></td>
+<td>100</td>
+<td>XLM-R-init</td>
 <td>NAACL 2021</td>
 <td>64</td>
 </tr>
 <tr>
 <td>FILTER</td>
 <td>2020.09</td>
-<td></td>
-<td></td>
+<td>100</td>
+<td>XLM-R-init</td>
 <td>AAAI 2021</td>
 <td>19</td>
 </tr>
@@ -568,16 +585,16 @@
 <tr>
 <td>mT6</td>
 <td>2021.04</td>
-<td></td>
-<td></td>
+<td>101</td>
+<td>T5</td>
 <td>EMNLP 2021</td>
 <td>11</td>
 </tr>
 <tr>
 <td>XLM-E</td>
 <td>2021.06</td>
-<td></td>
-<td></td>
+<td>100</td>
+<td>ELECTRA</td>
 <td>Arxiv 2021</td>
 <td>5</td>
 </tr>
@@ -620,18 +637,65 @@
 </ul>
 <h1 id="mBART"><a href="#mBART" class="headerlink" title="mBART"></a>mBART</h1><p>论文题目：Multilingual Denoising Pre-training for Neural Machine Translation</p>
 <p>单位：Facebook AI Research</p>
-<h2 id="主要贡献-3"><a href="#主要贡献-3" class="headerlink" title="主要贡献"></a>主要贡献</h2><div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/mbart.png" alt="mbart.png" title=""> </div>
+<h2 id="主要贡献-3"><a href="#主要贡献-3" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>使用来自多个语言的单语数据训练BART (<a href="https://aclanthology.org/2020.acl-main.703.pdf" target="_blank" rel="external">BART: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation, Translation, and Comprehension</a>) 模型，用于NMT。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/mbart.png" alt="mbart.png" title=""> </div>
 
-
+<h2 id="其他-3"><a href="#其他-3" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>模型结构：transformer结构，12层encoder和12层decoder，隐层维度为1024，attention head为16；</li>
+<li>学习目标为每个语言单独的BART目标 (即DAE)，其中noise function为：mask 35%的span (长度由$\lambda=3.5$的泊松分布决定)，另外交换 (permute) 句子顺序；</li>
+<li>encoder输入中每个batch随机sample一种语言，选择尽可能多的连续句子，直到长度达到512或到文本边界，最后拼接上对应的language embedding；</li>
+<li>decoder输入中开始为目标语言的language embedding。</li>
+</ul>
 <h1 id="X-STILTs"><a href="#X-STILTs" class="headerlink" title="X-STILTs"></a>X-STILTs</h1><p>论文题目：English Intermediate-Task Training Improves Zero-Shot Cross-Lingual Transfer Too</p>
 <p>单位：New York University, University of Amsterdam, University of Colorado Boulder</p>
-<h2 id="主要贡献-4"><a href="#主要贡献-4" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="MARGE"><a href="#MARGE" class="headerlink" title="MARGE"></a>MARGE</h1><p>论文题目：Pre-training via Paraphrasing</p>
+<h2 id="主要贡献-4"><a href="#主要贡献-4" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>在多语言情况下测试Intermediate-Task Training，使用了9种intermediate language-understanding任务。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/x-stilts.png" alt="x-stilts.png" title=""> </div>
+
+<h2 id="其他-4"><a href="#其他-4" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>使用XLM-R作为模型初始化，分别测试了XLM-R+intermediate任务以及同时使用intermediate task和MLM任务。</li>
+</ul>
+<h1 id="MARGE"><a href="#MARGE" class="headerlink" title="MARGE"></a>MARGE</h1><p>论文题目：Pre-training via Paraphrasing</p>
 <p>单位：Facebook AI Research</p>
-<h2 id="主要贡献-5"><a href="#主要贡献-5" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="INFO-XLM"><a href="#INFO-XLM" class="headerlink" title="INFO-XLM"></a>INFO-XLM</h1><p>论文题目：InfoXLM: An Information-Theoretic Framework for Cross-Lingual Language Model Pre-Training</p>
+<h2 id="主要贡献-5"><a href="#主要贡献-5" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出一个基于跨语言paraphrasing的retrieval和reconstruction框架，目标为训练一个relevance model用于搜索目标文档 (target document) 的证据文档 (evidence document)，同时训练一个seq2seq模型最大化根据证据文档生成目标文档的概率。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/marge.png" alt="marge.png" title=""> </div>
+
+<h2 id="其他-5"><a href="#其他-5" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>本文中的relevance model和seq2seq model的训练是一个鸡和蛋的问题 (chicken-and-egg problem)，二者互相依赖，实验证明在随机初始化情况下，该方法也能学到期望的信息；</li>
+<li>在Reconstruction Model (也就是上述的seq2seq模型) 中，本文修改了普通的transformer里面decoder的attention，改为目标文档和多个证据文档之间的attention，同时用relevance model中生成的文档间的相似分数作为额外bias控制attention score。</li>
+</ul>
+<h1 id="INFO-XLM"><a href="#INFO-XLM" class="headerlink" title="INFO-XLM"></a>INFO-XLM</h1><p>论文题目：InfoXLM: An Information-Theoretic Framework for Cross-Lingual Language Model Pre-Training</p>
 <p>单位：Beijing Institute of Technology, Microsoft Corporation</p>
-<h2 id="主要贡献-6"><a href="#主要贡献-6" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="FILTER"><a href="#FILTER" class="headerlink" title="FILTER"></a>FILTER</h1><p>论文题目：FILTER: An Enhanced Fusion Method for Cross-lingual Language Understanding</p>
+<h2 id="主要贡献-6"><a href="#主要贡献-6" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出一种基于信息论的思想用于解释此前的跨语言预训练模型中的MMLM和TLM训练任务是如何获取跨语言信息的；</li>
+<li>提出一种新的跨cross-lingual contrast (XLCO) 任务，通过contrastive learning使模型学习从一系列负例中区分出文本真实的翻译。</li>
+</ul>
+<h2 id="其他-6"><a href="#其他-6" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>使用了Momentum Contrast (<a href="https://arxiv.org/pdf/1911.05722.pdf" target="_blank" rel="external">Momentum Contrast for Unsupervised Visual Representation Learning</a>) 做对比学习；</li>
+<li>训练中使用了base模型的第8层和large模型的第12层的[CLS]隐层用于contrastive learning；</li>
+<li>使用XLM-R初始化模型；</li>
+<li><font color="red">问题：MoCo中会分别使用一个query encoder和一个key encoder对源语言句子和目标语言句子进行建模，但本文使用的仍然是XLM的BERT结构，按照上面的说法应该只有一个encoder。那么另一个encoder是从哪来的呢？ </font>
+
+
+
+</li>
+</ul>
+<h1 id="FILTER"><a href="#FILTER" class="headerlink" title="FILTER"></a>FILTER</h1><p>论文题目：FILTER: An Enhanced Fusion Method for Cross-lingual Language Understanding</p>
 <p>单位：Microsoft Dynamics 365 AI Research</p>
-<h2 id="主要贡献-7"><a href="#主要贡献-7" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="RemBERT"><a href="#RemBERT" class="headerlink" title="RemBERT"></a>RemBERT</h1><p>论文题目：Rethinking Embedding Coupling in Pre-trained Language Models</p>
+<h2 id="主要贡献-7"><a href="#主要贡献-7" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出一种基于XLM的fine-tuning方法，同时使用源语言和其在目标语言上的翻译 (由<a href="https://azure.microsoft.com/en-us/services/cognitiveservices/
+translator/" target="_blank" rel="external">Microsoft Machine Translator</a>生成) 作为输入，在XLM的底层和上层为源语言和目标语言使用不同参数，在中间层共享参数。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/filter.png" alt="filter.png" title=""> </div>
+
+
+
+<h1 id="RemBERT"><a href="#RemBERT" class="headerlink" title="RemBERT"></a>RemBERT</h1><p>论文题目：Rethinking Embedding Coupling in Pre-trained Language Models</p>
 <p>单位：Google Research</p>
 <h2 id="主要贡献-8"><a href="#主要贡献-8" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="VECO"><a href="#VECO" class="headerlink" title="VECO"></a>VECO</h1><p>论文题目：VECO: Variable and Flexible Cross-lingual Pre-training for Language Understanding and Generation</p>
 <p>单位：Alibaba Group</p>
@@ -647,9 +711,20 @@
 
 <h1 id="mT6"><a href="#mT6" class="headerlink" title="mT6"></a>mT6</h1><p>论文题目：mT6: Multilingual Pretrained Text-to-Text Transformer with Translation Pairs</p>
 <p>单位：Beijing Institute of Technology, Microsoft Research</p>
-<h2 id="主要贡献-11"><a href="#主要贡献-11" class="headerlink" title="主要贡献"></a>主要贡献</h2><h1 id="XLM-E"><a href="#XLM-E" class="headerlink" title="XLM-E"></a>XLM-E</h1><p>论文题目：XLM-E: Cross-lingual Language Model Pre-training via ELECTRA</p>
+<h2 id="主要贡献-11"><a href="#主要贡献-11" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>在mT5的基础上增加了双语平行数据，提出了<code>machine translation</code>, <code>translation pair span corruption</code>和<code>translation span corruption</code>三个需要平行数据的跨语言预训练任务。</li>
+</ul>
+<h2 id="预训练任务-1"><a href="#预训练任务-1" class="headerlink" title="预训练任务"></a>预训练任务</h2><div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/mt6.png" alt="mt6.png" title=""> </div>
+
+
+
+<h1 id="XLM-E"><a href="#XLM-E" class="headerlink" title="XLM-E"></a>XLM-E</h1><p>论文题目：XLM-E: Cross-lingual Language Model Pre-training via ELECTRA</p>
 <p>单位：Microsoft Corporation</p>
-<h2 id="主要贡献-12"><a href="#主要贡献-12" class="headerlink" title="主要贡献"></a>主要贡献</h2>
+<h2 id="主要贡献-12"><a href="#主要贡献-12" class="headerlink" title="主要贡献"></a>主要贡献</h2><ul>
+<li>提出两个新的跨语言预训练任务Multilingual replaced token detection (MRTD) 和Translation replaced token detection (TRTD)，实现了跨语言的ELECTRA；</li>
+<li>模型在取得相近性能情况下预训练所需计算资源大大减少。</li>
+</ul>
+<h2 id="预训练任务-2"><a href="#预训练任务-2" class="headerlink" title="预训练任务"></a>预训练任务</h2><div style="width:70%;margin:auto"> <img src="/2021/12/23/跨语言预训练模型总结/xlm-e.png" alt="xlm-e.png" title=""> </div>
       
     </div>
 
@@ -945,7 +1020,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM"><span class="nav-number">2.</span> <span class="nav-text">XLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献"><span class="nav-number">2.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">2.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XNLG"><span class="nav-number">3.</span> <span class="nav-text">XNLG</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-1"><span class="nav-number">3.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务"><span class="nav-number">3.2.</span> <span class="nav-text">预训练任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-1"><span class="nav-number">3.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM-R"><span class="nav-number">4.</span> <span class="nav-text">XLM-R</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-2"><span class="nav-number">4.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-2"><span class="nav-number">4.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mBART"><span class="nav-number">5.</span> <span class="nav-text">mBART</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-3"><span class="nav-number">5.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#X-STILTs"><span class="nav-number">6.</span> <span class="nav-text">X-STILTs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-4"><span class="nav-number">6.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MARGE"><span class="nav-number">7.</span> <span class="nav-text">MARGE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-5"><span class="nav-number">7.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#INFO-XLM"><span class="nav-number">8.</span> <span class="nav-text">INFO-XLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-6"><span class="nav-number">8.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FILTER"><span class="nav-number">9.</span> <span class="nav-text">FILTER</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-7"><span class="nav-number">9.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RemBERT"><span class="nav-number">10.</span> <span class="nav-text">RemBERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-8"><span class="nav-number">10.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VECO"><span class="nav-number">11.</span> <span class="nav-text">VECO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-9"><span class="nav-number">11.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT5"><span class="nav-number">12.</span> <span class="nav-text">mT5</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-10"><span class="nav-number">12.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT6"><span class="nav-number">13.</span> <span class="nav-text">mT6</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-11"><span class="nav-number">13.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM-E"><span class="nav-number">14.</span> <span class="nav-text">XLM-E</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-12"><span class="nav-number">14.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM"><span class="nav-number">2.</span> <span class="nav-text">XLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献"><span class="nav-number">2.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">2.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XNLG"><span class="nav-number">3.</span> <span class="nav-text">XNLG</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-1"><span class="nav-number">3.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务"><span class="nav-number">3.2.</span> <span class="nav-text">预训练任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-1"><span class="nav-number">3.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM-R"><span class="nav-number">4.</span> <span class="nav-text">XLM-R</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-2"><span class="nav-number">4.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-2"><span class="nav-number">4.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mBART"><span class="nav-number">5.</span> <span class="nav-text">mBART</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-3"><span class="nav-number">5.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-3"><span class="nav-number">5.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#X-STILTs"><span class="nav-number">6.</span> <span class="nav-text">X-STILTs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-4"><span class="nav-number">6.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-4"><span class="nav-number">6.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MARGE"><span class="nav-number">7.</span> <span class="nav-text">MARGE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-5"><span class="nav-number">7.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-5"><span class="nav-number">7.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#INFO-XLM"><span class="nav-number">8.</span> <span class="nav-text">INFO-XLM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-6"><span class="nav-number">8.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他-6"><span class="nav-number">8.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FILTER"><span class="nav-number">9.</span> <span class="nav-text">FILTER</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-7"><span class="nav-number">9.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RemBERT"><span class="nav-number">10.</span> <span class="nav-text">RemBERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-8"><span class="nav-number">10.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VECO"><span class="nav-number">11.</span> <span class="nav-text">VECO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-9"><span class="nav-number">11.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT5"><span class="nav-number">12.</span> <span class="nav-text">mT5</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-10"><span class="nav-number">12.1.</span> <span class="nav-text">主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT6"><span class="nav-number">13.</span> <span class="nav-text">mT6</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-11"><span class="nav-number">13.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务-1"><span class="nav-number">13.2.</span> <span class="nav-text">预训练任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XLM-E"><span class="nav-number">14.</span> <span class="nav-text">XLM-E</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要贡献-12"><span class="nav-number">14.1.</span> <span class="nav-text">主要贡献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务-2"><span class="nav-number">14.2.</span> <span class="nav-text">预训练任务</span></a></li></ol></li></ol></div>
             
 
           </div>
