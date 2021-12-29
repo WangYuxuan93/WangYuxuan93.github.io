@@ -141,10 +141,11 @@
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/gpt3.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/gpt3-data.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/switch-transformer.png">
+<meta property="og:image" content="/2021/12/13/大规模预训练模型对比/glam.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/m6.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/pangu.png">
 <meta property="og:image" content="/2021/12/13/大规模预训练模型对比/mt5.png">
-<meta property="og:updated_time" content="2021-12-14T09:03:18.289Z">
+<meta property="og:updated_time" content="2021-12-29T08:53:41.003Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="大规模预训练模型对比">
 <meta name="twitter:description" content="2019年-2021年大规模预训练模型对比，从最开始2019年的8.5B的Megatron，到最近2021年底的280B的Gopher。">
@@ -428,7 +429,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-14 17:03:18" itemprop="dateModified" datetime="2021-12-14T17:03:18+08:00">2021-12-14</time>
+                <time title="修改时间：2021-12-29 16:53:41" itemprop="dateModified" datetime="2021-12-29T16:53:41+08:00">2021-12-29</time>
               
             
           </span>
@@ -543,6 +544,13 @@
 <td>GPT</td>
 </tr>
 <tr>
+<td>GLaM</td>
+<td>2021.12</td>
+<td>English</td>
+<td style="text-align:right">1.2T</td>
+<td>transformer-decoder</td>
+</tr>
+<tr>
 <td>CPM</td>
 <td>2020.12</td>
 <td>Chinese</td>
@@ -636,6 +644,12 @@
 <td>Gopher</td>
 <td style="text-align:right">280B</td>
 <td style="text-align:right">300B toks</td>
+<td>否</td>
+</tr>
+<tr>
+<td>GLaM</td>
+<td style="text-align:right">1.2T</td>
+<td style="text-align:right">1.6T toks</td>
 <td>否</td>
 </tr>
 <tr>
@@ -751,6 +765,17 @@
 <ul>
 <li>模型规模的收益不是平均的，某些需要更复杂的数学或逻辑推理的任务上，Gopher模型规模增加无法带来显著的效果提升。</li>
 </ul>
+<h1 id="GLaM"><a href="#GLaM" class="headerlink" title="GLaM"></a>GLaM</h1><p>论文题目：GLaM: Efficient Scaling of Language Models with Mixture-of-Experts</p>
+<p>单位：Google Inc</p>
+<p>主要贡献：</p>
+<ul>
+<li>提出一种sparsely activated MoE结构用于增大预训练模型容量，同时训练该模型的资源消耗远小于同样的dense模型；</li>
+<li>最大模型达到1.2T。</li>
+</ul>
+<div style="width:50%;margin:auto"> <img src="/2021/12/13/大规模预训练模型对比/glam.png" alt="glam.png" title=""> </div>
+
+
+
 <h1 id="CPM"><a href="#CPM" class="headerlink" title="CPM"></a>CPM</h1><p>论文题目：CPM: A Large-scale Generative Chinese Pre-trained Language Model</p>
 <p>单位：Tsinghua University, Beijing Academy of Artificial Intelligence (BAAI)</p>
 <p>主要贡献：</p>
@@ -1112,7 +1137,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据信息"><span class="nav-number">2.</span> <span class="nav-text">数据信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Megatron-LM"><span class="nav-number">3.</span> <span class="nav-text">Megatron-LM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Text-to-Text-Transfer-Transformer-T5"><span class="nav-number">4.</span> <span class="nav-text">Text-to-Text Transfer Transformer (T5)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GPT-3"><span class="nav-number">5.</span> <span class="nav-text">GPT-3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Switch-Transformer"><span class="nav-number">6.</span> <span class="nav-text">Switch Transformer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jurassic-1"><span class="nav-number">7.</span> <span class="nav-text">Jurassic-1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Megatron-Turing-NLG"><span class="nav-number">8.</span> <span class="nav-text">Megatron-Turing NLG</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gopher"><span class="nav-number">9.</span> <span class="nav-text">Gopher</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPM"><span class="nav-number">10.</span> <span class="nav-text">CPM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multi-Modality-to-Multi-Modality-Multitask-Mega-transformer-M6"><span class="nav-number">11.</span> <span class="nav-text">Multi-Modality to Multi-Modality Multitask Mega-transformer (M6)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PanGu"><span class="nav-number">12.</span> <span class="nav-text">PanGu</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPM-2"><span class="nav-number">13.</span> <span class="nav-text">CPM-2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HyperCLOVA"><span class="nav-number">14.</span> <span class="nav-text">HyperCLOVA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT5"><span class="nav-number">15.</span> <span class="nav-text">mT5</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型信息"><span class="nav-number">1.</span> <span class="nav-text">模型信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据信息"><span class="nav-number">2.</span> <span class="nav-text">数据信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Megatron-LM"><span class="nav-number">3.</span> <span class="nav-text">Megatron-LM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Text-to-Text-Transfer-Transformer-T5"><span class="nav-number">4.</span> <span class="nav-text">Text-to-Text Transfer Transformer (T5)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GPT-3"><span class="nav-number">5.</span> <span class="nav-text">GPT-3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Switch-Transformer"><span class="nav-number">6.</span> <span class="nav-text">Switch Transformer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jurassic-1"><span class="nav-number">7.</span> <span class="nav-text">Jurassic-1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Megatron-Turing-NLG"><span class="nav-number">8.</span> <span class="nav-text">Megatron-Turing NLG</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gopher"><span class="nav-number">9.</span> <span class="nav-text">Gopher</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GLaM"><span class="nav-number">10.</span> <span class="nav-text">GLaM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPM"><span class="nav-number">11.</span> <span class="nav-text">CPM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multi-Modality-to-Multi-Modality-Multitask-Mega-transformer-M6"><span class="nav-number">12.</span> <span class="nav-text">Multi-Modality to Multi-Modality Multitask Mega-transformer (M6)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PanGu"><span class="nav-number">13.</span> <span class="nav-text">PanGu</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPM-2"><span class="nav-number">14.</span> <span class="nav-text">CPM-2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HyperCLOVA"><span class="nav-number">15.</span> <span class="nav-text">HyperCLOVA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mT5"><span class="nav-number">16.</span> <span class="nav-text">mT5</span></a></li></ol></div>
             
 
           </div>
