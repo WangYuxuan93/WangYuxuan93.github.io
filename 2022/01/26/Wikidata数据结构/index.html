@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"/>
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Wikidata的JSON版本数据结构以及一些相关的信息记录。">
+<meta name="keywords" content="Dataset,Knowledge Graph,Knowledge Base">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wikidata数据结构">
+<meta property="og:url" content="www.alexyxwang.com/2022/01/26/Wikidata数据结构/index.html">
+<meta property="og:site_name" content="Avalon">
+<meta property="og:description" content="Wikidata的JSON版本数据结构以及一些相关的信息记录。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-01-26T09:26:47.651Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wikidata数据结构">
+<meta name="twitter:description" content="Wikidata的JSON版本数据结构以及一些相关的信息记录。">
+
+
+
+
+
+
+  <link rel="canonical" href="www.alexyxwang.com/2022/01/26/Wikidata数据结构/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Wikidata数据结构 | Avalon</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Avalon</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">全て遠き理想郷</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="www.alexyxwang.com/2022/01/26/Wikidata数据结构/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Alex"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Avalon"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Wikidata数据结构
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-01-26 14:51:17 / 修改时间：17:26:47" itemprop="dateCreated datePublished" datetime="2022-01-26T14:51:17+08:00">2022-01-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Dataset/" itemprop="url" rel="index"><span itemprop="name">Dataset</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Wikidata的JSON版本数据结构以及一些相关的信息记录。</p>
+<a id="more"></a>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><p>Wikidata官方版本<a href="https://dumps.wikimedia.org/wikidatawiki/entities/" target="_blank" rel="external">下载地址</a>。</p>
+<p>基本每隔几天都会更新一次，里面有几种格式的数据，包括JSON dump (.json文件)，RDF dump (使用Turtle和NTriples格式的.nt和.ttl文件)，XML dump (在<a href="https://dumps.wikimedia.org/wikidatawiki/" target="_blank" rel="external">另一个地址</a>里)。</p>
+<p>另外wikidata从2018年开始增加了一种namespace为lexeme的item，官方解释为：</p>
+<p><code>In linguistics, a lexeme is a unit of lexical meaning. Similarly, Wikidata&#39;s lexemes are items with a structure that makes them more suitable to store lexicographical data. Besides storing the language to which the lexeme refers, they have a section for forms and a section for senses.</code></p>
+<p>意思似乎跟中文中的义原 (sememe) 比较像，这些新的数据也以三种格式保存在前面的地址。</p>
+<p>目前 (2022.01.26) 最新版的wikidata JSON版本的压缩包已经到达接近70G，解压之后有几百G，而且是存在一个文件里的，比较难以处理。如果想用较少数据熟悉一下wikidata可以下载<a href="https://archive.org/details/wikimedia-other?and%5B%5D=wikidata%20dumps%20-title:(entity%20dumps" target="_blank" rel="external">以前的版本</a>)。只是下载速度会比较慢。</p>
+<h1 id="JSON文件结构"><a href="#JSON文件结构" class="headerlink" title="JSON文件结构"></a>JSON文件结构</h1><p>wikidata的JSON文件结构具体说明见<a href="https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_json.html" target="_blank" rel="external">这里</a>。</p>
+<h2 id="上层结构"><a href="#上层结构" class="headerlink" title="上层结构"></a>上层结构</h2><p>Wikidata里主要保存两类entity，分别是item和property，其中item用于记录各类实体，property用于表述实体的属性，二者的区别首先由属性<code>type</code>决定，其次property没有sitelinks，但多了datatype。</p>
+<p>item上层结构如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;id&quot;: &quot;Q60&quot;,</div><div class="line">  &quot;type&quot;: &quot;item&quot;,</div><div class="line">  &quot;labels&quot;: &#123;&#125;,</div><div class="line">  &quot;descriptions&quot;: &#123;&#125;,</div><div class="line">  &quot;aliases&quot;: &#123;&#125;,</div><div class="line">  &quot;claims&quot;: &#123;&#125;,</div><div class="line">  &quot;sitelinks&quot;: &#123;&#125;,</div><div class="line">  &quot;lastrevid&quot;: 195301613,</div><div class="line">  &quot;modified&quot;: &quot;2020-02-10T12:42:02Z&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>property上层结构如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;id&quot;: &quot;P30&quot;,</div><div class="line">  &quot;type&quot;: &quot;property&quot;,</div><div class="line">  &quot;datatype&quot;: &quot;wikibase-item&quot;</div><div class="line">  &quot;labels&quot;: &#123;&#125;,</div><div class="line">  &quot;descriptions&quot;: &#123;&#125;,</div><div class="line">  &quot;aliases&quot;: &#123;&#125;,</div><div class="line">  &quot;claims&quot;: &#123;&#125;,</div><div class="line">  &quot;lastrevid&quot;: 195301614,</div><div class="line">  &quot;modified&quot;: &quot;2020-02-10T12:42:02Z&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>各项内容说明如下：</p>
+<ul>
+<li>id：表示该实体的唯一性ID，其中item以Q开头，property以P开头；</li>
+<li>type：表示该实体为item或property；</li>
+<li>datatype：property实体适用的数据类型；</li>
+<li>labels：不同语言中的label (即不同语言中对这个entity的表述方式)；</li>
+<li>descriptions：不同语言中对这个entity的描述；</li>
+<li>aliases：不同语言中对这个词的其他表述方式 (或者理解为同义词)；</li>
+<li>claims：关于该实体的statement (若干，每个由一个property作为key，可以理解为该实体的一条属性)；</li>
+<li>sitelinks：多个包括该实体 (item) 的网页链接。</li>
+</ul>
+<h2 id="Labels-Descriptions-and-Aliases"><a href="#Labels-Descriptions-and-Aliases" class="headerlink" title="Labels, Descriptions and Aliases"></a>Labels, Descriptions and Aliases</h2><p>下面给出一个具体的labels、descriptions和aliases的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;labels&quot;: &#123;</div><div class="line">&quot;en&quot;: &#123;</div><div class="line">  &quot;language&quot;: &quot;en&quot;,</div><div class="line">  &quot;value&quot;: &quot;New York City&quot;</div><div class="line">&#125;,</div><div class="line">&quot;ar&quot;: &#123;</div><div class="line">  &quot;language&quot;: &quot;ar&quot;,</div><div class="line">  &quot;value&quot;: &quot;\u0645\u062f\u064a\u0646\u0629 \u0646\u064a\u0648 \u064a\u0648\u0631\u0643&quot;</div><div class="line">&#125;</div><div class="line">  &#125;,</div><div class="line">  &quot;descriptions&quot;: &#123;</div><div class="line">&quot;en&quot;: &#123;</div><div class="line">  &quot;language&quot;: &quot;en&quot;,</div><div class="line">  &quot;value&quot;: &quot;largest city in New York and the United States of America&quot;</div><div class="line">&#125;,</div><div class="line">&quot;it&quot;: &#123;</div><div class="line">  &quot;language&quot;: &quot;it&quot;,</div><div class="line">  &quot;value&quot;: &quot;citt\u00e0 degli Stati Uniti d&apos;America&quot;</div><div class="line">&#125;</div><div class="line">  &#125;,</div><div class="line">  &quot;aliases&quot;: &#123;</div><div class="line">&quot;en&quot;: [</div><div class="line">  &#123;</div><div class="line">    &quot;language&quot;: &quot;en&quot;,</div><div class="line">    &quot;value&quot;: &quot;New York&quot;</div><div class="line">  &#125;,</div><div class="line">],</div><div class="line">&quot;fr&quot;: [</div><div class="line">  &#123;</div><div class="line">    &quot;language&quot;: &quot;fr&quot;,</div><div class="line">    &quot;value&quot;: &quot;New York City&quot;</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    &quot;language&quot;: &quot;fr&quot;,</div><div class="line">    &quot;value&quot;: &quot;NYC&quot;</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    &quot;language&quot;: &quot;fr&quot;,</div><div class="line">    &quot;value&quot;: &quot;The City&quot;</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    &quot;language&quot;: &quot;fr&quot;,</div><div class="line">    &quot;value&quot;: &quot;La grosse pomme&quot;</div><div class="line">  &#125;</div><div class="line">]</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中每个元素都由一个language属性和实际的value组成，其中aliases以语言作为key，每个语言下对应的是一个该语言的同义词的list (表中每个元素仍然符合上述规则)。</p>
+<h2 id="Statements"><a href="#Statements" class="headerlink" title="Statements"></a>Statements</h2><p>下面给出一个statements的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;claims&quot;: &#123;</div><div class="line">    &quot;P17&quot;: [</div><div class="line">      &#123;</div><div class="line">        &quot;id&quot;: &quot;q60$5083E43C-228B-4E3E-B82A-4CB20A22A3FB&quot;,</div><div class="line">        &quot;mainsnak&quot;: &#123;&#125;,</div><div class="line">        &quot;type&quot;: &quot;statement&quot;,</div><div class="line">        &quot;rank&quot;: &quot;normal&quot;,</div><div class="line">        &quot;qualifiers&quot;: &#123;</div><div class="line">          &quot;P580&quot;: [],</div><div class="line">          &quot;P5436&quot;: []</div><div class="line">         &#125;</div><div class="line">        &quot;references&quot;: [</div><div class="line">           &#123;</div><div class="line">             &quot;hash&quot;: &quot;d103e3541cc531fa54adcaffebde6bef28d87d32&quot;,</div><div class="line">             &quot;snaks&quot;: []</div><div class="line">           &#125;</div><div class="line">         ]</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其结构是一个以property id为key的map，每个statement (或称为claim) 表示当前实体的一个属性 (property)，其中包括的信息如下：</p>
+<ul>
+<li>id：用于表示该statement的全局单一的随机ID；</li>
+<li>type：只能填statement (历史版本中也可能填claim)；</li>
+<li>mainsnak：用于表示与当前property相关的value的Snak，注意其中包括的property要与作为key的property一致；</li>
+<li>rank：表示该值是否会在query中显示 (preferred, normal or deprecated)；</li>
+<li>qualifiers：对主要value的补充描述 (例如测量时间等)；</li>
+<li>references：记录mainsnak中数据的来源。</li>
+</ul>
+<p>注意：在历史版本的wikidata中，statement和claim有所区别，前者有reference而后者没有。但新版中二者不做区分。</p>
+<h2 id="Snak"><a href="#Snak" class="headerlink" title="Snak"></a>Snak</h2><p>下面给出一个statements中的mainsnak的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;claims&quot;: &#123;</div><div class="line">    &quot;P17&quot;: [</div><div class="line">      &#123;</div><div class="line">        &quot;mainsnak&quot;: &#123;</div><div class="line">          &quot;snaktype&quot;: &quot;value&quot;,</div><div class="line">          &quot;property&quot;: &quot;P17&quot;,</div><div class="line">          &quot;datatype&quot;: &quot;wikibase-item&quot;,</div><div class="line">          &quot;datavalue&quot;: &#123;</div><div class="line">            &quot;value&quot;: &#123;</div><div class="line">              &quot;entity-type&quot;: &quot;item&quot;,</div><div class="line">              &quot;id&quot;: &quot;Q30&quot;,</div><div class="line">              &quot;numeric-id&quot;: 30</div><div class="line">            &#125;,</div><div class="line">            &quot;type&quot;: &quot;wikibase-entityid&quot;</div><div class="line">          &#125;</div><div class="line">        &#125;,</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        &quot;mainsnak&quot;: &#123;</div><div class="line">          &quot;snaktype&quot;: &quot;somevalue&quot;,</div><div class="line">          &quot;property&quot;: &quot;P17&quot;,</div><div class="line">        &#125;,</div><div class="line">      &#125;</div><div class="line">    ],</div><div class="line">    &quot;P356&quot;: [</div><div class="line">      &#123;</div><div class="line">        &quot;mainsnak&quot;: &#123;</div><div class="line">          &quot;snaktype&quot;: &quot;value&quot;,</div><div class="line">          &quot;property&quot;: &quot;P356&quot;,</div><div class="line">          &quot;datatype&quot;: &quot;string&quot;,</div><div class="line">          &quot;datavalue&quot;: &#123;</div><div class="line">            &quot;value&quot;: &quot;SomePicture.jpg&quot;,</div><div class="line">            &quot;type&quot;: &quot;string&quot;</div><div class="line">          &#125;</div><div class="line">        &#125;,</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中包括信息有：</p>
+<ul>
+<li>snaktype：value, somevalue or novalue，其中value表示具体的值，另外两个则表示当前snak有某个未知值或者没有值；</li>
+<li>property：相关property的id；</li>
+<li>datatype：数据的类别，<a href="https://www.wikidata.org/wiki/Special:ListDatatypes" target="_blank" rel="external">所有类别定义</a>，来自property的datatype；</li>
+<li>datavalue：只有当snaktype为value时有这一项，表示property具体的值。</li>
+</ul>
+<h2 id="Data-Values"><a href="#Data-Values" class="headerlink" title="Data Values"></a>Data Values</h2><p>下面给出data value的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&quot;datavalue&quot;: &#123;</div><div class="line">  &quot;value&quot;: &#123;</div><div class="line">    &quot;entity-type&quot;: &quot;item&quot;,</div><div class="line">    &quot;id&quot;: &quot;Q30&quot;,</div><div class="line">    &quot;numeric-id&quot;: 30</div><div class="line">  &#125;,</div><div class="line">  &quot;type&quot;: &quot;wikibase-entityid&quot;</div><div class="line">&#125;</div><div class="line">&quot;datavalue&quot;: &#123;</div><div class="line">  &quot;value&quot;: &quot;SomePicture.jpg&quot;,</div><div class="line">  &quot;type&quot;: &quot;string&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中包括两个主要属性：</p>
+<ul>
+<li>type：描述值的数据类型，该类型只用于处理文本。例如一个link的data type可能是<code>url</code>，但value中的type应该是<code>string</code>；</li>
+<li>value：具体的值，可能是数字，字符串或更复杂的结构。</li>
+</ul>
+<p>接下来具体介绍几种value的类别。</p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&quot;datavalue&quot;: &#123;</div><div class="line">  &quot;value&quot;: &quot;SomePicture.jpg&quot;,</div><div class="line">  &quot;type&quot;: &quot;string&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>string</code>类型的value只包括简单的字符串常量。</p>
+<h3 id="wikibase-entityid"><a href="#wikibase-entityid" class="headerlink" title="wikibase-entityid"></a>wikibase-entityid</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&quot;datavalue&quot;: &#123;</div><div class="line">  &quot;value&quot;: &#123;</div><div class="line">    &quot;entity-type&quot;: &quot;item&quot;,</div><div class="line">    &quot;id&quot;: &quot;Q30&quot;,</div><div class="line">    &quot;numeric-id&quot;: 30</div><div class="line">  &#125;,</div><div class="line">  &quot;type&quot;: &quot;wikibase-entityid&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>wikibase-entityid</code>类型的value包括：</p>
+<ul>
+<li>entity-type：目标entity的类别 (item or property)；</li>
+<li>id：目标entity的唯一ID；</li>
+<li>numeric-id：ID的数字部分。(注意：并不是所有的entity都有数字ID，因此建议使用id)</li>
+</ul>
+<h3 id="globecoordinate"><a href="#globecoordinate" class="headerlink" title="globecoordinate"></a>globecoordinate</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&quot;datavalue&quot;: &#123;</div><div class="line">  &quot;value&quot;: &#123;</div><div class="line">    &quot;latitude&quot;: 52.516666666667,</div><div class="line">    &quot;longitude&quot;: 13.383333333333,</div><div class="line">    &quot;altitude&quot;: null,</div><div class="line">    &quot;precision&quot;: 0.016666666666667,</div><div class="line">    &quot;globe&quot;: &quot;http:\/\/www.wikidata.org\/entity\/Q2&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;type&quot;: &quot;globecoordinate&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>globecoordinate</code> (全球坐标) 类型的value包括：</p>
+<ul>
+<li>latitude：纬度；</li>
+<li>longitude：经度；</li>
+<li>precision：准确率；</li>
+<li>globe：对应地点的URI (例如Q2 = earth)；</li>
+<li>altitude：DEPRECATED。</li>
+</ul>
+<h3 id="quantity"><a href="#quantity" class="headerlink" title="quantity"></a>quantity</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&quot;datavalue&quot;: &#123;</div><div class="line">  &quot;value&quot;:&#123;</div><div class="line">    &quot;amount&quot;:&quot;+10.38&quot;,</div><div class="line">    &quot;upperBound&quot;:&quot;+10.375&quot;,</div><div class="line">    &quot;lowerBound&quot;:&quot;+10.385&quot;,</div><div class="line">    &quot;unit&quot;:&quot;http://www.wikidata.org/entity/Q712226&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;type&quot;:&quot;quantity&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>quantity</code>类型的value包括：</p>
+<ul>
+<li>amount：具体值，开头正负号表示值的正负性；</li>
+<li>upperBound/lowerBound：上下界，必须同时出现，如果未给出说明该值的不确定性未知；</li>
+<li>unit：单位的URI。(例如这里的Q712226 = square kilometer，如果没有单位则为”1”)</li>
+</ul>
+<h3 id="time"><a href="#time" class="headerlink" title="time"></a>time</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&quot;datavalue&quot;: &#123;</div><div class="line">  &quot;value&quot;: &#123;</div><div class="line">    &quot;time&quot;: &quot;+2001-12-31T00:00:00Z&quot;,</div><div class="line">    &quot;timezone&quot;: 0,</div><div class="line">    &quot;before&quot;: 0,</div><div class="line">    &quot;after&quot;: 0,</div><div class="line">    &quot;precision&quot;: 11,</div><div class="line">    &quot;calendarmodel&quot;: &quot;http:\/\/www.wikidata.org\/entity\/Q1985727&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;type&quot;: &quot;time&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>time</code>类型的value包括：</p>
+<ul>
+<li>time：具体时间；</li>
+<li>timezone：时区；</li>
+<li>calendarmodel：日历模型的URI，例如gregorian or julian；</li>
+<li>precision：To what unit is the given date/time significant，用数字代号表示；</li>
+<li>before/after：目前未使用。</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>其他没有涉及到的还有Qualifiers，References和Sitelinks，其基本信息已经在开头介绍了，具体信息见<a href="https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_json.html" target="_blank" rel="external">英文说明</a>。</p>
+<h1 id="利用方法"><a href="#利用方法" class="headerlink" title="利用方法"></a>利用方法</h1><h2 id="三元组"><a href="#三元组" class="headerlink" title="三元组"></a>三元组</h2><p>总的来说，如果只希望抽取三元组的话，应该关注<code>item</code>类别的entity，然后从其claims里面逐个判断每个property，property的Snak的datavalue的type是<code>wikibase-entityid</code>的表示这一个property描述的是当前item和另一个item之间的关系。抽取这类item-property-item信息作为三元组 (后面需要根据item/property的label属性将其转化为不同语言中的表示)。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Dataset/" rel="tag"># Dataset</a>
+          
+            <a href="/tags/Knowledge-Graph/" rel="tag"># Knowledge Graph</a>
+          
+            <a href="/tags/Knowledge-Base/" rel="tag"># Knowledge Base</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/13/论文笔记-A-Survey-on-Knowledge-Graphs-Representation-Acquisition-and-Applications/" rel="next" title="[论文笔记] A Survey on Knowledge Graphs: Representation, Acquisition and Applications">
+                <i class="fa fa-chevron-left"></i> [论文笔记] A Survey on Knowledge Graphs: Representation, Acquisition and Applications
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDQ0OC83MDAy"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Alex"/>
+            
+              <p class="site-author-name" itemprop="name">Alex</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/WangYuxuan93" title="GitHub &rarr; https://github.com/WangYuxuan93" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:hitalexwang@gmail.com" title="E-Mail &rarr; mailto:hitalexwang@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/alex_ritsu" title="Twitter &rarr; https://twitter.com/alex_ritsu" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#下载"><span class="nav-number">1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JSON文件结构"><span class="nav-number">2.</span> <span class="nav-text">JSON文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上层结构"><span class="nav-number">2.1.</span> <span class="nav-text">上层结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Labels-Descriptions-and-Aliases"><span class="nav-number">2.2.</span> <span class="nav-text">Labels, Descriptions and Aliases</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Statements"><span class="nav-number">2.3.</span> <span class="nav-text">Statements</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Snak"><span class="nav-number">2.4.</span> <span class="nav-text">Snak</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Values"><span class="nav-number">2.5.</span> <span class="nav-text">Data Values</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#string"><span class="nav-number">2.5.1.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wikibase-entityid"><span class="nav-number">2.5.2.</span> <span class="nav-text">wikibase-entityid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#globecoordinate"><span class="nav-number">2.5.3.</span> <span class="nav-text">globecoordinate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#quantity"><span class="nav-number">2.5.4.</span> <span class="nav-text">quantity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#time"><span class="nav-number">2.5.5.</span> <span class="nav-text">time</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">2.6.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用方法"><span class="nav-number">3.</span> <span class="nav-text">利用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#三元组"><span class="nav-number">3.1.</span> <span class="nav-text">三元组</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Alex</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.3.8</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+  <script>
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=63531031";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2022/01/26/Wikidata数据结构/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
