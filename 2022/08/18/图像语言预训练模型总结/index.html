@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"/>
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey。">
+<meta name="keywords" content="Paper Note,Pre-training,Vision-Language">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像语言预训练模型总结">
+<meta property="og:url" content="www.alexyxwang.com/2022/08/18/图像语言预训练模型总结/index.html">
+<meta property="og:site_name" content="Avalon">
+<meta property="og:description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-08-19T08:59:00.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图像语言预训练模型总结">
+<meta name="twitter:description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey。">
+
+
+
+
+
+
+  <link rel="canonical" href="www.alexyxwang.com/2022/08/18/图像语言预训练模型总结/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>图像语言预训练模型总结 | Avalon</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Avalon</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">全て遠き理想郷</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="www.alexyxwang.com/2022/08/18/图像语言预训练模型总结/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Alex"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Avalon"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">图像语言预训练模型总结
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-08-18 14:00:05" itemprop="dateCreated datePublished" datetime="2022-08-18T14:00:05+08:00">2022-08-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-08-19 16:59:00" itemprop="dateModified" datetime="2022-08-19T16:59:00+08:00">2022-08-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Paper-Note/" itemprop="url" rel="index"><span itemprop="name">Paper Note</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。<br>主要参考论文<a href="https://www.ijcai.org/proceedings/2022/0773.pdf" target="_blank" rel="external">Vision-and-Language Pretrained Models: A Survey</a>。</p>
+<a id="more"></a>
+<p>VLPM主要由以下四个部分组成：</p>
+<ul>
+<li>视觉/语言输入数据：原始数据，句子和图片</li>
+<li>视觉/语言表示：各自独立的表示</li>
+<li>视觉-语言交互模型：通过模型实现跨模态交互</li>
+<li>视觉-语言表示：跨模态表示</li>
+</ul>
+<h1 id="输入处理"><a href="#输入处理" class="headerlink" title="输入处理"></a>输入处理</h1><h2 id="文本编码"><a href="#文本编码" class="headerlink" title="文本编码"></a>文本编码</h2><p>基本所有工作都使用了BERT形式的预处理，即将token/position/segment embeddings加起来。<br>一般token和position embedding基本与BERT相同，而segment embedding则修改为modality embedding来区分不同的模态。<br>此外也可以在文本表示中插入visual feature作为第4种embedding，作为early-fusion strategy。<br>这样做的好处是可以用BERT进行初始化，同时也能直接在上层模型中使用transformer encoder和其中的multi-head self-attention mechanism实现跨模态交互。</p>
+<h2 id="模态内处理（Intra-modality）"><a href="#模态内处理（Intra-modality）" class="headerlink" title="模态内处理（Intra-modality）"></a>模态内处理（Intra-modality）</h2><p>有些工作在处理文本时使用类似BERT的transformer建模上下文信息，从而和使用CNN抽取的高层次图像信息平衡，并强化单模态表示。</p>
+<h2 id="图像编码"><a href="#图像编码" class="headerlink" title="图像编码"></a>图像编码</h2><p>输入图像一般是与输入文本对齐的图片或者一组相互之间语义相关的图片。<br>图像一般也用BERT形式的3个embedding表示。<br>其中segment embedding跟文本处理中一样用于区分模态。<br>而另外两种则变成visual feature和spatial position embedding用于获取图像语义。<br>其中visual feature使用CNN抽取。在获取该信息时，granularity of representation（即如何对像素进行分组，将其变成连续的visual tokens）决定了图像中跨模态对齐的粒度。<br>具体实现包括：</p>
+<ul>
+<li>RoI-based VLPM：使用预训练的R-CNN object detector抽取图像中的识别出的物体区域的图像特征作为visual tokens。该方法建立在假设大部分图像-文本对中的文本都是描述图像中的显著物体（salient object）的。</li>
+<li>paches：将整个图片分为连续的小块。</li>
+<li>pixels：将图片分为更细粒度的像素组，然后使用CNN进行特征抽取。</li>
+</ul>
+<p>后两种方法在速度上有较大提升。<br>最近甚至有不使用CNN而是直接用线性映射paches/pixels的方法（ViT）进一步加速该过程。<br>此外，也有通过pool layer将整个图片作为visual token的工作。</p>
+<p>而在表示spatial position embedding时：</p>
+<ul>
+<li>RoI-based VLPMs一般采用基于坐标的位置embedding（coordinate-based position embedding），例如使用5维向量表示RoI bounding box的坐标和fraction of image area。</li>
+<li>paches/pixel-based VLPMs一般采用2D向量表示行、列数。</li>
+</ul>
+<p>另外，由于文本处理的transformer是上下文相关的而图像处理的CNN是local的，因此很多工作会额外对visual tokens使用self-attention transformer使其获取上下文信息使其与文本表示有类似的特征分布。</p>
+<h1 id="V-L交互模型"><a href="#V-L交互模型" class="headerlink" title="V-L交互模型"></a>V-L交互模型</h1><h2 id="Self-attention-based-V-LIM"><a href="#Self-attention-based-V-LIM" class="headerlink" title="Self-attention-based V-LIM"></a>Self-attention-based V-LIM</h2><p>拼接文本和图像表示，然后输入self-attention transformer。通过transformer实现跨模态（V-L）和模态内（V-V，L-L）的信息交互。<br>之后，多模态序列中的特殊token（例如[CLS]）被用于作为joint V-L表示。<br>而文本、图像各自对应的输出表示可以用作上下文相关的V-L语义表示。</p>
+<h2 id="Co-attention-based-V-LIM"><a href="#Co-attention-based-V-LIM" class="headerlink" title="Co-attention-based V-LIM"></a>Co-attention-based V-LIM</h2><p>用两部分transformer block分别对文本和图像建模，然后只在cross-attention sub-layers里进行交互。<br>具体来说，cross-attention sub-layers用于强化两种模态的self-attention模块中的key和value的交换。</p>
+<h2 id="VSE-based-V-LIM"><a href="#VSE-based-V-LIM" class="headerlink" title="VSE-based V-LIM"></a>VSE-based V-LIM</h2><p>Visual-Semantic-Embedding(VSE)-based cross-modal contrastive learning：</p>
+<ul>
+<li>首先分别获取单模态表示；</li>
+<li>然后在图像、文本表示之间学习一个基于相似性的跨模态对齐，从而使其达到一个公共的VSE空间。<br>这类方法优点是比前两种方法速度更快，资源消耗更少。由于独立计算文本、图像表示，可以支持表示的预计算。<br>主要应用于大规模跨模态检索。</li>
+</ul>
+<h1 id="预训练"><a href="#预训练" class="headerlink" title="预训练"></a>预训练</h1><h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>最常用的两个预训练数据集：</p>
+<ul>
+<li>Conceptual Captions (CC, roughly 3M) </li>
+<li>SBU Captions (SBU, around 1M)</li>
+</ul>
+<p>此外还有更大的数据集：</p>
+<ul>
+<li>WIT (400M) </li>
+<li>ALIGN(1.8B)</li>
+</ul>
+<p>以上数据集都是从网络收集的，研究发现训练集数据量越大在下游迁移任务中性能越好。</p>
+<p>此外还有将数据集分为in-domain和out-of-domain数据的，其中一般将CC和SBU视为out-of-domain数据，而将MS-COCO (COCO)/Visual Genome (VG)视为in-domain数据，因为一般下游任务都是建立在这两个数据集上的。<br>in-domain数据也可以是具体的下游任务的，例如GQA和VQA2.0。</p>
+<h2 id="预训练任务和目标"><a href="#预训练任务和目标" class="headerlink" title="预训练任务和目标"></a>预训练任务和目标</h2><h3 id="Cross-modal-Masked-Language-Modeling-CMLM"><a href="#Cross-modal-Masked-Language-Modeling-CMLM" class="headerlink" title="Cross-modal Masked Language Modeling (CMLM)"></a>Cross-modal Masked Language Modeling (CMLM)</h3><p>修改自BERT的MLM任务，目标是根据上下文中的文本和所有visual token预测被mask的token。该任务被证明能将BERT迁移到多模态setting，因此成为一个基本的预训练任务。大部分工作跟MLM一样对subword进行mask，也有工作尝试mask整词和segment，得到了更好的迁移性能。</p>
+<h3 id="Cross-modal-Masked-Region-Modeling-CMRM"><a href="#Cross-modal-Masked-Region-Modeling-CMRM" class="headerlink" title="Cross-modal Masked Region Modeling (CMRM)"></a>Cross-modal Masked Region Modeling (CMRM)</h3><p>最初在RoI-based VLPMs中被提出，包括三个目标：</p>
+<ul>
+<li><p>Region Label Classification (CMRMC)：预测每个被遮盖的区域的物体类别（object class），损失函数为cross-entropy loss，将object detector检测到的独热物体类别作为标签，使用VLPM表示做多类别预测。</p>
+</li>
+<li><p>Label Distribution Approximation (CMRMD)：为了缓解object detector可能出现的分类错误，该方法将其预测的类别分布作为soft supervision，优化object detector预测的类别分布和VLPM预测的类别分布之间的KL散度loss。</p>
+</li>
+<li><p>Region Feature Regression (CMRMR)：学习使用L2 loss将VLPM中每个被mask的区域的输出表示回归到其输入特征（来自object detector）。该目标一般与前两种方法共同使用，用于强化图像内容建模的鲁棒性和跨模态学习。</p>
+</li>
+</ul>
+<h3 id="Cross-modal-Alignment-CA-："><a href="#Cross-modal-Alignment-CA-：" class="headerlink" title="Cross-modal Alignment (CA)："></a>Cross-modal Alignment (CA)：</h3><p>在attention-based模型中一般被视为二分类问题，根据V-L表示判断输入的图像-文本对是否是匹配的，使用二元cross-entropy loss。</p>
+<p>在VSE-based模型中则一般被视为排序问题，根据给定的文本或图像找到最匹配的另一方，使用contrastive learning objective。</p>
+<p>此外也有使用更细粒度的（patches/pixels）对齐目标的。该目标语前面方法的主要区别是前面方法会引入负例，研究证明这对于fusion-based VLPM和attention-based V-LIM有害。因此有工作对global-level CA使用单模态encoder，但同时对其他任务仍然使用fusion-based encoder。</p>
+<p>针对V-L生成任务（例如Image Generation），有工作将CMLM扩展为seq2seq CMLM作为额外的预训练任务。</p>
+<p>从另一个角度，也有直接使用某些下游任务（例如IC）进行预训练，称为downstream-driven pretraining task。</p>
+<p>也有一些工作同时在单模态数据上进行预训练。</p>
+<h1 id="下游任务"><a href="#下游任务" class="headerlink" title="下游任务"></a>下游任务</h1><h2 id="Visual-Question-Answering-VQA"><a href="#Visual-Question-Answering-VQA" class="headerlink" title="Visual Question Answering (VQA)"></a>Visual Question Answering (VQA)</h2><p>大多数工作将该任务视为一个多分类任务，即从一系列常见回答中选出一个作为答案。<br>SimVLM通过decode方法生成开放域答案。</p>
+<h2 id="Cross-Modal-Retrieval-CMR"><a href="#Cross-Modal-Retrieval-CMR" class="headerlink" title="Cross Modal Retrieval (CMR)"></a>Cross Modal Retrieval (CMR)</h2><p>根据文本描述从更大的图像库中提取最相关的图像，或者反过来。<br>部分工作将该任务视为二分类任务，判断每个图像-文字对是否是匹配的。<br>也有工作将其视为排序任务，最大化正例对的表示相似度，最小化负例对的相似度。（使用cross-entropy或者contrastive loss）</p>
+<h2 id="Text-Classification"><a href="#Text-Classification" class="headerlink" title="Text Classification"></a>Text Classification</h2><p>包括：</p>
+<ul>
+<li>Natural Language for Visual Reasoning (NLVR)任务上基于特殊token表示的二分类</li>
+<li>Visual Entailment (VE)任务</li>
+<li>Multimodal Affective Computing (MAC)</li>
+</ul>
+<h2 id="Visual-Commonsense-Reasoning-VCR"><a href="#Visual-Commonsense-Reasoning-VCR" class="headerlink" title="Visual Commonsense Reasoning (VCR)"></a>Visual Commonsense Reasoning (VCR)</h2><p>一般分为两个子任务，即预测answer和rationale，每个任务是从4个选项中预测一个，因此一般被视为多分类任务。</p>
+<h2 id="Referring-Expression-Comprehension-REC"><a href="#Referring-Expression-Comprehension-REC" class="headerlink" title="Referring Expression Comprehension (REC)"></a>Referring Expression Comprehension (REC)</h2><p>该任务一般对每个图像区域进行分类，判断其是否是当前短语描述的目标。在预测时则选择分数最高的区域。</p>
+<h2 id="Visual-Relationship-Detection-VRD"><a href="#Visual-Relationship-Detection-VRD" class="headerlink" title="Visual Relationship Detection (VRD)"></a>Visual Relationship Detection (VRD)</h2><p>只有RVL-BERT做了该任务。</p>
+<ul>
+<li>视为排序任务，对所有可能的两个物体区域中的subject-predicate-object三元组进行排序。</li>
+<li>或视为二分类任务，判断给定的subject-predicate-object三元组是否正确。</li>
+</ul>
+<h2 id="Visual-Dialogue-VD"><a href="#Visual-Dialogue-VD" class="headerlink" title="Visual Dialogue (VD)"></a>Visual Dialogue (VD)</h2><ul>
+<li>视为分类任务，从100个候选答案中选出一个。（ViDialBERT，VDBERT）</li>
+<li>或视为生成任务，生成正确的答案。（VDBERT）</li>
+</ul>
+<h2 id="Visual-Linguistic-Navigation-VLN"><a href="#Visual-Linguistic-Navigation-VLN" class="headerlink" title="Visual Linguistic Navigation (VLN)"></a>Visual Linguistic Navigation (VLN)</h2><ul>
+<li>视为分类任务，从一条正确的路和几条错误的路中选出正确的路径。</li>
+<li>通过RL和imitation learning objective在每个state间预测action。</li>
+</ul>
+<h2 id="Image-Captioning-IC"><a href="#Image-Captioning-IC" class="headerlink" title="Image Captioning (IC)"></a>Image Captioning (IC)</h2><p>生成任务，根据图片生成描述文本。</p>
+<h2 id="Multimodal-Machine-Translation-MMT"><a href="#Multimodal-Machine-Translation-MMT" class="headerlink" title="Multimodal Machine Translation (MMT)"></a>Multimodal Machine Translation (MMT)</h2><p>多模态机器翻译，翻译和描述生成的双重任务。它包括将描述从一种语言翻译成另一种语言，并从其他形式(比如视频或音频)中获取额外信息。</p>
+<h1 id="未来发展方向"><a href="#未来发展方向" class="headerlink" title="未来发展方向"></a>未来发展方向</h1><h2 id="V-L-Interaction-Modeling"><a href="#V-L-Interaction-Modeling" class="headerlink" title="V-L Interaction Modeling"></a>V-L Interaction Modeling</h2><p>目前在图像、文本对齐上仍有很大挑战。大部分预训练模型在任务层面或输入层面进行masking，这并不能直接实现图像和文本特征的对齐。<br>Kaleido-bert发现在embedding层面施加mask是有效的。<br>因此，探索如何显式地对齐图像和文本的embedding特征从而学习更细粒度的表示是很有希望的方向。</p>
+<h2 id="VLPM-Pretraining-Strategy"><a href="#VLPM-Pretraining-Strategy" class="headerlink" title="VLPM Pretraining Strategy"></a>VLPM Pretraining Strategy</h2><p>目前多任务学习策略还缺乏系统性的实验分析，在数据集选择、任务设计、任务分组及多阶段学习中的任务顺序等方面研究较少，没有定论。并且预训练的有效性也会受到下游任务的影响。</p>
+<h2 id="Training-Evaluation"><a href="#Training-Evaluation" class="headerlink" title="Training Evaluation"></a>Training Evaluation</h2><p>目前模型的评价只能依靠下游任务，如果能够设计类似perplexity的metric在预训练过程中对模型的性能进行判断将能节省大量资源。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Paper-Note/" rel="tag"># Paper Note</a>
+          
+            <a href="/tags/Pre-training/" rel="tag"># Pre-training</a>
+          
+            <a href="/tags/Vision-Language/" rel="tag"># Vision-Language</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/26/Wikidata数据结构/" rel="next" title="Wikidata数据结构">
+                <i class="fa fa-chevron-left"></i> Wikidata数据结构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDQ0OC83MDAy"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Alex"/>
+            
+              <p class="site-author-name" itemprop="name">Alex</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/WangYuxuan93" title="GitHub &rarr; https://github.com/WangYuxuan93" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:hitalexwang@gmail.com" title="E-Mail &rarr; mailto:hitalexwang@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/alex_ritsu" title="Twitter &rarr; https://twitter.com/alex_ritsu" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#输入处理"><span class="nav-number">1.</span> <span class="nav-text">输入处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文本编码"><span class="nav-number">1.1.</span> <span class="nav-text">文本编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模态内处理（Intra-modality）"><span class="nav-number">1.2.</span> <span class="nav-text">模态内处理（Intra-modality）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图像编码"><span class="nav-number">1.3.</span> <span class="nav-text">图像编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#V-L交互模型"><span class="nav-number">2.</span> <span class="nav-text">V-L交互模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-attention-based-V-LIM"><span class="nav-number">2.1.</span> <span class="nav-text">Self-attention-based V-LIM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Co-attention-based-V-LIM"><span class="nav-number">2.2.</span> <span class="nav-text">Co-attention-based V-LIM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VSE-based-V-LIM"><span class="nav-number">2.3.</span> <span class="nav-text">VSE-based V-LIM</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预训练"><span class="nav-number">3.</span> <span class="nav-text">预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">3.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务和目标"><span class="nav-number">3.2.</span> <span class="nav-text">预训练任务和目标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Masked-Language-Modeling-CMLM"><span class="nav-number">3.2.1.</span> <span class="nav-text">Cross-modal Masked Language Modeling (CMLM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Masked-Region-Modeling-CMRM"><span class="nav-number">3.2.2.</span> <span class="nav-text">Cross-modal Masked Region Modeling (CMRM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Alignment-CA-："><span class="nav-number">3.2.3.</span> <span class="nav-text">Cross-modal Alignment (CA)：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下游任务"><span class="nav-number">4.</span> <span class="nav-text">下游任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Question-Answering-VQA"><span class="nav-number">4.1.</span> <span class="nav-text">Visual Question Answering (VQA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cross-Modal-Retrieval-CMR"><span class="nav-number">4.2.</span> <span class="nav-text">Cross Modal Retrieval (CMR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Text-Classification"><span class="nav-number">4.3.</span> <span class="nav-text">Text Classification</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Commonsense-Reasoning-VCR"><span class="nav-number">4.4.</span> <span class="nav-text">Visual Commonsense Reasoning (VCR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referring-Expression-Comprehension-REC"><span class="nav-number">4.5.</span> <span class="nav-text">Referring Expression Comprehension (REC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Relationship-Detection-VRD"><span class="nav-number">4.6.</span> <span class="nav-text">Visual Relationship Detection (VRD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Dialogue-VD"><span class="nav-number">4.7.</span> <span class="nav-text">Visual Dialogue (VD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Linguistic-Navigation-VLN"><span class="nav-number">4.8.</span> <span class="nav-text">Visual Linguistic Navigation (VLN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Image-Captioning-IC"><span class="nav-number">4.9.</span> <span class="nav-text">Image Captioning (IC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multimodal-Machine-Translation-MMT"><span class="nav-number">4.10.</span> <span class="nav-text">Multimodal Machine Translation (MMT)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#未来发展方向"><span class="nav-number">5.</span> <span class="nav-text">未来发展方向</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#V-L-Interaction-Modeling"><span class="nav-number">5.1.</span> <span class="nav-text">V-L Interaction Modeling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VLPM-Pretraining-Strategy"><span class="nav-number">5.2.</span> <span class="nav-text">VLPM Pretraining Strategy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Training-Evaluation"><span class="nav-number">5.3.</span> <span class="nav-text">Training Evaluation</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Alex</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.3.8</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+  <script>
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=63531031";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2022/08/18/图像语言预训练模型总结/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
