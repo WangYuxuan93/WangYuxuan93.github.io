@@ -128,21 +128,35 @@
 
 
 
-  <meta name="description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey。">
+  <meta name="description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey和Trends in Integration of Vision and Language Research: A Survey of Tasks, Datasets, and Meth">
 <meta name="keywords" content="Paper Note,Pre-training,Vision-Language">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图像语言预训练模型总结">
 <meta property="og:url" content="www.alexyxwang.com/2022/08/18/图像语言预训练模型总结/index.html">
 <meta property="og:site_name" content="Avalon">
-<meta property="og:description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey。">
+<meta property="og:description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey和Trends in Integration of Vision and Language Research: A Survey of Tasks, Datasets, and Meth">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/vqa2.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/kvqa.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/flickr30k.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/mscoco.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/snli-ve.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/nlvr.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/nlvr2.png">
 <meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/vcr.png">
 <meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/refcoco.png">
-<meta property="og:updated_time" content="2022-08-22T09:33:21.794Z">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/flickr30k-entity.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/vrd.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/visdial.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/r2r.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/cococaption.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/nocaps.png">
+<meta property="og:image" content="/2022/08/18/图像语言预训练模型总结/multi30k.png">
+<meta property="og:updated_time" content="2022-08-23T09:21:39.869Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图像语言预训练模型总结">
-<meta name="twitter:description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey。">
-<meta name="twitter:image" content="/2022/08/18/图像语言预训练模型总结/vcr.png">
+<meta name="twitter:description" content="图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。主要参考论文Vision-and-Language Pretrained Models: A Survey和Trends in Integration of Vision and Language Research: A Survey of Tasks, Datasets, and Meth">
+<meta name="twitter:image" content="/2022/08/18/图像语言预训练模型总结/vqa2.png">
 
 
 
@@ -422,7 +436,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-08-22 17:33:21" itemprop="dateModified" datetime="2022-08-22T17:33:21+08:00">2022-08-22</time>
+                <time title="修改时间：2022-08-23 17:21:39" itemprop="dateModified" datetime="2022-08-23T17:21:39+08:00">2022-08-23</time>
               
             
           </span>
@@ -474,7 +488,7 @@
       
 
       
-        <p>图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。<br>主要参考论文<a href="https://www.ijcai.org/proceedings/2022/0773.pdf" target="_blank" rel="external">Vision-and-Language Pretrained Models: A Survey</a>。</p>
+        <p>图像语言预训练模型 (Vision-Language Pre-trained Model，VLPM) 总结。<br>主要参考论文<a href="https://www.ijcai.org/proceedings/2022/0773.pdf" target="_blank" rel="external">Vision-and-Language Pretrained Models: A Survey</a>和<a href="https://arxiv.org/pdf/1907.09358.pdf" target="_blank" rel="external">Trends in Integration of Vision and Language Research: A Survey of Tasks, Datasets, and Methods</a>。</p>
 <a id="more"></a>
 <p>VLPM主要由以下四个部分组成：</p>
 <ul>
@@ -534,27 +548,73 @@
 <p>从另一个角度，也有直接使用某些下游任务（例如IC）进行预训练，称为downstream-driven pretraining task。</p>
 <p>也有一些工作同时在单模态数据上进行预训练。</p>
 <h1 id="下游任务"><a href="#下游任务" class="headerlink" title="下游任务"></a>下游任务</h1><h2 id="Visual-Question-Answering-VQA"><a href="#Visual-Question-Answering-VQA" class="headerlink" title="Visual Question Answering (VQA)"></a>Visual Question Answering (VQA)</h2><ul>
-<li><p>任务描述：可以认为是QA任务的延伸，要求根据输入图片回答问题，答案形式可能是多选一或者生成文本。</p>
+<li>任务描述：可以认为是QA任务的延伸，要求根据输入图片回答问题，答案形式可能是多选一或者生成文本。</li>
+</ul>
+<p>代表数据集：</p>
+<ul>
+<li><p><a href="https://arxiv.org/pdf/1612.00837.pdf" target="_blank" rel="external">VQA2.0</a>：训练/开发/测试集图片文字对数量=443K/214K/453K。</p>
+</li>
+<li><p>例子：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/vqa2.png" alt="vqa2.png" title=""> </div>
+</li>
+<li><p><a href="https://ojs.aaai.org/index.php/AAAI/article/view/4915" target="_blank" rel="external">KVQA</a>：需求额外知识的VQA。</p>
+</li>
+<li><p>例子：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/kvqa.png" alt="kvqa.png" title=""> </div>
 </li>
 <li><p>解决方案：大多数工作将该任务视为一个多分类任务，即从一系列常见回答中选出一个作为答案。SimVLM通过decode方法生成开放域答案。</p>
 </li>
 </ul>
 <h2 id="Cross-Modal-Retrieval-CMR"><a href="#Cross-Modal-Retrieval-CMR" class="headerlink" title="Cross Modal Retrieval (CMR)"></a>Cross Modal Retrieval (CMR)</h2><ul>
 <li>任务描述：根据文本描述从更大的图像库中提取最相关的图像，或者反过来，根据图片检索。（或者称为Image-Text Retrieval）</li>
-<li>解决方案：部分工作将该任务视为二分类任务，判断每个图像-文字对是否是匹配的。也有工作将其视为排序任务，最大化正例对的表示相似度，最小化负例对的相似度。（使用cross-entropy或者contrastive loss）</li>
+</ul>
+<p>代表数据集：</p>
+<ul>
+<li><a href="https://aclanthology.org/Q14-1006.pdf" target="_blank" rel="external">Flickr30K</a>：31,000图片，每张图片对应5个caption。（一般开发、测试各1,000张图片，其余用于训练）</li>
+<li><p>例子：</p>
+<div style="width:80%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/flickr30k.png" alt="flickr30k.png" title=""> </div>
+</li>
+<li><p><a href="https://arxiv.org/abs/1405.0312" target="_blank" rel="external">MSCOCO</a>：训练/开发/测试图片数=165,482/81,208/81,434。每张图片对应5个catption。同时还标注了图片中的物体类别及边界（instance segmentation），常被用于预训练V-L模型。</p>
+</li>
+<li><p>例子：</p>
+<div style="width:80%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/mscoco.png" alt="mscoco.png" title=""> </div>
+</li>
+<li><p>解决方案：部分工作将该任务视为二分类任务，判断每个图像-文字对是否是匹配的。也有工作将其视为排序任务，最大化正例对的表示相似度，最小化负例对的相似度。（使用cross-entropy或者contrastive loss）</p>
+</li>
 </ul>
 <h2 id="Visual-Entailment-VE"><a href="#Visual-Entailment-VE" class="headerlink" title="Visual Entailment (VE)"></a>Visual Entailment (VE)</h2><ul>
-<li>任务描述：可以认为是NLI任务的扩展，要求判断图片是否符合文本的描述。</li>
+<li><p>任务描述：可以认为是NLI任务的扩展，要求判断图片是否符合文本的描述。<br>代表数据集：</p>
+</li>
+<li><p><a href="https://arxiv.org/abs/1901.06706" target="_blank" rel="external">SNLI-VE</a>：训练/开发/测试集图片数=29,783/1,000/1,000。训练/开发/测试集文本数=176,932/5,959/5,973。（这里文本指的是entailment/neural/contradition各自的数量，如例子所示每个图片对应多个不同的描述，也就是说合计数量是3倍）</p>
+</li>
+<li><p>例子：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/snli-ve.png" alt="snli-ve.png" title=""> </div></li>
 <li>解决方案：一般视为二分类任务。</li>
+</ul>
+<h2 id="Visual-Reasoning-VR"><a href="#Visual-Reasoning-VR" class="headerlink" title="Visual Reasoning (VR)"></a>Visual Reasoning (VR)</h2><ul>
+<li>任务描述：根据两张图片判断文本描述是否正确。</li>
+</ul>
+<p>代表数据集：</p>
+<ul>
+<li><a href="https://aclanthology.org/P17-2034.pdf" target="_blank" rel="external">NLVR</a>：包含92,244对基于人造图片的描述。</li>
+<li><p>例子：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/nlvr.png" alt="nlvr.png" title=""> </div>
+</li>
+<li><p><a href="https://aclanthology.org/P19-1644/" target="_blank" rel="external">NLVR2</a>：包含107,292个英文例子及对应网络图片。</p>
+</li>
+<li><p>例子：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/nlvr2.png" alt="nlvr2.png" title=""> </div>
+
+</li>
 </ul>
 <h2 id="Visual-Commonsense-Reasoning-VCR"><a href="#Visual-Commonsense-Reasoning-VCR" class="headerlink" title="Visual Commonsense Reasoning (VCR)"></a>Visual Commonsense Reasoning (VCR)</h2><ul>
 <li>任务描述：包括两个子任务：VQA（根据图片从4个答案里选择1个回答问题）和Answer Justification（根据图片问题和答案从4个选项里选择一个作为选择该答案的原因）</li>
 </ul>
 <p>代表数据集：</p>
 <ul>
-<li><a href="https://arxiv.org/abs/1811.10830" target="_blank" rel="external">VCR benchmark</a>：训练/开发/测试问题数=212,923/26,534/25,263，每个问题对应4个答案和4个原因，训练/开发/测试图片数=80,418/9,929/9,557。</li>
+<li><a href="https://arxiv.org/abs/1811.10830" target="_blank" rel="external">VCR benchmark</a>：训练/开发/测试问题数=212,923/26,534/25,263，每个问题对应4个答案和4个原因，训练/开发/测试图片数=80,418/9,929/9,557。图片来自电影片段，包括人类能轻易理解，但机器难以理解的复杂场景。将图片和电影描述提供给标注者，要求其针对图片提1到3个问题并给出答案和原因，另外3个负例则通过使用BERT模型建模问题-答案相关性、答案-答案相似性在其他问题的答案中搜索得到。具体标注的内容包括：图片中检测到的若干物体（使用Mask-RCNN自动识别，过滤后保证每个图片中有至少3个高置信度的物体），每个物体对应的bounding box，问题（query）中包括普通文本和对应图中物体的指针。答案和原因的组成形式也和问题一样。</li>
 <li><p>例子：</p>
-<div style="width:70%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/vcr.png" alt="vcr.png" title=""> </div>
+<div style="width:80%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/vcr.png" alt="vcr.png" title=""> </div>
 </li>
 <li><p>解决方案：每个任务是从4个选项中预测一个，因此一般被视为多分类任务。</p>
 </li>
@@ -576,24 +636,100 @@
 <li><p>解决方案：在预测时选择分数最高的区域。</p>
 </li>
 </ul>
-<h2 id="Visual-Relationship-Detection-VRD"><a href="#Visual-Relationship-Detection-VRD" class="headerlink" title="Visual Relationship Detection (VRD)"></a>Visual Relationship Detection (VRD)</h2><p>只有RVL-BERT做了该任务。</p>
+<h2 id="Phrase-Grounding-PG"><a href="#Phrase-Grounding-PG" class="headerlink" title="Phrase Grounding (PG)"></a>Phrase Grounding (PG)</h2><ul>
+<li>任务描述：与REC任务类似，但是要求对齐文本中的短语和图片中的物体。</li>
+</ul>
+<p>代表数据集：</p>
+<ul>
+<li><p><a href="https://arxiv.org/pdf/1505.04870.pdf" target="_blank" rel="external">Flickr30k Entities</a>：在Flickr30k的基础上标注了句子里的短语和图片中物体的对应关系。</p>
+</li>
+<li><p>例子：</p>
+<div style="width:80%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/flickr30k-entity.png" alt="flickr30k-entity.png" title=""> </div>
+
+
+</li>
+</ul>
+<h2 id="Visual-Relationship-Detection-VRD"><a href="#Visual-Relationship-Detection-VRD" class="headerlink" title="Visual Relationship Detection (VRD)"></a>Visual Relationship Detection (VRD)</h2><ul>
+<li>任务描述：判断图片中两个物体的关系。</li>
+</ul>
+<p>代表性数据集：</p>
+<ul>
+<li><p><a href="https://arxiv.org/pdf/1608.00187.pdf" target="_blank" rel="external">VRD</a>：关系包括了动作、空间、介词、对比、动词。包括5,000张图片，100个物体类别和70种谓语关系（这里把两个object之间的实际关系称为predicate，而两个object和一个predicate组成的三元组称为relationship），6672种关系类别，实际包含37,993个关系。</p>
+</li>
+<li><p>例子：</p>
+<div style="width:80%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/vrd.png" alt="vrd.png" title=""> </div>
+
+</li>
+</ul>
+<p>解决方案：</p>
 <ul>
 <li>视为排序任务，对所有可能的两个物体区域中的subject-predicate-object三元组进行排序。</li>
 <li>或视为二分类任务，判断给定的subject-predicate-object三元组是否正确。</li>
 </ul>
 <h2 id="Visual-Dialogue-VD"><a href="#Visual-Dialogue-VD" class="headerlink" title="Visual Dialogue (VD)"></a>Visual Dialogue (VD)</h2><ul>
+<li>任务描述：要求AI agent与人类就图片内容开展聊天。</li>
+</ul>
+<p>代表性数据集：</p>
+<ul>
+<li><p><a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8099604" target="_blank" rel="external">VisDial v0.9/v1.0</a>：v0.9训练集/开发集包含82,783/40,504张图片，v1.0将v0.9的两部分数据合并为训练集，然后增加了2,064张图片用于开发集和8,000张图片用于测试。</p>
+</li>
+<li><p>例子：</p>
+<div style="width:60%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/visdial.png" alt="visdial.png" title=""> </div>
+
+</li>
+</ul>
+<p>解决方案：</p>
+<ul>
 <li>视为分类任务，从100个候选答案中选出一个。（ViDialBERT，VDBERT）</li>
 <li>或视为生成任务，生成正确的答案。（VDBERT）</li>
 </ul>
-<h2 id="Visual-Linguistic-Navigation-VLN"><a href="#Visual-Linguistic-Navigation-VLN" class="headerlink" title="Visual Linguistic Navigation (VLN)"></a>Visual Linguistic Navigation (VLN)</h2><ul>
+<h2 id="Visual-Linguistic-Navigation-VLN"><a href="#Visual-Linguistic-Navigation-VLN" class="headerlink" title="Visual Linguistic Navigation (VLN)"></a>Visual Linguistic Navigation (VLN)</h2><p>代表性数据集：</p>
+<ul>
+<li><p><a href="https://arxiv.org/abs/1711.07280" target="_blank" rel="external">R2R</a></p>
+</li>
+<li><p>例子：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/r2r.png" alt="r2r.png" title=""> </div>
+
+</li>
+</ul>
+<p>解决方案：</p>
+<ul>
 <li>视为分类任务，从一条正确的路和几条错误的路中选出正确的路径。</li>
 <li>通过RL和imitation learning objective在每个state间预测action。</li>
 </ul>
-<h2 id="Image-Captioning-IC"><a href="#Image-Captioning-IC" class="headerlink" title="Image Captioning (IC)"></a>Image Captioning (IC)</h2><p>生成任务，根据图片生成描述文本。</p>
-<h2 id="Multimodal-Machine-Translation-MMT"><a href="#Multimodal-Machine-Translation-MMT" class="headerlink" title="Multimodal Machine Translation (MMT)"></a>Multimodal Machine Translation (MMT)</h2><p>多模态机器翻译，翻译和描述生成的双重任务。它包括将描述从一种语言翻译成另一种语言，并从其他形式(比如视频或音频)中获取额外信息。</p>
+<h2 id="Image-Captioning-IC"><a href="#Image-Captioning-IC" class="headerlink" title="Image Captioning (IC)"></a>Image Captioning (IC)</h2><ul>
+<li>任务描述：生成任务，根据图片生成描述文本。</li>
+</ul>
+<p>代表性数据集：</p>
+<ul>
+<li><a href="https://arxiv.org/pdf/1504.00325.pdf" target="_blank" rel="external">COCO Caption</a>：包含超过330,000图片及对应caption。</li>
+<li><p>例子：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/cococaption.png" alt="cococaption.png" title=""> </div>
+</li>
+<li><p><a href="https://arxiv.org/pdf/1812.08658.pdf" target="_blank" rel="external">nocaps</a>：来自开放域图片Open Images的用于描述15,100图片的166,100人类生成的caption。</p>
+</li>
+<li>例子：<div style="width:50%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/nocaps.png" alt="nocaps.png" title=""> </div>
+
+</li>
+</ul>
+<h2 id="Multimodal-Machine-Translation-MMT"><a href="#Multimodal-Machine-Translation-MMT" class="headerlink" title="Multimodal Machine Translation (MMT)"></a>Multimodal Machine Translation (MMT)</h2><ul>
+<li>任务描述：多模态机器翻译，翻译和描述生成的双重任务。它包括将描述从一种语言翻译成另一种语言，并从其他形式(比如视频或音频)中获取额外信息。</li>
+</ul>
+<p>代表性数据集：</p>
+<ul>
+<li><p><a href="https://arxiv.org/pdf/1605.00459.pdf" target="_blank" rel="external">Multi30k</a></p>
+</li>
+<li><p>例子：</p>
+<div style="width:70%;margin:auto"> <img src="/2022/08/18/图像语言预训练模型总结/multi30k.png" alt="multi30k.png" title=""> </div>
+
+</li>
+</ul>
 <h1 id="未来发展方向"><a href="#未来发展方向" class="headerlink" title="未来发展方向"></a>未来发展方向</h1><h2 id="V-L-Interaction-Modeling"><a href="#V-L-Interaction-Modeling" class="headerlink" title="V-L Interaction Modeling"></a>V-L Interaction Modeling</h2><p>目前在图像、文本对齐上仍有很大挑战。大部分预训练模型在任务层面或输入层面进行masking，这并不能直接实现图像和文本特征的对齐。<br>Kaleido-bert发现在embedding层面施加mask是有效的。<br>因此，探索如何显式地对齐图像和文本的embedding特征从而学习更细粒度的表示是很有希望的方向。</p>
 <h2 id="VLPM-Pretraining-Strategy"><a href="#VLPM-Pretraining-Strategy" class="headerlink" title="VLPM Pretraining Strategy"></a>VLPM Pretraining Strategy</h2><p>目前多任务学习策略还缺乏系统性的实验分析，在数据集选择、任务设计、任务分组及多阶段学习中的任务顺序等方面研究较少，没有定论。并且预训练的有效性也会受到下游任务的影响。</p>
 <h2 id="Training-Evaluation"><a href="#Training-Evaluation" class="headerlink" title="Training Evaluation"></a>Training Evaluation</h2><p>目前模型的评价只能依靠下游任务，如果能够设计类似perplexity的metric在预训练过程中对模型的性能进行判断将能节省大量资源。</p>
+<h2 id="Learning-Common-Sense-and-World-Knowledge"><a href="#Learning-Common-Sense-and-World-Knowledge" class="headerlink" title="Learning Common Sense and World Knowledge"></a>Learning Common Sense and World Knowledge</h2><p>需求外部知识的V-L任务，例如KVQA、OK-VQA等。</p>
+<h2 id="Combining-Multiple-Tasks"><a href="#Combining-Multiple-Tasks" class="headerlink" title="Combining Multiple Tasks"></a>Combining Multiple Tasks</h2><p>某些任务可以互相转化，从而共享信息。例如visual referring expression任务可以转化为visual dialog task；而image caption generation任务可以转化为visual referring expression任务。</p>
+<h2 id="3D-Vision-and-Language"><a href="#3D-Vision-and-Language" class="headerlink" title="3D-Vision and Language"></a>3D-Vision and Language</h2><p>现有大部分工作都集中于2D图片，而处理3D输入（例如RGB-D、meshes或point clouds）将是一个重要突破。</p>
 
       
     </div>
@@ -902,7 +1038,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#输入处理"><span class="nav-number">1.</span> <span class="nav-text">输入处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文本编码"><span class="nav-number">1.1.</span> <span class="nav-text">文本编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模态内处理（Intra-modality）"><span class="nav-number">1.2.</span> <span class="nav-text">模态内处理（Intra-modality）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图像编码"><span class="nav-number">1.3.</span> <span class="nav-text">图像编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#V-L交互模型"><span class="nav-number">2.</span> <span class="nav-text">V-L交互模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-attention-based-V-LIM"><span class="nav-number">2.1.</span> <span class="nav-text">Self-attention-based V-LIM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Co-attention-based-V-LIM"><span class="nav-number">2.2.</span> <span class="nav-text">Co-attention-based V-LIM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VSE-based-V-LIM"><span class="nav-number">2.3.</span> <span class="nav-text">VSE-based V-LIM</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预训练"><span class="nav-number">3.</span> <span class="nav-text">预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">3.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务和目标"><span class="nav-number">3.2.</span> <span class="nav-text">预训练任务和目标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Masked-Language-Modeling-CMLM"><span class="nav-number">3.2.1.</span> <span class="nav-text">Cross-modal Masked Language Modeling (CMLM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Masked-Region-Modeling-CMRM"><span class="nav-number">3.2.2.</span> <span class="nav-text">Cross-modal Masked Region Modeling (CMRM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Alignment-CA-："><span class="nav-number">3.2.3.</span> <span class="nav-text">Cross-modal Alignment (CA)：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下游任务"><span class="nav-number">4.</span> <span class="nav-text">下游任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Question-Answering-VQA"><span class="nav-number">4.1.</span> <span class="nav-text">Visual Question Answering (VQA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cross-Modal-Retrieval-CMR"><span class="nav-number">4.2.</span> <span class="nav-text">Cross Modal Retrieval (CMR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Entailment-VE"><span class="nav-number">4.3.</span> <span class="nav-text">Visual Entailment (VE)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Commonsense-Reasoning-VCR"><span class="nav-number">4.4.</span> <span class="nav-text">Visual Commonsense Reasoning (VCR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referring-Expression-Comprehension-REC"><span class="nav-number">4.5.</span> <span class="nav-text">Referring Expression Comprehension (REC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Relationship-Detection-VRD"><span class="nav-number">4.6.</span> <span class="nav-text">Visual Relationship Detection (VRD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Dialogue-VD"><span class="nav-number">4.7.</span> <span class="nav-text">Visual Dialogue (VD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Linguistic-Navigation-VLN"><span class="nav-number">4.8.</span> <span class="nav-text">Visual Linguistic Navigation (VLN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Image-Captioning-IC"><span class="nav-number">4.9.</span> <span class="nav-text">Image Captioning (IC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multimodal-Machine-Translation-MMT"><span class="nav-number">4.10.</span> <span class="nav-text">Multimodal Machine Translation (MMT)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#未来发展方向"><span class="nav-number">5.</span> <span class="nav-text">未来发展方向</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#V-L-Interaction-Modeling"><span class="nav-number">5.1.</span> <span class="nav-text">V-L Interaction Modeling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VLPM-Pretraining-Strategy"><span class="nav-number">5.2.</span> <span class="nav-text">VLPM Pretraining Strategy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Training-Evaluation"><span class="nav-number">5.3.</span> <span class="nav-text">Training Evaluation</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#输入处理"><span class="nav-number">1.</span> <span class="nav-text">输入处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文本编码"><span class="nav-number">1.1.</span> <span class="nav-text">文本编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模态内处理（Intra-modality）"><span class="nav-number">1.2.</span> <span class="nav-text">模态内处理（Intra-modality）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图像编码"><span class="nav-number">1.3.</span> <span class="nav-text">图像编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#V-L交互模型"><span class="nav-number">2.</span> <span class="nav-text">V-L交互模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-attention-based-V-LIM"><span class="nav-number">2.1.</span> <span class="nav-text">Self-attention-based V-LIM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Co-attention-based-V-LIM"><span class="nav-number">2.2.</span> <span class="nav-text">Co-attention-based V-LIM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VSE-based-V-LIM"><span class="nav-number">2.3.</span> <span class="nav-text">VSE-based V-LIM</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预训练"><span class="nav-number">3.</span> <span class="nav-text">预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">3.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练任务和目标"><span class="nav-number">3.2.</span> <span class="nav-text">预训练任务和目标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Masked-Language-Modeling-CMLM"><span class="nav-number">3.2.1.</span> <span class="nav-text">Cross-modal Masked Language Modeling (CMLM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Masked-Region-Modeling-CMRM"><span class="nav-number">3.2.2.</span> <span class="nav-text">Cross-modal Masked Region Modeling (CMRM)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-modal-Alignment-CA-："><span class="nav-number">3.2.3.</span> <span class="nav-text">Cross-modal Alignment (CA)：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下游任务"><span class="nav-number">4.</span> <span class="nav-text">下游任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Question-Answering-VQA"><span class="nav-number">4.1.</span> <span class="nav-text">Visual Question Answering (VQA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cross-Modal-Retrieval-CMR"><span class="nav-number">4.2.</span> <span class="nav-text">Cross Modal Retrieval (CMR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Entailment-VE"><span class="nav-number">4.3.</span> <span class="nav-text">Visual Entailment (VE)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Reasoning-VR"><span class="nav-number">4.4.</span> <span class="nav-text">Visual Reasoning (VR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Commonsense-Reasoning-VCR"><span class="nav-number">4.5.</span> <span class="nav-text">Visual Commonsense Reasoning (VCR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referring-Expression-Comprehension-REC"><span class="nav-number">4.6.</span> <span class="nav-text">Referring Expression Comprehension (REC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Phrase-Grounding-PG"><span class="nav-number">4.7.</span> <span class="nav-text">Phrase Grounding (PG)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Relationship-Detection-VRD"><span class="nav-number">4.8.</span> <span class="nav-text">Visual Relationship Detection (VRD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Dialogue-VD"><span class="nav-number">4.9.</span> <span class="nav-text">Visual Dialogue (VD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Linguistic-Navigation-VLN"><span class="nav-number">4.10.</span> <span class="nav-text">Visual Linguistic Navigation (VLN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Image-Captioning-IC"><span class="nav-number">4.11.</span> <span class="nav-text">Image Captioning (IC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multimodal-Machine-Translation-MMT"><span class="nav-number">4.12.</span> <span class="nav-text">Multimodal Machine Translation (MMT)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#未来发展方向"><span class="nav-number">5.</span> <span class="nav-text">未来发展方向</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#V-L-Interaction-Modeling"><span class="nav-number">5.1.</span> <span class="nav-text">V-L Interaction Modeling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VLPM-Pretraining-Strategy"><span class="nav-number">5.2.</span> <span class="nav-text">VLPM Pretraining Strategy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Training-Evaluation"><span class="nav-number">5.3.</span> <span class="nav-text">Training Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Learning-Common-Sense-and-World-Knowledge"><span class="nav-number">5.4.</span> <span class="nav-text">Learning Common Sense and World Knowledge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Combining-Multiple-Tasks"><span class="nav-number">5.5.</span> <span class="nav-text">Combining Multiple Tasks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3D-Vision-and-Language"><span class="nav-number">5.6.</span> <span class="nav-text">3D-Vision and Language</span></a></li></ol></li></ol></div>
             
 
           </div>
