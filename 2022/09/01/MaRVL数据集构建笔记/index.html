@@ -138,7 +138,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/2022/09/01/MaRVL数据集构建笔记/image-example.png">
 <meta property="og:image" content="/2022/09/01/MaRVL数据集构建笔记/caption-example.png">
-<meta property="og:updated_time" content="2022-09-01T07:52:33.344Z">
+<meta property="og:updated_time" content="2022-09-01T08:47:33.248Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MaRVL数据集构建笔记">
 <meta name="twitter:description" content="MaRVL多语Visual Language Reasoning数据集构建记录，参考论文Visually Grounded Reasoning across Languages and Cultures">
@@ -405,7 +405,7 @@
                 
               
 
-              <time title="创建时间：2022-09-01 15:10:33 / 修改时间：15:52:33" itemprop="dateCreated datePublished" datetime="2022-09-01T15:10:33+08:00">2022-09-01</time>
+              <time title="创建时间：2022-09-01 15:10:33 / 修改时间：16:47:33" itemprop="dateCreated datePublished" datetime="2022-09-01T15:10:33+08:00">2022-09-01</time>
             
 
             
@@ -468,7 +468,7 @@
 <h1 id="语言选择"><a href="#语言选择" class="headerlink" title="语言选择"></a>语言选择</h1><p>选择类型学、语系、地理上都有较大区别的5种语言，包括了不同的书写体系以及低资源语言。<br>Indonesian (id)，Swahili (sw)，Tamil (ta)，Turkish (tr)，Mandarin Chinese (zh)。</p>
 <h1 id="universal-concept选择"><a href="#universal-concept选择" class="headerlink" title="universal concept选择"></a>universal concept选择</h1><p>既要凸显出语言中最重要的概念，也要保持与其他语言有一定的一致性方便对比。<br>从一个共享的universal semantic field开始（使用Intercontinental Dictionary Series）</p>
 <h1 id="语言特定concept选择"><a href="#语言特定concept选择" class="headerlink" title="语言特定concept选择"></a>语言特定concept选择</h1><p>3,4,5步的标注者都是从proz.com和prolific.co上找的标注者。</p>
-<p>每种语言找5个native speaker，要求为每个semantic field提供5-10个specific concept的该语言wikipedia页面链接。(每个concept有0.1GBP)</p>
+<p>每种语言找5个native speaker，要求为每个semantic field提供5-10个specific concept的该语言wikipedia页面链接。(每个concept有0.1 GBP)</p>
 <p>要求有2点：</p>
 <ul>
 <li>提供的concept必须在使用该语言的人群中常见或具有代表性</li>
@@ -496,7 +496,7 @@
 <li>水印；</li>
 <li>低分辨率图片；</li>
 </ul>
-<p>目的是为了保证只有自然图片（即照片）被选择。(每个有效的图片有0.12GBP)<br>图片使用CC-License。</p>
+<p>目的是为了保证只有自然图片（即照片）被选择。(每个有效的图片有0.12 GBP)<br>图片使用CC-License。</p>
 <p>收集完之后会人工检查一遍删除无效图片。</p>
 <h1 id="描述标注"><a href="#描述标注" class="headerlink" title="描述标注"></a>描述标注</h1><p>对于一个concept，随机选取其对应的8张图片，随机组成4对。标注者被要求写一个描述，使其对其中2对图片是正确的，而对另2对图片时错误的。下面是一个例子：</p>
 <div style="width:80%;margin:auto"> <img src="/2022/09/01/MaRVL数据集构建笔记/caption-example.png" alt="caption-example.png" title=""> </div>
@@ -504,10 +504,12 @@
 <p>标注的描述要围绕预先给出的theme concept。这样可以避免标注过于简单，同时使重点集中在图片的主体上。</p>
 <p>这样每个标注的实例对应了4对图片，该标注方法是学习NLVR2的规则。<br>对每个concept标注4个实例。</p>
 <p>标注过程中标注者可以汇报图片重复或者错误的theme concept等问题，也可以因为当前图片过难而跳过。</p>
-<p>这里的标注者使用的是proz.com上至少有学士学位的native speaker进行标注。在标注之前有一个训练流程。每个语言有2-4名标注者。</p>
-<p>在标注完一批数据后，另一些标注者被要求标注同样的图片，并且在他们完成后展示和原始标注不同之处，新的标注者要写下他们标注不同的理由，包括原标注的语法错误等。</p>
+<p>这里的标注者使用的是proz.com上至少有学士学位的native speaker进行标注。每个语言有2-4名标注者。</p>
+<p>在标注之前有一个训练流程。训练流程要求标注者标注一个例子，之后会对该标注进行反馈，要求标注者按照规则修改。</p>
+<p>在标注完一批数据后，另一些标注者（验证者）被要求标注同样的图片，并且在他们完成后展示和原始标注不同之处，新的标注者要写下他们标注不同的理由，包括原标注的语法错误等。</p>
 <p>然后这些新的标注结果和理由被返回第一批标注者处要求他们修改。</p>
-<p>最后，一位native speaker对标注进行检查，并修改小的语法错误和不一致之处。</p>
+<p>最后，一位native speaker对标注进行检查，主要集中检查逻辑正确性，并修改小的语法错误和不一致之处。</p>
+<p>标注者每句有效标注0.6 GBP，验证者每个例子0.1 GBP。</p>
 <p>最终的数据集中每个样本包括2张图片，1段描述和一个True/False标签。</p>
 
       
