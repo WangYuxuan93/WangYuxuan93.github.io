@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"/>
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="记录对比多个V-L数据集构建方法，主要包括：Vision-Text Retrieval、Visual Question Answering、Image Captioning、Visual Reasoning、Referring Expression、Visual Dialogue。">
+<meta name="keywords" content="Dataset,Paper Note,Vision-Language">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像文本数据集构建笔记">
+<meta property="og:url" content="www.alexyxwang.com/2022/09/01/图像文本数据集构建笔记/index.html">
+<meta property="og:site_name" content="Avalon">
+<meta property="og:description" content="记录对比多个V-L数据集构建方法，主要包括：Vision-Text Retrieval、Visual Question Answering、Image Captioning、Visual Reasoning、Referring Expression、Visual Dialogue。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/coco-category.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/coco.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/vqa2.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/vqa2-annotate.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/coco-caption.png">
+<meta property="og:updated_time" content="2022-09-06T09:14:48.742Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图像文本数据集构建笔记">
+<meta name="twitter:description" content="记录对比多个V-L数据集构建方法，主要包括：Vision-Text Retrieval、Visual Question Answering、Image Captioning、Visual Reasoning、Referring Expression、Visual Dialogue。">
+<meta name="twitter:image" content="/2022/09/01/图像文本数据集构建笔记/coco-category.png">
+
+
+
+
+
+
+  <link rel="canonical" href="www.alexyxwang.com/2022/09/01/图像文本数据集构建笔记/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>图像文本数据集构建笔记 | Avalon</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Avalon</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">全て遠き理想郷</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="www.alexyxwang.com/2022/09/01/图像文本数据集构建笔记/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Alex"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Avalon"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">图像文本数据集构建笔记
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-09-01 16:49:14" itemprop="dateCreated datePublished" datetime="2022-09-01T16:49:14+08:00">2022-09-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-09-06 17:14:48" itemprop="dateModified" datetime="2022-09-06T17:14:48+08:00">2022-09-06</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Paper-Note/" itemprop="url" rel="index"><span itemprop="name">Paper Note</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>记录对比多个V-L数据集构建方法，主要包括：Vision-Text Retrieval、Visual Question Answering、Image Captioning、Visual Reasoning、Referring Expression、Visual Dialogue。</p>
+<a id="more"></a>
+<h1 id="Vision-Text-Retrieval"><a href="#Vision-Text-Retrieval" class="headerlink" title="Vision-Text Retrieval"></a>Vision-Text Retrieval</h1><h2 id="数据集：MSCOCO"><a href="#数据集：MSCOCO" class="headerlink" title="数据集：MSCOCO"></a>数据集：<a href="https://arxiv.org/abs/1405.0312" target="_blank" rel="external">MSCOCO</a></h2><h3 id="物品类别-Object-Category-选择"><a href="#物品类别-Object-Category-选择" class="headerlink" title="物品类别 (Object Category) 选择"></a>物品类别 (Object Category) 选择</h3><ul>
+<li><p>类别范围：物品类别需要具有代表性，同时需要有较高出现频率来支持大数据集的构建。<br>类别有两大类：thing (包括比较容易标注的物体) 和 stuff (包括天空、草地、街道等没有清晰边界的东西)。这里只选择标注有清晰边界的thing。</p>
+</li>
+<li><p>类别粒度：确定category粒度为entry-level，即人类常用于描述物体的语言。因为过于细粒度的类别不利于搜集足够的图片。<br>同时有些类别可能被包括在其他的类别之中，例如手、脸都是人体的一部分，这类标注有助于现实世界的应用。</p>
+</li>
+<li><p>类别来源：PASCAL VOC和1,200个最常用的视觉可识别的物体。此外让4-8岁的孩子描述他们看到的室内和室外的物体，得到272个类别。最后由作者根据常见性、应用中的有效性、丰富性等进行1-5分的打分投票。按照投票总数排名选择，同时保证每个大类的平衡性。此外难以获取超过5,000张图片的类别也被删掉。</p>
+</li>
+</ul>
+<p>最后得到91个类别：</p>
+<div style="width:80%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/coco-category.png" alt="coco-category.png" title=""> </div>
+
+<h3 id="非符号化-Non-iconic-图像收集"><a href="#非符号化-Non-iconic-图像收集" class="headerlink" title="非符号化 (Non-iconic) 图像收集"></a>非符号化 (Non-iconic) 图像收集</h3><p>图像可以分为符号化物体图像、符号化场景图像和非符号化图像。具体例子如下：</p>
+<div style="width:80%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/coco.png" alt="coco.png" title=""> </div>
+
+<p>该数据集主要收集非符号化图像，因为它们的泛化性更好。<br>采用2种方法搜集图片：</p>
+<ul>
+<li>仿照PASCAL VOC，从Flickr上收集。(该网站由专业摄影师上传图片，具有可以搜索的metadata和keyword)</li>
+<li>在搜索引擎中搜索两个类别物体名的组合或者类别和场景名的组合，这是因为单独搜索一个类别名返回的大部分都是以该类别的一个实例为中心的符号化图像，而组合搜索则会返回更多非符号化图像。在无法搜索到足够的一个类别图片时，会搜索单个类别名，同时增加审查阶段过滤掉其中的符号化图像。</li>
+</ul>
+<p>最后收集到328,000张图片。</p>
+<h3 id="图像标注"><a href="#图像标注" class="headerlink" title="图像标注"></a>图像标注</h3><p>包括以下三步：</p>
+<ul>
+<li><p>Category Labeling：将91个类别分为11个大类，对每张图片，标注者首先要依次判断该图片里是否有每个大类的物体，如果有，则需要标注者将该大类下具体的小类别标识拖到图片中的一个该类别的实例上。每张图片有8个人标注，只要有1个人认为类别存在就将其认为存在。(这一步花费大约20k worker hours)</p>
+</li>
+<li><p>Instance Spotting：对每张图片，标注者需要将×标志放到该图片中一个类别的所有实例上(这里的类别来自第一步标注)。为了增加召回率，第一步标注出的类别的一个实例也被显示给这一步的标注者。对于一张图片和一个类别，每个标注者最多只能标10个实例，每张图片8个人标注。(这一步花费大约10k worker hours)</p>
+</li>
+<li><p>Instance Segmentation：要求标注者按照前一步的实例位置标注进行实例分割，如果图片上已有其他实体分割的标注也会同时显示给标注者。标注者可以标出当前图片中不存在该实例或者所有实例都已分割完。这一步标注每1000个分割需要22个worker hour，因此每个实例只有一个标注者标注。在开始前有训练阶段，要求标注一个实例的完整的分割，直到完全标注正确为止。此外还有3~5个标注者被要求判断每个实例分割是否正确。无效标注被要求重新标注。在实例少于10个的图片中，每个实例单独标注；在包含更多实例的图片中，超过10-15个实例被标注后，其他实例被一起标注为crowds。</p>
+</li>
+</ul>
+<h3 id="描述标注"><a href="#描述标注" class="headerlink" title="描述标注"></a>描述标注</h3><p>此外还给每个图片标注了5条描述，具体标注过程见<a href="https://arxiv.org/pdf/1504.00325.pdf" target="_blank" rel="external">COCO Caption</a>。</p>
+<h2 id="数据集：Flickr30K"><a href="#数据集：Flickr30K" class="headerlink" title="数据集：Flickr30K"></a>数据集：<a href="https://aclanthology.org/Q14-1006.pdf" target="_blank" rel="external">Flickr30K</a></h2><p>所有标注规范都模仿<a href="https://www.ijcai.org/Proceedings/15/Papers/593.pdf" target="_blank" rel="external">Framing Image Description as a Ranking Task: Data, Models and Evaluation Metrics</a>。<br>每张图片由5个独立的标注者分别写一个描述，标注者不了解图片中的实体和环境，因此会使用客观方式描述。</p>
+<h1 id="Visual-Question-Answering"><a href="#Visual-Question-Answering" class="headerlink" title="Visual Question Answering"></a>Visual Question Answering</h1><h2 id="数据集：VQA"><a href="#数据集：VQA" class="headerlink" title="数据集：VQA"></a>数据集：<a href="https://arxiv.org/pdf/1505.00468.pdf" target="_blank" rel="external">VQA</a></h2><h3 id="真实图片"><a href="#真实图片" class="headerlink" title="真实图片"></a>真实图片</h3><p>图片来源是MS COCO的123,287张训练集和81,434张开发集图片。由于COCO中搜集的图片都具有复杂的上下文信息，适用于VQA任务。</p>
+<h3 id="抽象场景-abstract-scene"><a href="#抽象场景-abstract-scene" class="headerlink" title="抽象场景 (abstract scene)"></a>抽象场景 (abstract scene)</h3><p>新构建了50K抽象场景数据集，该数据集包含20个性别、种族、年龄不同的paperdoll人类模型(类似于贴画娃娃)和8种不同的表达。人类模型的肢体是可以调整的。同时包括不同动作的超过100种物体和31种动物。</p>
+<h3 id="数据分割"><a href="#数据分割" class="headerlink" title="数据分割"></a>数据分割</h3><p>采用和MS COCO一样的train/test-dev/test-standard/test-challenge/test-reserve的分割方法，其中test-dev用于debug和开发。test-standard用作默认测试数据。</p>
+<h3 id="问题收集"><a href="#问题收集" class="headerlink" title="问题收集"></a>问题收集</h3><p>收集问题需要考虑到以下几点：</p>
+<ul>
+<li>问题不能太简单，只使用CV知识就能回答，例如“猫的颜色”；</li>
+<li>要保证问题的回答需要图片信息，而不能不借助图片直接就能回答正确，例如“胡子是什么组成的”。</li>
+</ul>
+<p>经过对标注者不同的要求测试，最终要求为：</p>
+<p><code>“We have built a smart robot. It understands a lot about
+images. It can recognize and name all the objects, it
+knows where the objects are, it can recognize the scene
+(e.g., kitchen, beach), people’s expressions and poses, and
+properties of objects (e.g., color of objects, their texture).
+Your task is to stump this smart robot!
+Ask a question about this scene that this smart robot
+probably can not answer, but any human can easily
+answer while looking at the scene in the image.”</code></p>
+<p>总结起来就是我们建了一个聪明的机器人，能够识别、定位所有物体和场景，包括人的表达的动作和物体的属性。标注者的任务是提出问题难住这个机器人，但同时提出的问题又需要人类一看图片就很容易能回答出来。</p>
+<p>另外标注者也被要求问题必须要是根据图片才能回答的。<br>总的来说，每张图片对应来自各自独立标注者3个问题，标注者在标注时可以看到针对该图片已经标注过的问题，从而增加问题的丰富度。</p>
+<h3 id="答案标注"><a href="#答案标注" class="headerlink" title="答案标注"></a>答案标注</h3><p>为了处理一个问题多种可能答案都是正确的情况，对每个问题收集10个来自各自独立标注者的答案，并保证回答问题的不是问问题的人。</p>
+<p>要求标注者使用短语而非完整句子回答，要实事求是地回答，避免使用口语式回答或加入自己的看法。</p>
+<p>同时标注者要先选择自己是否能够回答该问题。</p>
+<ul>
+<li><p>对于开放域问答：如果有3个人及以上都回答了一个问题，则认为该回答是正确的。最终有89.32%的答案都是一个词组成的。</p>
+</li>
+<li><p>对于多项选择：每个问题对应18个候选答案，每个选项的accuracy是按照选该选项的人除以3确定的 (最大为1)。</p>
+</li>
+</ul>
+<p>候选答案从以下4类答案中获取：</p>
+<ul>
+<li>Correct：出现频率最高的正确答案；</li>
+<li>Plausible：这类是看起来是对的答案，这种答案是让3个标注者在不看图片的情况下回答问题生成的；</li>
+<li>Popular：10个最常用的答案 (包括：”yes”, “no”, “2”, “1”等)；</li>
+<li>Random：来自数据集的随机问题的答案。</li>
+</ul>
+<h2 id="数据集：VQA2-0"><a href="#数据集：VQA2-0" class="headerlink" title="数据集：VQA2.0"></a>数据集：<a href="https://arxiv.org/pdf/1612.00837.pdf" target="_blank" rel="external">VQA2.0</a></h2><p>该数据集主要是为了解决VQA中的偏置问题。与VQA相比，该数据集中每个问题对应两张具有不同回答的图片。</p>
+<div style="width:50%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/vqa2.png" alt="vqa2.png" title=""> </div>
+
+<p>VQA2.0数据建立在VQA基础上，VQA包括超过204K图片，共614K个自然语言问题（每个图片3个问题），对应超过六百万答案（每个问题10个答案）。</p>
+<p>具体构建方法为：对VQA中的每个图片I-问题Q-答案A对，找到另一张与原图I相似的图片，其对原问题Q的答案与A不同。<br>标注页面如下：</p>
+<div style="width:70%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/vqa2-annotate.png" alt="vqa2-annotate.png" title=""> </div>
+
+<p>标注者要从原图片的24张nearest-neighbor图片中选出一张，使问题Q对其是有意义的，且答案不为A。<br>24张最近邻图片是通过将图片表示为VGGNet中penultimate (‘fc7’) layer的activation，然后和原图片计算l2距离获得的。</p>
+<p>在获取补充图片后，对每个新的图片-问题对，让10位标注者写下答案，其中出现最多的作为新图片-问题的答案。</p>
+<p>在24张最近邻图片中问题Q都无效或没有图片对应的答案与原答案不同时，标注者可以选择跳过。</p>
+<p>共收集了195K、93K、191K张补充图片分别加入训练、开发和测试集。<br>因此，完整的数据包括443K训练、214K开发和453K测试集的图片-问题对。</p>
+<h1 id="Image-Captioning"><a href="#Image-Captioning" class="headerlink" title="Image Captioning"></a>Image Captioning</h1><h2 id="数据集：COCO-Caption"><a href="#数据集：COCO-Caption" class="headerlink" title="数据集：COCO Caption"></a>数据集：<a href="https://arxiv.org/pdf/1504.00325.pdf" target="_blank" rel="external">COCO Caption</a></h2><p>使用来自MS COCO的图片，由于其中包括复杂的信息，适合作为IC的图片源。<br>训练、开发、测试集的分割与MS COCO原始分割相同。</p>
+<p>包括两个数据集：</p>
+<ul>
+<li>MS COCO c5：MS COCO训练、开发、测试集中的每张图片对应5个描述；</li>
+<li>MS COCO c40：MS COCO测试集中随机sample的5,000张图片中每个对应40个描述。创建该数据集是因为很多自动评价指标在参考句子更多的时候和人类评价的一致性更好。</li>
+</ul>
+<p>使用Amazon’s Mechanical Turk (AMT)众包标注，标注页面如下所示：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/coco-caption.png" alt="coco-caption.png" title=""> </div>
+
+<p>标注要求包括：</p>
+<ul>
+<li>描述场景中的重要部分；</li>
+<li>不要使用“There is”开头的句子；</li>
+<li>不要描述不重要的细节；</li>
+<li>不要描述可能发生在过去或未来的事；</li>
+<li>不要描述图中人可能说的话；</li>
+<li>不要给图中人命名；</li>
+<li>句子至少要有8个词。</li>
+</ul>
+<p>具体标注数据如下：<br>413,915 captions for 82,783 images in training, 202,520 captions for 40,504 images in validation and 379,249 captions for 40,775 images in testing including 179,189 for MS COCO c5 and 200,060 for MS COCO c40.</p>
+<p>使用的自动评价指标包括：BLUE、ROUGE、METEOR、CIDEr。</p>
+<h1 id="Visual-Reasoning"><a href="#Visual-Reasoning" class="headerlink" title="Visual Reasoning"></a>Visual Reasoning</h1><p>数据集：<a href="https://aclanthology.org/P19-1644/" target="_blank" rel="external">NLVR2</a></p>
+<h1 id="Referring-Expression"><a href="#Referring-Expression" class="headerlink" title="Referring Expression"></a>Referring Expression</h1><p>数据集：<a href="https://arxiv.org/pdf/1608.00272v3.pdf" target="_blank" rel="external">RefCOCO</a></p>
+<h1 id="Visual-Dialogue"><a href="#Visual-Dialogue" class="headerlink" title="Visual Dialogue"></a>Visual Dialogue</h1><p>数据集：<a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8099604" target="_blank" rel="external">VisDial v0.9/v1.0</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Dataset/" rel="tag"># Dataset</a>
+          
+            <a href="/tags/Paper-Note/" rel="tag"># Paper Note</a>
+          
+            <a href="/tags/Vision-Language/" rel="tag"># Vision-Language</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/09/01/MaRVL数据集构建笔记/" rel="next" title="MaRVL数据集构建笔记">
+                <i class="fa fa-chevron-left"></i> MaRVL数据集构建笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDQ0OC83MDAy"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Alex"/>
+            
+              <p class="site-author-name" itemprop="name">Alex</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/WangYuxuan93" title="GitHub &rarr; https://github.com/WangYuxuan93" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:hitalexwang@gmail.com" title="E-Mail &rarr; mailto:hitalexwang@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/alex_ritsu" title="Twitter &rarr; https://twitter.com/alex_ritsu" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Vision-Text-Retrieval"><span class="nav-number">1.</span> <span class="nav-text">Vision-Text Retrieval</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：MSCOCO"><span class="nav-number">1.1.</span> <span class="nav-text">数据集：MSCOCO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物品类别-Object-Category-选择"><span class="nav-number">1.1.1.</span> <span class="nav-text">物品类别 (Object Category) 选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非符号化-Non-iconic-图像收集"><span class="nav-number">1.1.2.</span> <span class="nav-text">非符号化 (Non-iconic) 图像收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像标注"><span class="nav-number">1.1.3.</span> <span class="nav-text">图像标注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#描述标注"><span class="nav-number">1.1.4.</span> <span class="nav-text">描述标注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：Flickr30K"><span class="nav-number">1.2.</span> <span class="nav-text">数据集：Flickr30K</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Question-Answering"><span class="nav-number">2.</span> <span class="nav-text">Visual Question Answering</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：VQA"><span class="nav-number">2.1.</span> <span class="nav-text">数据集：VQA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#真实图片"><span class="nav-number">2.1.1.</span> <span class="nav-text">真实图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象场景-abstract-scene"><span class="nav-number">2.1.2.</span> <span class="nav-text">抽象场景 (abstract scene)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分割"><span class="nav-number">2.1.3.</span> <span class="nav-text">数据分割</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题收集"><span class="nav-number">2.1.4.</span> <span class="nav-text">问题收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#答案标注"><span class="nav-number">2.1.5.</span> <span class="nav-text">答案标注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：VQA2-0"><span class="nav-number">2.2.</span> <span class="nav-text">数据集：VQA2.0</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Image-Captioning"><span class="nav-number">3.</span> <span class="nav-text">Image Captioning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：COCO-Caption"><span class="nav-number">3.1.</span> <span class="nav-text">数据集：COCO Caption</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Reasoning"><span class="nav-number">4.</span> <span class="nav-text">Visual Reasoning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referring-Expression"><span class="nav-number">5.</span> <span class="nav-text">Referring Expression</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Dialogue"><span class="nav-number">6.</span> <span class="nav-text">Visual Dialogue</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Alex</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.3.8</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+  <script>
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=63531031";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2022/09/01/图像文本数据集构建笔记/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
