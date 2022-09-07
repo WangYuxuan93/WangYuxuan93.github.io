@@ -141,7 +141,14 @@
 <meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/vqa2.png">
 <meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/vqa2-annotate.png">
 <meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/coco-caption.png">
-<meta property="og:updated_time" content="2022-09-06T09:14:48.742Z">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/nlvr2-heuristic.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/nlvr2-interesting.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/nlvr2-find.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/nlvr2-pruning.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/nlvr2-caption.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/nlvr2-rules.png">
+<meta property="og:image" content="/2022/09/01/图像文本数据集构建笔记/nlvr2-statistic.png">
+<meta property="og:updated_time" content="2022-09-07T09:19:59.531Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图像文本数据集构建笔记">
 <meta name="twitter:description" content="记录对比多个V-L数据集构建方法，主要包括：Vision-Text Retrieval、Visual Question Answering、Image Captioning、Visual Reasoning、Referring Expression、Visual Dialogue。">
@@ -425,7 +432,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-09-06 17:14:48" itemprop="dateModified" datetime="2022-09-06T17:14:48+08:00">2022-09-06</time>
+                <time title="修改时间：2022-09-07 17:19:59" itemprop="dateModified" datetime="2022-09-07T17:19:59+08:00">2022-09-07</time>
               
             
           </span>
@@ -578,10 +585,70 @@ answer while looking at the scene in the image.”</code></p>
 </ul>
 <p>具体标注数据如下：<br>413,915 captions for 82,783 images in training, 202,520 captions for 40,504 images in validation and 379,249 captions for 40,775 images in testing including 179,189 for MS COCO c5 and 200,060 for MS COCO c40.</p>
 <p>使用的自动评价指标包括：BLUE、ROUGE、METEOR、CIDEr。</p>
-<h1 id="Visual-Reasoning"><a href="#Visual-Reasoning" class="headerlink" title="Visual Reasoning"></a>Visual Reasoning</h1><p>数据集：<a href="https://aclanthology.org/P19-1644/" target="_blank" rel="external">NLVR2</a></p>
-<h1 id="Referring-Expression"><a href="#Referring-Expression" class="headerlink" title="Referring Expression"></a>Referring Expression</h1><p>数据集：<a href="https://arxiv.org/pdf/1608.00272v3.pdf" target="_blank" rel="external">RefCOCO</a></p>
-<h1 id="Visual-Dialogue"><a href="#Visual-Dialogue" class="headerlink" title="Visual Dialogue"></a>Visual Dialogue</h1><p>数据集：<a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8099604" target="_blank" rel="external">VisDial v0.9/v1.0</a></p>
+<h1 id="Visual-Reasoning"><a href="#Visual-Reasoning" class="headerlink" title="Visual Reasoning"></a>Visual Reasoning</h1><h2 id="数据集：NLVR2"><a href="#数据集：NLVR2" class="headerlink" title="数据集：NLVR2"></a>数据集：<a href="https://aclanthology.org/P19-1644/" target="_blank" rel="external">NLVR2</a></h2><p>该任务为给定两张图片，判断描述的文本是否正确。</p>
+<h3 id="图片收集"><a href="#图片收集" class="headerlink" title="图片收集"></a>图片收集</h3><p>根据任务特点，需要搜集互相具有相似性的，且比较起来需要一定推理能力的图片。而现有的ImageNet、COCO等图片源中没有这种成组的图片，且大多是相对简单的集中于目标物体的图片。</p>
+<p>因此使用ILSVRC2014 ImageNet challenge中的同义词作为搜索query检索具有相似内容的图片。<br>具体包括以下几步：</p>
+<ul>
+<li>ImageNet Synsets Correspondence：从ILSVRC2014中的1,000个同义词集合中选出一个经常出现在丰富上下文中的子集。对其中每个synset，使用query expansion heuristic构建5个query。heuristic设计的目标是检索出支持复杂推理、包括多个实体、复杂环境或实体参与某项活动的图片。例如：acorn的expansion包括two acorns和acorn fruit。然后使用Google similar images tool对每个query检索到的前5张图各检索7张与其不重复的最相近图片。这样每个query共获取了5组每组8张图片，而总共有25组。如果按照下图中的标注规范一组中超过一半的图片都被标注为有趣，则该synset加一分。最后选取得分最多的124个synset。这一步只是为了确定synset，由作者和学生完成。</li>
+</ul>
+<div style="width:70%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/nlvr2-heuristic.png" alt="nlvr2-heuristic.png" title=""> </div>
 
+<div style="width:40%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/nlvr2-interesting.png" alt="nlvr2-interesting.png" title=""> </div>
+
+<ul>
+<li>Image Search：使用谷歌图片搜索引擎检索图片。将generation heuristic应用到124个synset上，对每个synset使用其中所有的近义词。例如：对timber wolf，使用近义词集合{timber wolf, grey wolf, gray wolf, canis lupus}。对每个query，搜集最多16张相关图片。具体来说，首先使用搜索引擎获取query相关图片，然后使用Google similar images tool检索与该图片相似的图片。</li>
+</ul>
+<div style="width:80%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/nlvr2-find.png" alt="nlvr2-find.png" title=""> </div>
+
+<ul>
+<li>Image Pruning：1）通过众包去掉收集的图片集合中的低质量图片：向标注者展示synset name和所有图片集合，要求去掉其中包含不适合的内容，非现实图片、拼贴画或不包含synset对应实例的图片。最终获得不多于16张图片的集合，如果剩余图片少于8张将被丢弃。2）通过众包去掉不有趣的图片：按照Table 2中的规则判断图片是否有趣，同时还要去掉重复图片。最终丢弃有趣图片少于3张的集合。将图片按照有趣程度排序，保留前8张（这里的意思应该是从左边开始先是有趣的图片，然后是不有趣的，然后从左边选8张）。</li>
+</ul>
+<div style="width:80%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/nlvr2-pruning.png" alt="nlvr2-pruning.png" title=""> </div>
+
+
+<h3 id="描述收集"><a href="#描述收集" class="headerlink" title="描述收集"></a>描述收集</h3><p>在前一步获得了每组8张的图片集合，在这一步首先随机将每组分成4对2张图片组成的图片对。（成对的图片能鼓励两张图片间的对比和推理。）</p>
+<p>标注者需要从4对图片中选出2对，然后写一个句子，使其对被选中的2对图片是对的，但对未被选中的2对图片是错的。（让标注者自己选择比随机分配更能降低生成无效图片对的概率）</p>
+<p>写的句子需要描述图片对的相似性和区别，鼓励使用compositional language。</p>
+<div style="width:80%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/nlvr2-caption.png" alt="nlvr2-caption.png" title=""> </div>
+
+<p>要求标注者在写描述句子时需要避免：</p>
+<ul>
+<li>主观意见；</li>
+<li>讨论照片的特点（例如，在两张图里猫爪都伸出了照片）；</li>
+<li>描述图片中出现的文本；</li>
+<li>描述在未选择的图片中不存在的物体；</li>
+<li>描述单一物体（例如，图中有一个锤子）；</li>
+<li>分别描述两张图片（例如，左边图有一个人，右边图有一只狗）。</li>
+</ul>
+<p>下面给出具体对应的例子：</p>
+<div style="width:80%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/nlvr2-rules.png" alt="nlvr2-rules.png" title=""> </div>
+
+<h3 id="验证过程"><a href="#验证过程" class="headerlink" title="验证过程"></a>验证过程</h3><p>将上一步的每个描述句子和其对应的4对图片分别组合形成4个例子，让标注者独立判断每个例子的描述是正确还是错误，标注者还可以选择该例子是无意义的。最终只保留没有被标注为无意义且新标注的标签和原来写的标签相同的句子。</p>
+<h3 id="数据划分"><a href="#数据划分" class="headerlink" title="数据划分"></a>数据划分</h3><p>随机选择20%通过验证的例子作为开发和测试集。同时保证最初来自一个8张图片组的图片不被分别划分到2个部分。（对这部分数据，每个例子额外增加4个验证标注，如果有2个或更多验证标注和原始标注不同，则删除该例子）然后将通过的例子平分成1个开发集和2个测试集，保证初始的图片组（由类似图片组成的组）不出现在多个集合中。</p>
+<h3 id="数据收集管理"><a href="#数据收集管理" class="headerlink" title="数据收集管理"></a>数据收集管理</h3><ul>
+<li>对于图片收集和描述收集任务：首先展示6个针对标注规范的辅导问题，然后要求他们验证来自2组的4个预先选择的图片对的19个句子，并完成一个独立的描述写作任务。最后人工评价标注者写的句子。</li>
+<li>对于描述验证任务：让标注者验证8个预先选择的例子。</li>
+</ul>
+<p>为了鼓励标注者按照规范书写尽可能具有语言多样性的句子，标注过程分为多个阶段。每个阶段结束时从每个标注者当轮标注的句子中随机选取20个，按照其中符合规范的百分比提供不同的奖励。</p>
+<p>此外，每个标注者最开始只能进行有限的描述写作任务，当其在一轮中符合规范的句子超过75%时，其才能进行所有任务。</p>
+<p>最后获取的样本数量为：</p>
+<div style="width:50%;margin:auto"> <img src="/2022/09/01/图像文本数据集构建笔记/nlvr2-statistic.png" alt="nlvr2-statistic.png" title=""> </div>
+
+<h1 id="Referring-Expression"><a href="#Referring-Expression" class="headerlink" title="Referring Expression"></a>Referring Expression</h1><h2 id="数据集：RefCOCO-RefCOCO"><a href="#数据集：RefCOCO-RefCOCO" class="headerlink" title="数据集：RefCOCO/RefCOCO+"></a>数据集：<a href="https://aclanthology.org/D14-1086/" target="_blank" rel="external">RefCOCO/RefCOCO+</a></h2><h3 id="ReferItGame"><a href="#ReferItGame" class="headerlink" title="ReferItGame"></a>ReferItGame</h3><p>该数据集通过这种两人互动游戏构建，首先给A标注者一张标有目标物体的图片，要求其用语言描述，之后B标注者被要求根据图片和描述点击对应的图片。如果B标注正确则得分并交换位置。</p>
+<h3 id="图片和标签"><a href="#图片和标签" class="headerlink" title="图片和标签"></a>图片和标签</h3><p>原始数据集不是在COCO上构建的，而是在ImageCLEF IAPR image retrieval dataset上，该数据集包括20,000张图片。而其SAIAPR TC-12 expansion（扩展版）中包括了每张图片中构成对象的segmentation标注。包括238种动物、人类、建筑、物体和场景标签。</p>
+<h3 id="数据收集"><a href="#数据收集" class="headerlink" title="数据收集"></a>数据收集</h3><p>使用上述ImageCLEF数据集构建了超过100k独立游戏（每个游戏有一个被标出来的物体）。<br>为了先标注更有趣的表达，优先标注图片中存在一个类别的多个实体的游戏。在这些都标完之后，再根据物体类别排序，尽可能包含更大范围的不同类别的物体。最后再标注剩下的。</p>
+<p>为了验证一致性，在标注过程中有一定比例出现此前已经标注过的游戏。</p>
+<h2 id="数据集：RefCOCOg"><a href="#数据集：RefCOCOg" class="headerlink" title="数据集：RefCOCOg"></a>数据集：<a href="https://arxiv.org/abs/1511.02283?context=cs" target="_blank" rel="external">RefCOCOg</a></h2><p>直接在MS COCO（COCO上也有实例级别的物体分割标注）上构建的RE数据集，主要解决的是RefCOCO中两个问题：(1) 有的图片中只有一个类别的一个实例，因此可以用很简单的语言在没有歧义的情况下描述目标物体；(2) ImageCLEF数据集主要集中在“stuff”(环境)而非“things”(物体)。</p>
+<p>选择图片中符合以下条件的物体：</p>
+<ul>
+<li>图中存在同一个类别的2-4个实例；</li>
+<li>图中实例的bounding box至少占整个图片的5%。</li>
+</ul>
+<p>得到26,711张图片中的54,822个实体。</p>
+<p>在Mechanical Turk上建立一个任务，给出一张图片和其中一个用highlighting object mask标出的物体，要求标注者写一句话单独描述被标出来的实体。</p>
+<p>之后建立另一个任务，给出一张图片和上面任务写下的描述，要求标注者选择描述的物体。如果选择的位置在原始物体的segmentation mask之内，则将该标注认为是有效，否则将该标注抛弃，让其他标注者重新标注。</p>
+<p>在Mechanical Turk上重复交替执行上述两个任务（最多3次），最终收集到104,560个描述，平均每个物体有1.91个描述，每张图片有3.91个描述。</p>
+<h1 id="Visual-Dialogue"><a href="#Visual-Dialogue" class="headerlink" title="Visual Dialogue"></a>Visual Dialogue</h1><h2 id="数据集：VisDial-v0-9-v1-0"><a href="#数据集：VisDial-v0-9-v1-0" class="headerlink" title="数据集：VisDial v0.9/v1.0"></a>数据集：<a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8099604" target="_blank" rel="external">VisDial v0.9/v1.0</a></h2><h2 id="数据集：Image-Chat"><a href="#数据集：Image-Chat" class="headerlink" title="数据集：Image-Chat"></a>数据集：<a href="https://arxiv.org/pdf/1811.00945.pdf" target="_blank" rel="external">Image-Chat</a></h2>
       
     </div>
 
@@ -889,7 +956,7 @@ answer while looking at the scene in the image.”</code></p>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Vision-Text-Retrieval"><span class="nav-number">1.</span> <span class="nav-text">Vision-Text Retrieval</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：MSCOCO"><span class="nav-number">1.1.</span> <span class="nav-text">数据集：MSCOCO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物品类别-Object-Category-选择"><span class="nav-number">1.1.1.</span> <span class="nav-text">物品类别 (Object Category) 选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非符号化-Non-iconic-图像收集"><span class="nav-number">1.1.2.</span> <span class="nav-text">非符号化 (Non-iconic) 图像收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像标注"><span class="nav-number">1.1.3.</span> <span class="nav-text">图像标注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#描述标注"><span class="nav-number">1.1.4.</span> <span class="nav-text">描述标注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：Flickr30K"><span class="nav-number">1.2.</span> <span class="nav-text">数据集：Flickr30K</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Question-Answering"><span class="nav-number">2.</span> <span class="nav-text">Visual Question Answering</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：VQA"><span class="nav-number">2.1.</span> <span class="nav-text">数据集：VQA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#真实图片"><span class="nav-number">2.1.1.</span> <span class="nav-text">真实图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象场景-abstract-scene"><span class="nav-number">2.1.2.</span> <span class="nav-text">抽象场景 (abstract scene)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分割"><span class="nav-number">2.1.3.</span> <span class="nav-text">数据分割</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题收集"><span class="nav-number">2.1.4.</span> <span class="nav-text">问题收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#答案标注"><span class="nav-number">2.1.5.</span> <span class="nav-text">答案标注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：VQA2-0"><span class="nav-number">2.2.</span> <span class="nav-text">数据集：VQA2.0</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Image-Captioning"><span class="nav-number">3.</span> <span class="nav-text">Image Captioning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：COCO-Caption"><span class="nav-number">3.1.</span> <span class="nav-text">数据集：COCO Caption</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Reasoning"><span class="nav-number">4.</span> <span class="nav-text">Visual Reasoning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referring-Expression"><span class="nav-number">5.</span> <span class="nav-text">Referring Expression</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Dialogue"><span class="nav-number">6.</span> <span class="nav-text">Visual Dialogue</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Vision-Text-Retrieval"><span class="nav-number">1.</span> <span class="nav-text">Vision-Text Retrieval</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：MSCOCO"><span class="nav-number">1.1.</span> <span class="nav-text">数据集：MSCOCO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物品类别-Object-Category-选择"><span class="nav-number">1.1.1.</span> <span class="nav-text">物品类别 (Object Category) 选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非符号化-Non-iconic-图像收集"><span class="nav-number">1.1.2.</span> <span class="nav-text">非符号化 (Non-iconic) 图像收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像标注"><span class="nav-number">1.1.3.</span> <span class="nav-text">图像标注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#描述标注"><span class="nav-number">1.1.4.</span> <span class="nav-text">描述标注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：Flickr30K"><span class="nav-number">1.2.</span> <span class="nav-text">数据集：Flickr30K</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Question-Answering"><span class="nav-number">2.</span> <span class="nav-text">Visual Question Answering</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：VQA"><span class="nav-number">2.1.</span> <span class="nav-text">数据集：VQA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#真实图片"><span class="nav-number">2.1.1.</span> <span class="nav-text">真实图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象场景-abstract-scene"><span class="nav-number">2.1.2.</span> <span class="nav-text">抽象场景 (abstract scene)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分割"><span class="nav-number">2.1.3.</span> <span class="nav-text">数据分割</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题收集"><span class="nav-number">2.1.4.</span> <span class="nav-text">问题收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#答案标注"><span class="nav-number">2.1.5.</span> <span class="nav-text">答案标注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：VQA2-0"><span class="nav-number">2.2.</span> <span class="nav-text">数据集：VQA2.0</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Image-Captioning"><span class="nav-number">3.</span> <span class="nav-text">Image Captioning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：COCO-Caption"><span class="nav-number">3.1.</span> <span class="nav-text">数据集：COCO Caption</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Reasoning"><span class="nav-number">4.</span> <span class="nav-text">Visual Reasoning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：NLVR2"><span class="nav-number">4.1.</span> <span class="nav-text">数据集：NLVR2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图片收集"><span class="nav-number">4.1.1.</span> <span class="nav-text">图片收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#描述收集"><span class="nav-number">4.1.2.</span> <span class="nav-text">描述收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证过程"><span class="nav-number">4.1.3.</span> <span class="nav-text">验证过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据划分"><span class="nav-number">4.1.4.</span> <span class="nav-text">数据划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据收集管理"><span class="nav-number">4.1.5.</span> <span class="nav-text">数据收集管理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referring-Expression"><span class="nav-number">5.</span> <span class="nav-text">Referring Expression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：RefCOCO-RefCOCO"><span class="nav-number">5.1.</span> <span class="nav-text">数据集：RefCOCO/RefCOCO+</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ReferItGame"><span class="nav-number">5.1.1.</span> <span class="nav-text">ReferItGame</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片和标签"><span class="nav-number">5.1.2.</span> <span class="nav-text">图片和标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据收集"><span class="nav-number">5.1.3.</span> <span class="nav-text">数据收集</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：RefCOCOg"><span class="nav-number">5.2.</span> <span class="nav-text">数据集：RefCOCOg</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Visual-Dialogue"><span class="nav-number">6.</span> <span class="nav-text">Visual Dialogue</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：VisDial-v0-9-v1-0"><span class="nav-number">6.1.</span> <span class="nav-text">数据集：VisDial v0.9/v1.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集：Image-Chat"><span class="nav-number">6.2.</span> <span class="nav-text">数据集：Image-Chat</span></a></li></ol></li></ol></div>
             
 
           </div>
